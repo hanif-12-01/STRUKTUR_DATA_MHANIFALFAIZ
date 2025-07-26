@@ -70,6 +70,7 @@
         }
 
         .search-bar {
+            position: relative;
             padding: 15px;
             border-bottom: 1px solid var(--thistle);
         }
@@ -976,6 +977,36 @@
                 display: none;
             }
         }
+        .suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #c53e4e;
+            border-top: none;
+            z-index: 999;
+            max-height: 220px;
+            overflow-y: auto;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            display: none;
+        }
+        .suggestion-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .suggestion-item:hover {
+            background: #f5f5f5;
+        }
+        .suggestion-notfound {
+            padding: 10px 16px;
+            color: #c53e4e;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -1001,7 +1032,8 @@
                 </div>
             </div>
             <div class="search-bar">
-                <input type="text" placeholder="Cari kuliner, lokasi, atau kategori..." id="searchInput">
+                <input type="text" placeholder="Cari kuliner, lokasi, atau kategori..." id="searchInput" autocomplete="off">
+                <div id="searchSuggestions" class="suggestions-dropdown"></div>
             </div>
             <div class="places-list" id="placesList">
                 <!-- Tempat kuliner akan dimuat di sini oleh JavaScript -->
@@ -1448,6 +1480,11 @@
         function renderPlacesList(places = kulinerData) {
             const placesList = document.getElementById('placesList');
             placesList.innerHTML = '';
+            if (places.length === 0) {
+                placesList.innerHTML = '<div style="padding:20px;text-align:center;color:#c53e4e;font-weight:500;">Tidak ditemukan</div>';
+                document.getElementById('totalPlaces').textContent = 0;
+                return;
+            }
             
             places.forEach((place, index) => {
                 const placeCard = document.createElement('div');
@@ -1663,6 +1700,8 @@
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Urutkan data berdasarkan nama_kuliner saat load
+            kulinerData.sort((a, b) => a.nama_kuliner.localeCompare(b.nama_kuliner));
             // Render daftar tempat dan marker
             renderPlacesList();
             renderMapMarkers();
@@ -1678,8 +1717,71 @@
             
             // Search input
             const searchInput = document.getElementById('searchInput');
+            const suggestionsBox = document.getElementById('searchSuggestions');
+
+            // Hapus event input lain jika ada
+            searchInput.oninput = null;
             searchInput.addEventListener('input', function() {
-                searchPlaces(this.value);
+                const query = this.value.trim().toLowerCase();
+                if (!query) {
+                    suggestionsBox.style.display = 'none';
+                    suggestionsBox.innerHTML = '';
+                    return;
+                }
+                // Binary search prefix
+                function binarySearchByName(arr, query) {
+                    let left = 0, right = arr.length - 1;
+                    let results = [];
+                    while (left <= right) {
+                        let mid = Math.floor((left + right) / 2);
+                        let name = arr[mid].nama_kuliner.toLowerCase();
+                        if (name.startsWith(query)) {
+                            // Cari semua yang prefix-nya sama (ke kiri & kanan)
+                            let l = mid, r = mid;
+                            while (l > 0 && arr[l-1].nama_kuliner.toLowerCase().startsWith(query)) l--;
+                            while (r < arr.length-1 && arr[r+1].nama_kuliner.toLowerCase().startsWith(query)) r++;
+                            for (let i = l; i <= r; i++) results.push(arr[i]);
+                            break;
+                        } else if (name < query) {
+                            left = mid + 1;
+                        } else {
+                            right = mid - 1;
+                        }
+                    }
+                    return results;
+                }
+                const filtered = binarySearchByName(kulinerData, query);
+                let html = '';
+                if (filtered.length === 0) {
+                    html = '<div class="suggestion-notfound">Tidak ditemukan</div>';
+                } else {
+                    html = filtered.map(place =>
+                        `<div class="suggestion-item" data-id="${place.id}">${place.nama_kuliner} <span style="color:#888;font-size:0.9em;">(${place.kategori})</span></div>`
+                    ).join('');
+                }
+                suggestionsBox.innerHTML = html;
+                suggestionsBox.style.display = 'block';
+            });
+
+            // Klik suggestion
+            suggestionsBox.onclick = null;
+            suggestionsBox.addEventListener('click', function(e) {
+                if (e.target.classList.contains('suggestion-item')) {
+                    const id = e.target.getAttribute('data-id');
+                    const place = kulinerData.find(p => p.id == id);
+                    if (place) {
+                        renderPlacesList([place]);
+                        searchInput.value = place.nama_kuliner;
+                        suggestionsBox.style.display = 'none';
+                    }
+                }
+            });
+
+            // Sembunyikan dropdown jika klik di luar
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                    suggestionsBox.style.display = 'none';
+                }
             });
             
             // Chatbot toggle
