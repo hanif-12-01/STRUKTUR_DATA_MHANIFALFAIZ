@@ -29,18 +29,22 @@
 
         .app-container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            height: 100vh;
         }
 
         /* Sidebar Styles */
         .sidebar {
-            width: 100%;
+            width: 260px;
+            min-width: 200px;
             background: white;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            box-shadow: 2px 0 15px rgba(0,0,0,0.08);
             z-index: 100;
             display: flex;
             flex-direction: column;
-            border-bottom: 1px solid var(--thistle);
+            border-right: 1px solid var(--thistle);
+            height: 100vh;
+            position: relative;
         }
 
         .header {
@@ -87,36 +91,29 @@
         }
 
         .filters {
-            padding: 15px;
+            padding: 20px 10px 10px 10px;
             border-bottom: 1px solid var(--thistle);
         }
 
         .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 12px;
-        }
-
-        .filter-header h3 {
-            font-size: 1.1rem;
-            color: #444;
         }
 
         .filter-tags {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
         }
 
         .filter-tag {
             background: var(--thistle);
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid transparent;
+            margin-bottom: 5px;
         }
 
         .filter-tag:hover, .filter-tag.active {
@@ -212,9 +209,33 @@
             position: relative;
             background: var(--azure-web);
             height: 100vh;
-            position: relative;
-            background: var(--azure-web);
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .map-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 24px 28px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            max-width: 350px;
+            z-index: 100;
+            border-left: 4px solid var(--bittersweet-shimmer);
+        }
+        @media (max-width: 768px) {
+            .map-overlay {
+                max-width: 90vw;
+                padding: 12px 8px;
+            }
         }
 
         .map-placeholder {
@@ -667,6 +688,25 @@
             }
         }
 
+        @media (max-width: 900px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                min-width: unset;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--thistle);
+                box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            }
+            .map-area {
+                height: 60vh;
+                min-height: 350px;
+                align-items: stretch;
+            }
+        }
+
         @media (max-width: 768px) {
             .app-container {
                 flex-direction: column;
@@ -946,11 +986,6 @@
                 <h1><i class="fas fa-utensils"></i> Lapor Mangan!</h1>
                 <p>Peta Kuliner Purwokerto</p>
             </div>
-            
-            <div class="search-bar">
-                <input type="text" placeholder="Cari kuliner, lokasi, atau kategori..." id="searchInput">
-            </div>
-            
             <div class="filters">
                 <div class="filter-header">
                     <h3>Filter Kategori</h3>
@@ -965,11 +1000,12 @@
                     <div class="filter-tag" data-category="foodcourt">Food Court</div>
                 </div>
             </div>
-            
+            <div class="search-bar">
+                <input type="text" placeholder="Cari kuliner, lokasi, atau kategori..." id="searchInput">
+            </div>
             <div class="places-list" id="placesList">
                 <!-- Tempat kuliner akan dimuat di sini oleh JavaScript -->
             </div>
-            
             <div class="stats-bar">
                 <div class="stat-item">
                     <span class="stat-value" id="totalPlaces">12</span>
@@ -988,44 +1024,23 @@
         
         <!-- Map Area -->
         <div class="map-area">
-            <div class="map-placeholder">
-                <div class="map-overlay" id="mapOverlay">
-                    <h3>Soto Sokaraja</h3>
-                    <p>Soto khas Purwokerto yang terkenal dengan kuahnya yang gurih dan bahan rempah pilihan. Cocok untuk sarapan pagi.</p>
-                    <div class="place-info">
-                        <div><i class="fas fa-clock"></i> 08:00 - 20:00</div>
-                        <div><i class="fas fa-star"></i> 4.7 (245 ulasan)</div>
-                        <div><i class="fas fa-tag"></i> Rp15.000 - Rp25.000</div>
-                        <div><i class="fas fa-car"></i> Ada Tukang Parkir</div>
-                    </div>
-                    <button class="directions-btn" id="directionsBtn">
-                        <i class="fas fa-directions"></i> Buka di Google Maps
-                    </button>
-                </div>
-                
-                <!-- Location Markers akan dimuat di sini oleh JavaScript -->
-                <div class="user-location" style="top: 50%; left: 50%;"></div>
+            <div id="map" style="width: 100%; height: 100%; min-height: 400px;"></div>
+            <div class="map-overlay" id="mapOverlay">
+                <!-- Konten info kuliner aktif akan diisi oleh JS -->
             </div>
-            
-            <!-- Map Controls -->
+            <!-- Map Controls, Add Place Button, Chatbot, dll tetap seperti sebelumnya -->
             <div class="map-controls">
-                <button class="map-btn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
-                <button class="map-btn" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
-                <button class="map-btn" title="Lokasi Saya"><i class="fas fa-location-arrow"></i></button>
-                <button class="map-btn" title="Layer Peta"><i class="fas fa-layer-group"></i></button>
+                <button class="map-btn" title="Zoom In" id="zoomInBtn"><i class="fas fa-search-plus"></i></button>
+                <button class="map-btn" title="Zoom Out" id="zoomOutBtn"><i class="fas fa-search-minus"></i></button>
+                <button class="map-btn" title="Lokasi Saya" id="locateBtn"><i class="fas fa-location-arrow"></i></button>
+                <button class="map-btn" title="Layer Peta" id="layerBtn"><i class="fas fa-layer-group"></i></button>
             </div>
-            
-            <!-- Add Place Button -->
             <button class="add-place-btn" id="addPlaceBtn" title="Tambah Tempat Kuliner">
                 <i class="fas fa-plus"></i>
             </button>
-            
-            <!-- Chatbot Toggle -->
             <button class="chatbot-toggle pulse" id="chatbotToggle">
                 <i class="fas fa-robot"></i>
             </button>
-            
-            <!-- Chatbot Container -->
             <div class="chatbot-container" id="chatbotContainer">
                 <div class="chatbot-header">
                     <h3><i class="fas fa-robot"></i> Chatbot Rekomendasi</h3>
@@ -1784,6 +1799,47 @@
                 renderMapMarkers();
             });
         });
+    </script>
+    <!-- Tambahkan Leaflet CSS dan JS sebelum </body> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+    // --- LEAFLET MAP ---
+    let leafletMap;
+    let leafletMarkers = [];
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inisialisasi peta Purwokerto
+        leafletMap = L.map('map').setView([-7.4212405, 109.2422016], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(leafletMap);
+        // Tambahkan marker kuliner
+        function renderLeafletMarkers(places = kulinerData) {
+            leafletMarkers.forEach(m => leafletMap.removeLayer(m));
+            leafletMarkers = [];
+            places.forEach(place => {
+                if (place.latitude && place.longitude) {
+                    const marker = L.marker([place.latitude, place.longitude]).addTo(leafletMap);
+                    marker.bindPopup(`<b>${place.nama_kuliner}</b><br>${place.alamat}<br>Rating: ${getPlaceRating(place.nama_kuliner)} (${getPlaceReviews(place.nama_kuliner)} ulasan)`);
+                    leafletMarkers.push(marker);
+                }
+            });
+        }
+        renderLeafletMarkers();
+        // Zoom in/out
+        document.getElementById('zoomInBtn').onclick = () => leafletMap.zoomIn();
+        document.getElementById('zoomOutBtn').onclick = () => leafletMap.zoomOut();
+        // Lokasi saya
+        document.getElementById('locateBtn').onclick = () => {
+            leafletMap.locate({setView: true, maxZoom: 16});
+        };
+        leafletMap.on('locationfound', function(e) {
+            L.marker(e.latlng).addTo(leafletMap).bindPopup('Lokasi Anda').openPopup();
+        });
+        // Layer peta (opsional, bisa dikembangkan)
+        // Jika ingin filter marker sesuai sidebar, bisa tambahkan event di filterByCategory/searchPlaces
+        // Contoh: renderLeafletMarkers(filteredPlaces)
+    });
     </script>
 </body>
 </html>
