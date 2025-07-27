@@ -1,0 +1,314 @@
+:root {
+  --red: #c53e4e;
+  --light-red: #d8c2cf;
+  --bg: #f8f9fa;
+  --white: #ffffff;
+  --text: #333;
+  --blue: #2980b9;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+body { background: var(--bg); color: var(--text); }
+
+header {
+  background: var(--red);
+  color: var(--white);
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  position: relative;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+header img { height: 40px; }
+
+.weather-info {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.weather-info:hover { background: rgba(255, 255, 255, 0.3); }
+
+.weather-icon { font-size: 20px; }
+.weather-temp { font-weight: 600; font-size: 16px; }
+
+.weather-details {
+  position: absolute;
+  top: 100%;
+  right: 20px;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  z-index: 1000;
+  width: 250px;
+  display: none;
+  color: var(--text);
+}
+
+.weather-details.show { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#map { height: 60vh; width: 100%; }
+
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filter-bar input,
+.filter-bar select,
+.filter-bar button,
+.filter-bar a.lapor-button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--light-red);
+  border-radius: 8px;
+}
+
+.filter-bar button {
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.filter-bar button:hover { background: #b03545; }
+
+.lapor-button {
+  background: var(--blue);
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.lapor-button:hover { background: #2471a3; }
+
+.card {
+  background: var(--white);
+  border-left: 5px solid var(--red);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card:hover { transform: translateY(-3px); }
+
+.card h3 { color: var(--red); }
+.card small { color: #666; }
+
+.detail-popup {
+  display: none;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 9999;
+  max-width: 400px;
+  width: 90%;
+}
+
+.detail-popup img {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.close-btn {
+  float: right;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--red);
+}
+
+.chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--red);
+  color: white;
+  border-radius: 50%;
+  padding: 15px;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.chatbot:hover { transform: scale(1.1); }
+
+.chat-popup {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: white;
+  border-radius: 15px;
+  width: 300px;
+  height: 400px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  overflow: hidden;
+  flex-direction: column;
+  z-index: 999;
+}
+
+.chat-header {
+  background: #00B900;
+  color: white;
+  padding: 12px 15px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-close { cursor: pointer; font-size: 20px; }
+
+.chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #e5ddd5;
+  background-image: url('https://web.line.me/static/desktop/2.1.0/img/bg_chat.5f8e3b6.png');
+  background-size: cover;
+  scroll-behavior: smooth;
+}
+
+.message {
+  margin-bottom: 10px;
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 18px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.message-user {
+  background: #DCF8C6;
+  margin-left: auto;
+  margin-right: 5px;
+  border-top-right-radius: 5px;
+}
+
+.message-bot {
+  background: white;
+  margin-right: auto;
+  margin-left: 5px;
+  border-top-left-radius: 5px;
+}
+
+.typing-indicator {
+  background: white !important;
+  margin-right: auto;
+  margin-left: 5px;
+  border-top-left-radius: 5px;
+  padding: 12px 16px;
+}
+
+.typing-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #999;
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+@keyframes typing {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.message-time {
+  font-size: 10px;
+  color: #666;
+  margin-top: 3px;
+  text-align: right;
+}
+
+.chat-input-container {
+  display: flex;
+  padding: 10px;
+  background: white;
+  border-top: 1px solid #ddd;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+}
+
+.chat-send {
+  background: #00B900;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  margin-left: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  header { flex-direction: column; align-items: flex-start; }
+  .weather-info { margin-top: 10px; align-self: flex-end; }
+  .weather-details { right: 10px; left: 10px; width: auto; }
+  .filter-bar { flex-direction: column; }
+  .detail-popup { top: 5%; }
+  .chat-popup { width: 90%; right: 5%; bottom: 70px; }
+}
+
+@media (max-width: 480px) {
+  .header-content h1 { font-size: 20px; }
+  .weather-info { padding: 6px 10px; font-size: 14px; }
+}
