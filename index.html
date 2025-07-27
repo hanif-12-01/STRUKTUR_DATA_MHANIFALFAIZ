@@ -52,18 +52,10 @@
       backdrop-filter: blur(5px);
     }
 
-    .weather-info:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
+    .weather-info:hover { background: rgba(255, 255, 255, 0.3); }
 
-    .weather-icon {
-      font-size: 20px;
-    }
-
-    .weather-temp {
-      font-weight: 600;
-      font-size: 16px;
-    }
+    .weather-icon { font-size: 20px; }
+    .weather-temp { font-weight: 600; font-size: 16px; }
 
     .weather-details {
       position: absolute;
@@ -79,20 +71,14 @@
       color: var(--text);
     }
 
-    .weather-details.show {
-      display: block;
-      animation: fadeIn 0.3s ease;
-    }
+    .weather-details.show { display: block; animation: fadeIn 0.3s ease; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    #map {
-      height: 60vh;
-      width: 100%;
-    }
+    #map { height: 60vh; width: 100%; }
 
     .container {
       padding: 20px;
@@ -123,9 +109,7 @@
       transition: background 0.3s ease;
     }
 
-    .filter-bar button:hover {
-      background: #b03545;
-    }
+    .filter-bar button:hover { background: #b03545; }
 
     .lapor-button {
       background: var(--blue);
@@ -138,12 +122,9 @@
       justify-content: center;
       gap: 8px;
       font-weight: 500;
-      border: none;
     }
 
-    .lapor-button:hover {
-      background: #2471a3;
-    }
+    .lapor-button:hover { background: #2471a3; }
 
     .card {
       background: var(--white);
@@ -203,9 +184,7 @@
       transition: transform 0.3s ease;
     }
 
-    .chatbot:hover {
-      transform: scale(1.1);
-    }
+    .chatbot:hover { transform: scale(1.1); }
 
     .chat-popup {
       display: none;
@@ -232,10 +211,7 @@
       align-items: center;
     }
 
-    .chat-close {
-      cursor: pointer;
-      font-size: 20px;
-    }
+    .chat-close { cursor: pointer; font-size: 20px; }
 
     .chat-messages {
       flex: 1;
@@ -253,7 +229,6 @@
       padding: 8px 12px;
       border-radius: 18px;
       line-height: 1.4;
-      position: relative;
       word-wrap: break-word;
     }
 
@@ -294,14 +269,8 @@
     }
 
     @keyframes typing {
-      0%, 80%, 100% {
-        transform: scale(0.8);
-        opacity: 0.5;
-      }
-      40% {
-        transform: scale(1);
-        opacity: 1;
-      }
+      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
     }
 
     .message-time {
@@ -459,10 +428,10 @@
       { nama: "Combro", kategori: "Camilan", alamat: "Jl. HR Bunyamin, Purwokerto", jam: "07:00 - 18:00", harga: "Rp 3.000 - 5.000", deskripsi: "Singkong isi oncom pedas, goreng renyah.", foto: "https://i.imgur.com/8z3L5kL.jpg", parkir: "Ya", rute: "Jl. HR Bunyamin - Alun-Alun", lat: -7.4180, lng: 109.2300, keliling: true },
       { nama: "Lumpia Boom", kategori: "Makanan Ringan", alamat: "Jl. Sudirman, Purwokerto", jam: "09:00 - 18:00", harga: "Rp 10.000 - 15.000", deskripsi: "Lumpia besar isi sayur, telur, ayam, dll.", foto: "https://i.imgur.com/8z3L5kL.jpg", parkir: "Ya", rute: "Jl. Sudirman - Pasar Wage", lat: -7.4210, lng: 109.2410, keliling: true },
       { nama: "Cimplung", kategori: "Camilan", alamat: "Jl. Pramuka, Purwokerto", jam: "08:00 - 16:00", harga: "Rp 3.000 - 5.000", deskripsi: "Singkong + kelapa + gula aren, manis dan gurih.", foto: "https://i.imgur.com/8z3L5kL.jpg", parkir: "Tidak", rute: "Jl. Pramuka - Terminal", lat: -7.4250, lng: 109.2340, keliling: true },
-      // Tambahan dari Wikipedia [^1^]
+      // Tambahan dari Wikipedia 
       { nama: "Tahu Brontak", kategori: "Gorengan", alamat: "Pasar Sokaraja, Purwokerto", jam: "08:00 - 17:00", harga: "Rp 3.000 - 6.000", deskripsi: "Tahu isi sayuran yang keluar saat digoreng, gurih dan renyah.", foto: "https://i.imgur.com/8z3L5kL.jpg", parkir: "Ya", rute: "Pasar Sokaraja", lat: -7.4205, lng: 109.2295, keliling: true },
       { nama: "Dage", kategori: "Camilan Kering", alamat: "Jl. Sudirman, Purwokerto", jam: "09:00 - 16:00", harga: "Rp 5.000 - 8.000", deskripsi: "Kudapan dari ampas kacang yang digumpalkan dan dijamurkan, disantap dengan cabe rawit.", foto: "https://i.imgur.com/8z3L5kL.jpg", parkir: "Ya", rute: "Jl. Sudirman", lat: -7.4215, lng: 109.2415, keliling: true },
-      { nama: "Empal Basah", kategori: "Makanan Berat", alamat: "Warung Empal Bu Yati, Purwokerto", jam: "10:00 - 15:00", harga: "Rp 15.000 - 25.000", deskripsi: "Daging sapi kuah santan kental dengan sensasi gatal dari serunding, cocok dengan ketupat janur.", foto: "https://i.imgur.com/8z3L5kL.jpg", parkir: "Ya", rute: "Jl. HR Bunyamin", lat: -7.4175, lng: 109.2315, keliling: false },
+      { nama: "Empal Basah", kategori: "Makanan Berat", alamat: "Warung Empal Bu Yati, Purwokerto", jam: "10:00 - 20:00", harga: "Rp 15.000 - 25.000", deskripsi: "Daging sapi kuah santan kental dengan sensasi gatal dari serunding, cocok dengan ketupat janur.", foto: "https://i.imgur.com/8z3L5kL.jpg", parkir: "Ya", rute: "Jl. HR Bunyamin", lat: -7.4175, lng: 109.2315, keliling: false },
       { nama: "Dawet Ayu", kategori: "Minuman", alamat: "Pasar Wage, Purwokerto", jam: "08:00 - 17:00", harga: "Rp 5.000 - 8.000", deskripsi: "Minuman segar dari cendol, santan, dan gula jawa, disajikan dengan es.", foto: "https://i.imgur.com/8z3L5kL.jpg", parkir: "Ya", rute: "Pasar Wage", lat: -7.4275, lng: 109.2405, keliling: true }
     ];
 
@@ -638,42 +607,111 @@
       const weatherDesc = document.getElementById('weatherDetailsDesc')?.textContent || 'Cerah';
 
       const context = `
-Anda adalah MakanBot, asisten kuliner lokal Purwokerto yang paham istilah makanan khas.
+# IDENTITAS & TUJUAN UTAMA
+Anda adalah MakanBot, asisten AI kuliner yang sangat ramah dan berpengetahuan luas tentang makanan khas Purwokerto. Gaya bahasa Anda santai, informatif, dan selalu membantu. Anda harus selalu menggunakan informasi dari basis data di bawah ini untuk menjawab pertanyaan.
 
-📍 Lokasi: Purwokerto  
-🌦️ Cuaca saat ini: ${weatherDesc}, suhu ${weatherTemp}
+# KONTEKS SAAT INI
+- Lokasi: Purwokerto
+- Cuaca: ${weatherDesc}, suhu ${weatherTemp}
 
-🍽️ Data kuliner lokal:
-- Soto Sokaraja (sroto): kuah kaldu sapi + kacang, Rp 12.000–20.000, Jl. Sokaraja, 07:00–15:00
-- Tempe Mendoan (mendo): tempe goreng setengah matang, Rp 2.000–5.000, Pasar Sokaraja
-- Getuk Goreng (getuk): singkong goreng isi gula, Rp 5.000–10.000, Jl. Sudirman
-- Tahu Brontak: tahu isi sayur keluar saat digoreng, Rp 3.000–6.000, Pasar Sokaraja
-- Kraca: keong sawah masak pedas, Rp 8.000–12.000, malam di Pasar Malam
-- Dage: ampas kacang digumpal & dijamur, Rp 5.000–8.000, Jl. Sudirman
-- Empal Basah: daging sapi kuah santan gatal, Rp 15.000–25.000, Jl. HR Bunyamin
-- Dawet Ayu: cendol + santan + gula jawa, Rp 5.000–8.000, Pasar Wage
+# BASIS DATA KULINER PURWOKERTO
+[
+  {
+    "Nama": "Soto Sokaraja",
+    "Alias": "sroto",
+    "Deskripsi": "Soto khas dengan kuah kaldu sapi bening yang dicampur dengan sambal kacang, disajikan dengan ketupat, tauge, dan kerupuk.",
+    "Harga": "Rp 12.000 - Rp 20.000",
+    "Lokasi": "Pusat Soto di Jl. Sokaraja",
+    "Jam Buka": "07:00 - 15:00"
+  },
+  {
+    "Nama": "Tempe Mendoan",
+    "Alias": "mendo",
+    "Deskripsi": "Tempe lembaran tipis yang digoreng dengan adonan tepung setengah matang (lembek), disajikan dengan cabai rawit atau sambal kecap.",
+    "Harga": "Rp 2.000 - Rp 5.000",
+    "Lokasi": "Banyak dijual di pinggir jalan, pusatnya di area Pasar Sokaraja",
+    "Jam Buka": "Pagi - Malam"
+  },
+  {
+    "Nama": "Getuk Goreng",
+    "Alias": "getuk",
+    "Deskripsi": "Jajanan dari singkong yang dihaluskan, diisi gula aren, lalu digoreng hingga bagian luarnya renyah.",
+    "Harga": "Rp 5.000 - Rp 10.000 per bungkus",
+    "Lokasi": "Pusat oleh-oleh di Jl. Jend. Sudirman",
+    "Jam Buka": "08:00 - 21:00"
+  },
+  {
+    "Nama": "Tahu Brontak",
+    "Alias": "brontak",
+    "Deskripsi": "Tahu goreng dengan isian sayuran (tauge, wortel) yang melimpah hingga 'memberontak' keluar dari tahu.",
+    "Harga": "Rp 3.000 - Rp 6.000",
+    "Lokasi": "Pasar Sokaraja dan pasar tradisional lainnya",
+    "Jam Buka": "Pagi - Sore"
+  },
+  {
+    "Nama": "Kraca",
+    "Alias": "keong sawah",
+    "Deskripsi": "Keong sawah yang dimasak dengan bumbu pedas kaya rempah. Cara makannya disedot langsung dari cangkangnya.",
+    "Harga": "Rp 8.000 - Rp 12.000 per porsi",
+    "Lokasi": "Biasanya dijual malam hari di area Pasar Malam atau alun-alun",
+    "Jam Buka": "18:00 - 23:00"
+  },
+  {
+    "Nama": "Empal Basah",
+    "Alias": "empal",
+    "Deskripsi": "Potongan daging sapi empuk yang dimasak dengan kuah santan kental berbumbu rempah. Rasanya gurih dan sedikit manis.",
+    "Harga": "Rp 15.000 - Rp 25.000",
+    "Lokasi": "Warung makan di sekitar Jl. HR Bunyamin",
+    "Jam Buka": "10:00 - 20:00"
+  },
+  {
+    "Nama": "Dawet Ayu",
+    "Alias": "dawet",
+    "Deskripsi": "Minuman segar berisi cendol hijau, santan, dan gula jawa cair. Disajikan dingin dengan es.",
+    "Harga": "Rp 5.000 - Rp 8.000",
+    "Lokasi": "Banyak ditemukan di area Pasar Wage",
+    "Jam Buka": "09:00 - 16:00"
+  }
+]
 
-📚 Istilah lokal dikenali:
-- sroto = Soto Sokaraja
-- mendo, tempe goreng setengah matang = Tempe Mendoan
-- getuk = Getuk Goreng
-- kraca = keong sawah
-- dawet = Dawet Ayu
-- nopia = kue panggang isi gula
-- brontak = Tahu Brontak
-- empal = Empal Basah
-- dage = Dage
+# KAMUS ISTILAH LOKAL
+- sroto: Soto Sokaraja
+- mendo: Tempe Mendoan
+- getuk: Getuk Goreng
+- kraca: Kraca (Keong Sawah)
+- dawet: Dawet Ayu
+- brontak: Tahu Brontak
+- empal: Empal Basah
 
-🧠 Aturan respons:
-- Gunakan bahasa ramah
-- Jika ditanya makanan murah → Tempe Mendoan, Cenil, Nopia
-- Jika hujan → Soto Sokaraja, Dawet Ayu hangat
-- Jika panas → Es Dawet Ayu, Getuk Goreng
-- Jika malam → Kraca
-- Jika keliling → Tempe Mendoan, Getuk Goreng
+# ATURAN PERILAKU
+1.  Selalu sapa pengguna dengan ramah.
+2.  Gunakan informasi dari KONTEKS CUACA untuk memberi rekomendasi yang relevan.
+3.  Jika cuaca panas, prioritaskan rekomendasi Es Dawet Ayu atau jajanan seperti Getuk Goreng.
+4.  Jika cuaca hujan atau dingin, prioritaskan rekomendasi makanan hangat seperti Soto Sokaraja.
+5.  Jika pengguna bertanya pada malam hari atau mencari makan malam, prioritaskan rekomendasi Kraca atau Tempe Mendoan.
+6.  Jika pengguna mencari makanan yang murah, prioritaskan rekomendasi Tempe Mendoan atau Tahu Brontak.
+7.  Jika pengguna bertanya untuk oleh-oleh atau sambil jalan-jalan, rekomendasikan Getuk Goreng atau Tempe Mendoan.
+8.  Selalu berikan detail singkat (deskripsi, harga, lokasi) dari basis data saat merekomendasikan.
 
-Pengguna bertanya: "${userInput}"
-Assistant:
+# CONTOH INTERAKSI
+
+Pengguna: "sroto sing enak nang ndi?"
+MakanBot: "Halo! Kalau cari Sroto (Soto Sokaraja) yang mantap, pusatnya ada di sepanjang Jl. Sokaraja. Soto di sana khas banget karena pakai sambal kacang. Harganya sekitar Rp 12.000 sampai Rp 20.000. Biasanya buka dari pagi sampai sore."
+
+Pengguna: "Purwokerto lagi panas banget, enaknya jajan apa ya?"
+MakanBot: "Wah, pas banget cuacanya lagi panas gini! Biar seger, coba deh Es Dawet Ayu di daerah Pasar Wage. Cendolnya kenyal, terus dipadu santan sama gula jawa, cuma sekitar Rp 5.000-an aja. Pasti langsung adem!"
+
+Pengguna: "rekomendasi makan malem dong"
+MakanBot: "Malam-malam di Purwokerto paling asyik nyari Kraca, mas/mbak! Itu lho, keong sawah yang dimasak pedas. Biasanya banyak yang jual di area Pasar Malam. Harganya murah meriah, sekitar Rp 8.000 - Rp 12.000 seporsi. Berani coba?"
+
+Pengguna: "makanan murah dong"
+MakanBot: "Coba Tempe Mendoan cuma Rp 2.000–5.000, atau Tahu Brontak Rp 3.000–6.000. Hemat dan enak!"
+
+# TUGAS SAAT INI
+Jawab pertanyaan pengguna berdasarkan semua informasi dan aturan di atas.
+
+Pengguna: "${userInput}"
+MakanBot:
       `;
 
       try {
@@ -706,7 +744,7 @@ Assistant:
       if (lower.includes("brontak") || lower.includes("tahu isi")) return "Tahu Brontak di Pasar Sokaraja, tahu isi sayur keluar saat digoreng, Rp 3.000–6.000.";
       if (lower.includes("dawet") || lower.includes("es dawet")) return "Dawet Ayu di Pasar Wage, minuman segar cendol santan gula jawa, Rp 5.000–8.000.";
       if (lower.includes("empal")) return "Empal Basah di Warung Bu Yati, daging sapi kuah santan pedas, cocok dengan ketupat janur.";
-      if (lower.includes("murah")) return "Coba Tempe Mendoan (Rp 2.000–5.000), Cenil (Rp 3.000–5.000), atau Nopia (Rp 3.000–6.000).";
+      if (lower.includes("murah")) return "Coba Tempe Mendoan (Rp 2.000–5.000), Tahu Brontak (Rp 3.000–6.000), atau Nopia (Rp 3.000–6.000).";
       if (lower.includes("malam")) return "Kraca dijual malam di Pasar Malam Purwokerto, cocok untuk jajan malam!";
       if (lower.includes("hai") || lower.includes("hello")) return "Halo! Mau cari kuliner apa di Purwokerto hari ini?";
       return "Maaf, aku belum paham. Coba tanya: 'Makanan murah apa?' atau 'Rekomendasi untuk cuaca hujan?'";
