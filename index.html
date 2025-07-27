@@ -273,6 +273,10 @@
       background: #e5ddd5;
       background-image: url('https://web.line.me/static/desktop/2.1.0/img/bg_chat.5f8e3b6.png');
       background-size: cover;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      max-height: 300px;
+      min-height: 200px;
     }
 
     .message {
@@ -297,6 +301,47 @@
       margin-right: auto;
       margin-left: 5px;
       border-top-left-radius: 5px;
+    }
+
+    .typing-indicator {
+      background: white !important;
+      margin-right: auto;
+      margin-left: 5px;
+      border-top-left-radius: 5px;
+      padding: 12px 16px;
+    }
+
+    .typing-dots {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .typing-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #999;
+      animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    @keyframes typing {
+      0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .message-time {
@@ -874,6 +919,29 @@
       }
     }
 
+    // Function to smoothly scroll chat to bottom
+    function scrollChatToBottom() {
+      const chatMessages = document.getElementById("chatMessages");
+      if (chatMessages) {
+        // Force scroll to bottom with multiple attempts
+        const scrollToBottom = () => {
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        };
+        
+        // Immediate scroll
+        scrollToBottom();
+        
+        // Use requestAnimationFrame for smooth scrolling
+        requestAnimationFrame(scrollToBottom);
+        
+        // Double-check after a short delay
+        setTimeout(scrollToBottom, 50);
+        
+        // Final check after longer delay to ensure content is rendered
+        setTimeout(scrollToBottom, 200);
+      }
+    }
+
     async function sendChat() {
       const input = document.getElementById("chatInput").value.trim();
       const chatMessages = document.getElementById("chatMessages");
@@ -897,43 +965,130 @@
       `;
       document.getElementById("chatInput").value = "";
       
-      // Scroll ke bawah
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      // Scroll ke bawah dengan fungsi yang lebih robust
+      scrollChatToBottom();
 
-      // Simple responses for common questions
-      let reply = "";
-      if (input.toLowerCase().includes("rekomendasi") || input.toLowerCase().includes("sarankan")) {
-        const randomFood = kulinerData[Math.floor(Math.random() * kulinerData.length)];
-        reply = `Saya merekomendasikan ${randomFood.nama} (${randomFood.kategori}) di ${randomFood.alamat}. Buka jam ${randomFood.jam} dengan harga sekitar ${randomFood.harga}.`;
-      } 
-      else if (input.toLowerCase().includes("soto")) {
-        reply = "Di Purwokerto ada Soto Sokaraja yang terkenal. Lokasinya di Jl. Sokaraja, buka jam 07:00-15:00 dengan harga Rp 12.000-20.000. Soto ini unik karena menggunakan kuah kaldu sapi dengan kacang.";
-      }
-      else if (input.toLowerCase().includes("mendoan")) {
-        reply = "Tempe Mendoan khas Purwokerto bisa ditemukan di Pasar Sokaraja. Harganya terjangkau Rp 2.000-5.000 per potong. Tempe digoreng setengah matang sehingga renyah di luar tapi lembut di dalam.";
-      }
-      else if (input.toLowerCase().includes("hallo") || input.toLowerCase().includes("hai")) {
-        reply = "Halo! Saya siap membantu Anda menemukan kuliner terbaik di Purwokerto. Ada yang bisa saya bantu?";
-      }
-      else if (input.toLowerCase().includes("cuaca")) {
-        const weatherTemp = document.getElementById('weatherTemp').textContent;
-        const weatherDesc = document.getElementById('weatherDetailsDesc').textContent;
-        reply = `Cuaca Purwokerto saat ini: ${weatherDesc}, suhu ${weatherTemp}.`;
-      }
-      else {
-        reply = "Terima kasih pertanyaannya. Di Purwokerto banyak kuliner khas seperti Soto Sokaraja, Tempe Mendoan, Getuk Goreng, dan lainnya. Mau cari makanan jenis apa? Saya bisa bantu rekomendasi.";
-      }
+      // Show typing indicator
+      const typingIndicator = document.createElement('div');
+      typingIndicator.className = 'message message-bot typing-indicator';
+      typingIndicator.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+      chatMessages.appendChild(typingIndicator);
+      scrollChatToBottom();
 
-      // Simulate typing delay
-      setTimeout(() => {
+      try {
+        // Enhanced AI response using API
+        const reply = await getAIResponse(input);
+        
+        // Remove typing indicator
+        chatMessages.removeChild(typingIndicator);
+        
+        // Add AI response
         chatMessages.innerHTML += `
           <div class="message message-bot">
             ${reply}
             <div class="message-time">${timeString}</div>
           </div>
         `;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }, 1000);
+        scrollChatToBottom();
+      } catch (error) {
+        // Fallback to simple responses if API fails
+        chatMessages.removeChild(typingIndicator);
+        
+        let reply = "";
+        if (input.toLowerCase().includes("rekomendasi") || input.toLowerCase().includes("sarankan")) {
+          const randomFood = kulinerData[Math.floor(Math.random() * kulinerData.length)];
+          reply = `Saya merekomendasikan ${randomFood.nama} (${randomFood.kategori}) di ${randomFood.alamat}. Buka jam ${randomFood.jam} dengan harga sekitar ${randomFood.harga}.`;
+        } 
+        else if (input.toLowerCase().includes("soto")) {
+          reply = "Di Purwokerto ada Soto Sokaraja yang terkenal. Lokasinya di Jl. Sokaraja, buka jam 07:00-15:00 dengan harga Rp 12.000-20.000. Soto ini unik karena menggunakan kuah kaldu sapi dengan kacang.";
+        }
+        else if (input.toLowerCase().includes("mendoan")) {
+          reply = "Tempe Mendoan khas Purwokerto bisa ditemukan di Pasar Sokaraja. Harganya terjangkau Rp 2.000-5.000 per potong. Tempe digoreng setengah matang sehingga renyah di luar tapi lembut di dalam.";
+        }
+        else if (input.toLowerCase().includes("hallo") || input.toLowerCase().includes("hai")) {
+          reply = "Halo! Saya siap membantu Anda menemukan kuliner terbaik di Purwokerto. Ada yang bisa saya bantu?";
+        }
+        else if (input.toLowerCase().includes("cuaca")) {
+          const weatherTemp = document.getElementById('weatherTemp').textContent;
+          const weatherDesc = document.getElementById('weatherDetailsDesc').textContent;
+          reply = `Cuaca Purwokerto saat ini: ${weatherDesc}, suhu ${weatherTemp}.`;
+        }
+        else {
+          reply = "Terima kasih pertanyaannya. Di Purwokerto banyak kuliner khas seperti Soto Sokaraja, Tempe Mendoan, Getuk Goreng, dan lainnya. Mau cari makanan jenis apa? Saya bisa bantu rekomendasi.";
+        }
+
+        chatMessages.innerHTML += `
+          <div class="message message-bot">
+            ${reply}
+            <div class="message-time">${timeString}</div>
+          </div>
+        `;
+        scrollChatToBottom();
+      }
+    }
+
+    async function getAIResponse(userInput) {
+      const API_KEY = 'AIzaSyBx6wxIFqWHRB9JQBe2Cd5mjlnrGfnpRCw';
+      
+      // Get current weather info for context
+      const weatherTemp = document.getElementById('weatherTemp')?.textContent || '25°C';
+      const weatherDesc = document.getElementById('weatherDetailsDesc')?.textContent || 'Cerah';
+      
+      // Create context about Purwokerto food
+      const context = `
+        Anda adalah asisten kuliner untuk kota Purwokerto. Berikan rekomendasi makanan dan minuman yang relevan.
+        
+        Informasi kuliner Purwokerto:
+        - Soto Sokaraja: kuah kaldu sapi dengan kacang, harga Rp 12.000-20.000, lokasi Jl. Sokaraja
+        - Tempe Mendoan: tempe goreng setengah matang, harga Rp 2.000-5.000, lokasi Pasar Sokaraja
+        - Getuk Goreng: singkong goreng dengan gula aren, harga Rp 5.000-10.000
+        - Klanting: cemilan singkong berbentuk anting, harga Rp 5.000-10.000
+        - Cenil: singkong kenyal berwarna-warni, harga Rp 3.000-5.000
+        - Es Dawet Ayu: minuman segar dari tepung beras dan santan, harga Rp 5.000-8.000
+        
+        Cuaca saat ini: ${weatherDesc}, suhu ${weatherTemp}
+        
+        Berikan jawaban yang ramah, informatif, dan dalam bahasa Indonesia. Jika ditanya tentang makanan yang tidak ada dalam daftar, sarankan alternatif yang tersedia.
+      `;
+
+      const prompt = `${context}\n\nUser: ${userInput}\n\nAssistant:`;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: prompt
+              }]
+            }],
+            generationConfig: {
+              temperature: 0.7,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 800,
+            }
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+          return data.candidates[0].content.parts[0].text;
+        } else {
+          throw new Error('Invalid response format');
+        }
+      } catch (error) {
+        console.error('AI API Error:', error);
+        throw error;
+      }
     }
 
     function showWeatherRec() {
@@ -1283,6 +1438,57 @@
       document.getElementById("chatInput").addEventListener("keypress", (e) => {
         if (e.key === "Enter") sendChat();
       });
+
+      // Initialize chat scroll to bottom
+      const chatMessages = document.getElementById("chatMessages");
+      if (chatMessages) {
+        // Scroll to bottom on page load
+        scrollChatToBottom();
+        
+        // Set up MutationObserver to auto-scroll when new messages are added
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+              // Check if any added nodes are message elements
+              const hasNewMessages = Array.from(mutation.addedNodes).some(node => 
+                node.nodeType === Node.ELEMENT_NODE && 
+                (node.classList.contains('message') || node.querySelector('.message'))
+              );
+              
+              if (hasNewMessages) {
+                // Immediate scroll
+                scrollChatToBottom();
+                
+                // Additional scroll after DOM update
+                setTimeout(() => {
+                  scrollChatToBottom();
+                }, 10);
+                
+                // Final scroll after longer delay
+                setTimeout(() => {
+                  scrollChatToBottom();
+                }, 100);
+              }
+            }
+          });
+        });
+        
+        // Start observing the chat messages container
+        observer.observe(chatMessages, {
+          childList: true,
+          subtree: true
+        });
+        
+        // Also add scroll event listener to ensure chat stays at bottom
+        chatMessages.addEventListener('scroll', () => {
+          // If user scrolls up, don't auto-scroll
+          const isAtBottom = chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 10;
+          if (!isAtBottom) {
+            // User has scrolled up, don't force scroll
+            return;
+          }
+        });
+      }
     });
   </script>
 </body>
