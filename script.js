@@ -244,17 +244,25 @@ document.addEventListener('DOMContentLoaded', () => {
       return "Maaf, aku belum paham. Coba tanya: 'Makanan murah apa?' atau 'Rekomendasi untuk cuaca hujan?'";
   }
 
-  async function init() {
-    try {
-      const response = await fetch(SHEET_URL);
-      if (!response.ok) throw new Error('Gagal memuat data kuliner');
-      kulinerData = await response.json();
-      renderMap();
-      renderList();
-    } catch (error) {
-      console.error('Error initializing app:', error);
-      document.getElementById('list').innerHTML = "<p style='text-align:center; color:red;'>Gagal memuat data. Coba lagi nanti.</p>";
-    }
+  function init() {
+    fetch(SHEET_URL)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Gagal memuat data kuliner');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data); // For debugging
+        kulinerData = data;
+        renderMap();
+        renderList();
+      })
+      .catch((error) => {
+        console.error('Error initializing app:', error);
+        document.getElementById('list').innerHTML = "<p style='text-align:center; color:red;'>Gagal memuat data. Coba lagi nanti.</p>";
+      });
+
     fetchWeather();
     setInterval(fetchWeather, 30 * 60 * 1000);
 
