@@ -1,1917 +1,1289 @@
-    <!DOCTYPE html>
-    <html lang="id">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Lapor Mangan! - Peta Kuliner Purwokerto</title>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <style>
-            :root {
-                --bittersweet-shimmer: #c53e4e;
-                --thistle: #d8c2cf;
-                --redwood: #9f4855;
-                --azure-web: #d5ecf2;
-                --light-cyan: #d5ebee;
-            }
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            body {
-                font-family: 'Poppins', sans-serif;
-                background: var(--light-cyan);
-                color: #333;
-            }
-            .app-container {
-                display: flex;
-                flex-direction: row;
-                height: 100vh;
-            }
-            /* Sidebar Styles */
-            .sidebar {
-                width: 260px;
-                min-width: 180px;
-                max-width: 400px;
-                background: white;
-                box-shadow: 2px 0 15px rgba(0,0,0,0.08);
-                z-index: 100;
-                display: flex;
-                flex-direction: column;
-                border-right: 1px solid var(--thistle);
-                height: 100vh;
-                position: relative;
-                resize: none;
-            }
-            .sidebar-resize-handle {
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 8px;
-                height: 100%;
-                cursor: ew-resize;
-                background: linear-gradient(to right, #eee 60%, #ccc 100%);
-                z-index: 200;
-            }
-            @media (max-width: 900px) {
-                .sidebar {
-                    width: 100% !important;
-                    min-width: unset;
-                    max-width: unset;
-                    height: auto;
-                    border-right: none;
-                    border-bottom: 1px solid var(--thistle);
-                    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-                }
-                .sidebar-resize-handle {
-                    display: none;
-                }
-            }
-            .header {
-                padding: 20px;
-                background: linear-gradient(135deg, var(--bittersweet-shimmer), var(--redwood));
-                color: white;
-                text-align: center;
-            }
-            .header h1 {
-                font-size: 1.8rem;
-                margin-bottom: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-            }
-            .header p {
-                font-size: 0.95rem;
-                opacity: 0.95;
-                font-weight: 300;
-            }
-            .search-bar {
-                padding: 8px 15px 8px 15px;
-                margin-top: 0;
-                border-bottom: 1px solid var(--thistle);
-            }
-            .search-bar input {
-                width: 100%;
-                padding: 14px 20px;
-                border: 1px solid var(--thistle);
-                border-radius: 30px;
-                font-size: 1rem;
-                outline: none;
-                transition: all 0.3s;
-                background: var(--azure-web);
-            }
-            .search-bar input:focus {
-                box-shadow: 0 0 0 3px rgba(197, 62, 78, 0.2);
-                border-color: var(--bittersweet-shimmer);
-            }
-            .filters {
-                padding: 20px 10px 10px 10px;
-                border-bottom: 1px solid var(--thistle);
-            }
-            .filter-header {
-                margin-bottom: 12px;
-            }
-            .filter-tags {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-            .filter-tag {
-                background: var(--thistle);
-                padding: 10px 18px;
-                border-radius: 20px;
-                font-size: 1rem;
-                cursor: pointer;
-                transition: all 0.2s;
-                border: 1px solid transparent;
-                margin-bottom: 5px;
-            }
-            .filter-tag:hover, .filter-tag.active {
-                background: var(--bittersweet-shimmer);
-                color: white;
-                border-color: var(--bittersweet-shimmer);
-            }
-            .places-list {
-                max-height: 50vh;
-                overflow-y: auto;
-                padding: 4px 10px 10px 10px;
-                margin-top: 0;
-            }
-            .place-card {
-                padding: 18px;
-                border-radius: 12px;
-                margin-bottom: 15px;
-                cursor: pointer;
-                transition: all 0.3s;
-                border: 1px solid var(--thistle);
-                background: white;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }
-            .place-card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                border-color: var(--bittersweet-shimmer);
-            }
-            .place-card.active {
-                background: #fff9f9;
-                border-left: 4px solid var(--bittersweet-shimmer);
-            }
-            .place-name {
-                font-weight: 600;
-                margin-bottom: 8px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .place-rating {
-                color: #FFD700;
-                font-size: 0.9rem;
-            }
-            .place-category {
-                font-size: 0.85rem;
-                color: var(--bittersweet-shimmer);
-                margin-bottom: 10px;
-                font-weight: 500;
-            }
-            .place-info {
-                display: flex;
-                flex-wrap: wrap;
-                font-size: 0.8rem;
-                color: #666;
-                gap: 15px;
-            }
-            .place-info div {
-                display: flex;
-                align-items: center;
-            }
-            .place-info i {
-                margin-right: 6px;
-                color: var(--bittersweet-shimmer);
-            }
-            .parking-info {
-                display: inline-flex;
-                align-items: center;
-                background: var(--azure-web);
-                padding: 2px 8px;
-                border-radius: 12px;
-                font-size: 0.75rem;
-                margin-left: 8px;
-            }
-            .parking-info i {
-                margin-right: 4px;
-                color: #28a745;
-            }
-            /* Map Area */
-            .map-area {
-                flex: 1;
-                position: relative;
-                background: var(--azure-web);
-                height: 100vh;
-                overflow: hidden;
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-            }
-            #map {
-                width: 100%;
-                height: 100%;
-            }
-            .map-overlay {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                padding: 24px 28px;
-                border-radius: 18px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-                max-width: 350px;
-                z-index: 100;
-                border-left: 4px solid var(--bittersweet-shimmer);
-            }
-            @media (max-width: 768px) {
-                .map-overlay {
-                    max-width: 90vw;
-                    padding: 12px 8px;
-                }
-            }
-            .map-placeholder {
-                width: 100%;
-                height: 100%;
-                background-image: url('https://obj.misskey.id/media/1c781f25-9b85-46ee-9ee7-d47566c171ec.webp');
-                background-size: cover;
-                background-position: center;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-                overflow: hidden;
-            }
-            .map-overlay {
-                position: absolute;
-                top: 25px;
-                left: 25px;
-                background: white;
-                padding: 20px;
-                border-radius: 15px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-                max-width: 320px;
-                z-index: 10;
-                border-left: 4px solid var(--bittersweet-shimmer);
-            }
-            .map-overlay h3 {
-                margin-bottom: 12px;
-                color: var(--bittersweet-shimmer);
-                font-size: 1.3rem;
-            }
-            .map-overlay p {
-                font-size: 0.95rem;
-                margin-bottom: 15px;
-                line-height: 1.5;
-                color: #555;
-            }
-            .location-marker {
-                position: absolute;
-                width: 32px;
-                height: 32px;
-                background: var(--bittersweet-shimmer);
-                border-radius: 50%;
-                border: 3px solid white;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-                cursor: pointer;
-                transform: translate(-50%, -50%);
-                transition: all 0.3s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 0.7rem;
-                font-weight: bold;
-            }
-            .location-marker.soto {
-                background: var(--bittersweet-shimmer);
-            }
-            .location-marker.bakso {
-                background: #4ECDC4;
-            }
-            .location-marker.gorengan {
-                background: #FFD166;
-            }
-            .location-marker.ayam {
-                background: #06D6A0;
-            }
-            .location-marker.restoran {
-                background: #118AB2;
-            }
-            .location-marker.foodcourt {
-                background: #073B4C;
-            }
-            .location-marker.active {
-                transform: translate(-50%, -50%) scale(1.3);
-                z-index: 20;
-                box-shadow: 0 0 0 8px rgba(197, 62, 78, 0.3);
-            }
-            .user-location {
-                position: absolute;
-                width: 22px;
-                height: 22px;
-                background: #9B5DE5;
-                border-radius: 50%;
-                border: 3px solid white;
-                box-shadow: 0 0 0 6px rgba(155, 93, 229, 0.4);
-                transform: translate(-50%, -50%);
-                z-index: 15;
-            }
-            .map-controls {
-                position: absolute;
-                bottom: 25px;
-                right: 25px;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            }
-            .map-btn {
-                width: 55px;
-                height: 55px;
-                border-radius: 50%;
-                background: white;
-                border: none;
-                box-shadow: 0 3px 15px rgba(0,0,0,0.2);
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.3rem;
-                color: #555;
-                transition: all 0.2s;
-            }
-            .map-btn:hover {
-                background: var(--thistle);
-                transform: scale(1.05);
-            }
-            /* Chatbot */
-            .chatbot-container {
-                position: absolute;
-                bottom: 25px;
-                left: 25px;
-                width: 360px;
-                background: white;
-                border-radius: 20px;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-                overflow: hidden;
-                display: none;
-                z-index: 100;
-                border: 1px solid var(--thistle);
-            }
-            .chatbot-header {
-                background: linear-gradient(135deg, var(--bittersweet-shimmer), var(--redwood));
-                color: white;
-                padding: 18px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .chatbot-header h3 {
-                font-size: 1.1rem;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            .chatbot-body {
-                height: 320px;
-                overflow-y: auto;
-                padding: 20px;
-                background: var(--azure-web);
-            }
-            .message {
-                margin-bottom: 18px;
-                max-width: 85%;
-            }
-            .bot-message {
-                background: white;
-                padding: 12px 18px;
-                border-radius: 20px 20px 20px 5px;
-                align-self: flex-start;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-                border: 1px solid var(--thistle);
-            }
-            .user-message {
-                background: var(--bittersweet-shimmer);
-                color: white;
-                padding: 12px 18px;
-                border-radius: 20px 20px 5px 20px;
-                margin-left: auto;
-                box-shadow: 0 2px 5px rgba(197, 62, 78, 0.2);
-            }
-            .chatbot-input {
-                display: flex;
-                padding: 15px;
-                border-top: 1px solid var(--thistle);
-                background: white;
-            }
-            .chatbot-input input {
-                flex: 1;
-                padding: 12px 15px;
-                border: 1px solid var(--thistle);
-                border-radius: 25px;
-                outline: none;
-                font-size: 0.95rem;
-                background: var(--azure-web);
-            }
-            .chatbot-input input:focus {
-                border-color: var(--bittersweet-shimmer);
-            }
-            .chatbot-input button {
-                background: var(--bittersweet-shimmer);
-                color: white;
-                border: none;
-                border-radius: 25px;
-                padding: 12px 20px;
-                margin-left: 10px;
-                cursor: pointer;
-                transition: background 0.2s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .chatbot-input button:hover {
-                background: var(--redwood);
-            }
-            .chatbot-toggle {
-                position: absolute;
-                bottom: 25px;
-                left: 25px;
-                width: 65px;
-                height: 65px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, var(--bittersweet-shimmer), var(--redwood));
-                color: white;
-                border: none;
-                box-shadow: 0 6px 20px rgba(197, 62, 78, 0.4);
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.7rem;
-                z-index: 90;
-                transition: all 0.3s;
-            }
-            .chatbot-toggle:hover {
-                transform: scale(1.05) rotate(10deg);
-            }
-            .chatbot-toggle.pulse {
-                animation: pulse 2s infinite;
-            }
-            @keyframes pulse {
-                0% { box-shadow: 0 0 0 0 rgba(197, 62, 78, 0.7); }
-                70% { box-shadow: 0 0 0 15px rgba(197, 62, 78, 0); }
-                100% { box-shadow: 0 0 0 0 rgba(197, 62, 78, 0); }
-            }
-            /* Form Modal */
-            .modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 1000;
-                align-items: center;
-                justify-content: center;
-            }
-            .modal-content {
-                background: white;
-                border-radius: 15px;
-                width: 90%;
-                max-width: 500px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                overflow: hidden;
-            }
-            .modal-header {
-                background: linear-gradient(135deg, var(--bittersweet-shimmer), var(--redwood));
-                color: white;
-                padding: 20px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .modal-body {
-                padding: 20px;
-            }
-            .form-group {
-                margin-bottom: 20px;
-            }
-            .form-group label {
-                display: block;
-                margin-bottom: 8px;
-                font-weight: 500;
-                color: #444;
-            }
-            .form-group input, .form-group select, .form-group textarea {
-                width: 100%;
-                padding: 12px;
-                border: 1px solid var(--thistle);
-                border-radius: 8px;
-                font-family: 'Poppins', sans-serif;
-                font-size: 1rem;
-                background: var(--azure-web);
-            }
-            .form-group textarea {
-                height: 100px;
-                resize: vertical;
-            }
-            .modal-footer {
-                padding: 15px 20px;
-                background: var(--thistle);
-                display: flex;
-                justify-content: flex-end;
-                gap: 10px;
-            }
-            .btn {
-                padding: 10px 20px;
-                border: none;
-                border-radius: 25px;
-                font-family: 'Poppins', sans-serif;
-                font-size: 0.95rem;
-                cursor: pointer;
-                transition: all 0.2s;
-            }
-            .btn-primary {
-                background: var(--bittersweet-shimmer);
-                color: white;
-            }
-            .btn-primary:hover {
-                background: var(--redwood);
-            }
-            .btn-secondary {
-                background: #999;
-                color: white;
-            }
-            .btn-secondary:hover {
-                background: #777;
-            }
-            .add-place-btn {
-                position: absolute;
-                top: 25px;
-                right: 100px;
-                width: 55px;
-                height: 55px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, var(--bittersweet-shimmer), var(--redwood));
-                color: white;
-                border: none;
-                box-shadow: 0 6px 20px rgba(197, 62, 78, 0.4);
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.7rem;
-                z-index: 90;
-                transition: all 0.3s;
-            }
-            .add-place-btn:hover {
-                transform: scale(1.05);
-            }
-            /* Directions Button */
-            .directions-btn {
-                display: inline-flex;
-                align-items: center;
-                background: var(--bittersweet-shimmer);
-                color: white;
-                padding: 8px 15px;
-                border-radius: 25px;
-                font-size: 0.9rem;
-                cursor: pointer;
-                border: none;
-                transition: all 0.2s;
-                margin-top: 10px;
-            }
-            .directions-btn:hover {
-                background: var(--redwood);
-                transform: translateY(-2px);
-            }
-            .directions-btn i {
-                margin-right: 8px;
-            }
-            /* Responsive Design */
-            @media (max-width: 1200px) {
-                .sidebar {
-                    width: 320px;
-                }
-                
-                .map-overlay {
-                    max-width: 280px;
-                    padding: 15px;
-                }
-                
-                .chatbot-container {
-                    width: 320px;
-                }
-            }
-            @media (max-width: 992px) {
-                .sidebar {
-                    width: 280px;
-                }
-                
-                .header h1 {
-                    font-size: 1.5rem;
-                }
-                
-                .place-info {
-                    font-size: 0.75rem;
-                    gap: 10px;
-                }
-                
-                .map-overlay {
-                    max-width: 250px;
-                    padding: 12px;
-                }
-                
-                .map-overlay h3 {
-                    font-size: 1.1rem;
-                }
-            }
-            @media (max-width: 900px) {
-                .app-container {
-                    flex-direction: column;
-                }
-                .sidebar {
-                    width: 100%;
-                    min-width: unset;
-                    height: auto;
-                    border-right: none;
-                    border-bottom: 1px solid var(--thistle);
-                    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-                }
-                .sidebar-resize-handle {
-                    display: none;
-                }
-                .map-area {
-                    height: 60vh;
-                    min-height: 350px;
-                    align-items: stretch;
-                }
-            }
-            @media (max-width: 768px) {
-                .app-container {
-                    flex-direction: column;
-                }
-                
-                .sidebar {
-                    width: 100%;
-                    height: 45%;
-                    position: absolute;
-                    bottom: 0;
-                    border-right: none;
-                    border-top: 1px solid var(--thistle);
-                    box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
-                    z-index: 110;
-                }
-                
-                .map-area {
-                    height: 55%;
-                }
-                
-                .map-overlay {
-                    top: 15px;
-                    left: 15px;
-                    max-width: 220px;
-                    padding: 10px;
-                }
-                
-                .map-overlay h3 {
-                    font-size: 1rem;
-                }
-                
-                .map-overlay p {
-                    font-size: 0.85rem;
-                }
-                
-                .place-info {
-                    font-size: 0.7rem;
-                }
-                
-                .chatbot-container {
-                    width: 90%;
-                    left: 5%;
-                    bottom: 20%;
-                }
-                
-                .chatbot-toggle {
-                    width: 55px;
-                    height: 55px;
-                    font-size: 1.4rem;
-                }
-                
-                .add-place-btn {
-                    width: 55px;
-                    height: 55px;
-                    font-size: 1.4rem;
-                    top: 15px;
-                    right: 80px;
-                }
-                
-                .map-controls {
-                    bottom: 15px;
-                    right: 15px;
-                }
-                
-                .map-btn {
-                    width: 45px;
-                    height: 45px;
-                    font-size: 1rem;
-                }
-            }
-            @media (max-width: 576px) {
-                .sidebar {
-                    height: 40%;
-                }
-                
-                .map-area {
-                    height: 60%;
-                }
-                
-                .header {
-                    padding: 15px;
-                }
-                
-                .header h1 {
-                    font-size: 1.3rem;
-                }
-                
-                .search-bar {
-                    padding: 10px;
-                }
-                
-                .search-bar input {
-                    padding: 10px 15px;
-                    font-size: 0.9rem;
-                }
-                
-                .filters {
-                    padding: 10px;
-                }
-                
-                .filter-tag {
-                    padding: 6px 12px;
-                    font-size: 0.75rem;
-                }
-                
-                .places-list {
-                    padding: 5px;
-                }
-                
-                .place-card {
-                    padding: 12px;
-                    margin-bottom: 10px;
-                }
-                
-                .place-name {
-                    font-size: 0.9rem;
-                }
-                
-                .place-category {
-                    font-size: 0.75rem;
-                }
-                
-                .map-overlay {
-                    top: 10px;
-                    left: 10px;
-                    max-width: 180px;
-                    padding: 8px;
-                }
-                
-                .map-overlay h3 {
-                    font-size: 0.9rem;
-                    margin-bottom: 8px;
-                }
-                
-                .map-overlay p {
-                    font-size: 0.75rem;
-                    margin-bottom: 10px;
-                }
-                
-                .place-info {
-                    font-size: 0.65rem;
-                    gap: 5px;
-                }
-                
-                .location-marker {
-                    width: 25px;
-                    height: 25px;
-                    font-size: 0.6rem;
-                }
-                
-                .chatbot-container {
-                    width: 95%;
-                    left: 2.5%;
-                }
-                
-                .chatbot-header {
-                    padding: 15px;
-                }
-                
-                .chatbot-header h3 {
-                    font-size: 1rem;
-                }
-                
-                .chatbot-body {
-                    height: 250px;
-                    padding: 15px;
-                }
-                
-                .message {
-                    margin-bottom: 12px;
-                }
-                
-                .bot-message, .user-message {
-                    padding: 8px 12px;
-                    font-size: 0.8rem;
-                }
-                
-                .chatbot-input {
-                    padding: 10px;
-                }
-                
-                .chatbot-input input {
-                    padding: 8px 12px;
-                    font-size: 0.85rem;
-                }
-                
-                .chatbot-input button {
-                    padding: 8px 15px;
-                }
-            }
-            @media (max-width: 400px) {
-                .sidebar {
-                    height: 35%;
-                }
-                
-                .map-area {
-                    height: 65%;
-                }
-                
-                .header h1 {
-                    font-size: 1.1rem;
-                }
-                
-                .header p {
-                    font-size: 0.8rem;
-                }
-                
-                .filter-tags {
-                    gap: 5px;
-                }
-                
-                .filter-tag {
-                    padding: 4px 8px;
-                    font-size: 0.7rem;
-                }
-                
-                .place-card {
-                    padding: 10px;
-                }
-                
-                .place-name {
-                    font-size: 0.85rem;
-                }
-                
-                .map-overlay {
-                    max-width: 150px;
-                    padding: 6px;
-                }
-                
-                .map-overlay h3 {
-                    font-size: 0.8rem;
-                }
-                
-                .map-overlay p {
-                    font-size: 0.7rem;
-                }
-                
-                .place-info div {
-                    margin-right: 8px;
-                }
-            }
-            /* Landscape mode for mobile */
-            @media (max-height: 500px) and (orientation: landscape) {
-                .sidebar {
-                    height: 100%;
-                    width: 40%;
-                    border-top: none;
-                    border-right: 1px solid var(--thistle);
-                }
-                
-                .map-area {
-                    height: 100%;
-                    width: 60%;
-                }
-                
-                .places-list {
-                    max-height: calc(100% - 200px);
-                }
-            }
-            /* Hide elements on very small screens */
-            @media (max-width: 320px) {
-                .place-info div:nth-child(3) {
-                    display: none;
-                }
-            }
-            .suggestions-dropdown {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: #fff;
-                border: 1px solid #c53e4e;
-                border-top: none;
-                z-index: 999;
-                max-height: 220px;
-                overflow-y: auto;
-                box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-                display: none;
-            }
-            .suggestion-item {
-                padding: 10px 16px;
-                cursor: pointer;
-                border-bottom: 1px solid #eee;
-            }
-            .suggestion-item:last-child {
-                border-bottom: none;
-            }
-            .suggestion-item:hover {
-                background: #f5f5f5;
-            }
-            .suggestion-notfound {
-                padding: 10px 16px;
-                color: #c53e4e;
-                text-align: center;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="app-container">
-            <!-- Sidebar -->
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-resize-handle" id="sidebarResizeHandle"></div>
-                <div class="header">
-                    <h1><i class="fas fa-utensils"></i> Lapor Mangan!</h1>
-                    <p>Peta Kuliner Purwokerto</p>
-                </div>
-                <div class="filters">
-                    <div class="filter-header">
-                        <h3>Filter Kategori</h3>
-                    </div>
-                    <div class="filter-tags">
-                        <div class="filter-tag active" data-category="semua">Semua</div>
-                        <div class="filter-tag" data-category="soto">Soto</div>
-                        <div class="filter-tag" data-category="bakso">Bakso</div>
-                        <div class="filter-tag" data-category="gorengan">Gorengan</div>
-                        <div class="filter-tag" data-category="ayam">Ayam</div>
-                        <div class="filter-tag" data-category="restoran">Restoran</div>
-                        <div class="filter-tag" data-category="foodcourt">Food Court</div>
-                    </div>
-                </div>
-                <div class="search-bar">
-                    <input type="text" placeholder="Cari kuliner, lokasi, atau kategori..." id="searchInput" autocomplete="off">
-                    <div id="searchSuggestions" class="suggestions-dropdown"></div>
-                </div>
-                <div class="places-list" id="placesList">
-                    <!-- Tempat kuliner akan dimuat di sini oleh JavaScript -->
-                </div>
-                <div class="stats-bar">
-                    <div class="stat-item">
-                        <span class="stat-value" id="totalPlaces">12</span>
-                        <span>Lokasi</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value">89</span>
-                        <span>Pengguna Aktif</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value">4.6</span>
-                        <span>Rating Rata-rata</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Map Area -->
-            <div class="map-area">
-                <div id="map" style="width: 100%; height: 100%; min-height: 400px;"></div>
-                <div class="map-overlay" id="mapOverlay">
-                    <!-- Konten info kuliner aktif akan diisi oleh JS -->
-                </div>
-                <!-- Map Controls, Add Place Button, Chatbot, dll tetap seperti sebelumnya -->
-                <div class="map-controls">
-                    <button class="map-btn" title="Zoom In" id="zoomInBtn"></button>
-                    <button class="map-btn" title="Zoom Out" id="zoomOutBtn"></button>
-                    <button class="map-btn" title="Lokasi Saya" id="locateBtn"><i class="fas fa-location-arrow"></i></button>
-                    <button class="map-btn" title="Layer Peta" id="layerBtn"><i class="fas fa-layer-group"></i></button>
-                </div>
-                <button class="add-place-btn" id="addPlaceBtn" title="Tambah Tempat Kuliner">
-                    <i class="fas fa-plus"></i>
-                </button>
-                <button class="chatbot-toggle pulse" id="chatbotToggle">
-                    <i class="fas fa-robot"></i>
-                </button>
-                <div class="chatbot-container" id="chatbotContainer">
-                    <div class="chatbot-header">
-                        <h3><i class="fas fa-robot"></i> Chatbot Rekomendasi</h3>
-                        <button id="closeChatbot" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="chatbot-body" id="chatbotBody">
-                        <div class="message bot-message">
-                            <strong>LaporBot:</strong> Halo! Saya bisa bantu rekomendasikan kuliner sesuai preferensi Anda. Cuaca hari ini cerah, ingin rekomendasi apa?
-                        </div>
-                        <div class="message user-message">
-                            Rekomendasikan bakso terdekat
-                        </div>
-                        <div class="message bot-message">
-                            <strong>LaporBot:</strong> Berdasarkan lokasi Anda, saya rekomendasikan <strong>Bakso Samiasih</strong> (0.5km). Terkenal dengan baksonya yang kenyal dan kuah kaldu yang gurih! ⭐4.5<br><br>
-                            <em>"Bakso Samiasih selalu jadi langganan. Kuahnya bening dan dagingnya berkualitas!"</em> - User Review
-                        </div>
-                    </div>
-                    <div class="chatbot-input">
-                        <input type="text" placeholder="Ketik pesan..." id="chatInput">
-                        <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Lapor Mangan! - Purwokerto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --red: #c53e4e;
+      --light-red: #d8c2cf;
+      --bg: #f8f9fa;
+      --white: #ffffff;
+      --text: #333;
+      --blue: #2980b9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background: var(--bg); color: var(--text); }
+
+    header {
+      background: var(--red);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: relative;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    header img { height: 40px; }
+
+    .weather-info {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .weather-info:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .weather-icon {
+      font-size: 20px;
+    }
+
+    .weather-temp {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .weather-details {
+      position: absolute;
+      top: 100%;
+      right: 20px;
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      z-index: 1000;
+      width: 250px;
+      display: none;
+      color: var(--text);
+    }
+
+    .weather-details.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .weather-details-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .weather-details-main {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .weather-details-icon {
+      font-size: 40px;
+      color: var(--blue);
+    }
+
+    .weather-details-temp {
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .weather-details-desc {
+      text-transform: capitalize;
+    }
+
+    .weather-details-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .weather-stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+    }
+
+    .weather-stat i {
+      color: var(--blue);
+      width: 20px;
+      text-align: center;
+    }
+
+    #map {
+      height: 60vh;
+      width: 100%;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .filter-bar input,
+    .filter-bar select,
+    .filter-bar button {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid var(--light-red);
+      border-radius: 8px;
+    }
+
+    .filter-bar button {
+      background: var(--red);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .filter-bar button:hover {
+      background: #b03545;
+    }
+
+    .card {
+      background: var(--white);
+      border-left: 5px solid var(--red);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover { transform: translateY(-3px); }
+
+    .card h3 { color: var(--red); }
+    .card small { color: #666; }
+
+    .detail-popup {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      z-index: 9999;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .detail-popup img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--red);
+    }
+
+    .chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--red);
+      color: white;
+      border-radius: 50%;
+      padding: 15px;
+      cursor: pointer;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .chatbot:hover {
+      transform: scale(1.1);
+    }
+
+    /* LINE-style Chat Interface */
+    .chat-popup {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: white;
+      border-radius: 15px;
+      width: 300px;
+      height: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+      flex-direction: column;
+      z-index: 999;
+    }
+
+    .chat-header {
+      background: #00B900;
+      color: white;
+      padding: 12px 15px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-close {
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #e5ddd5;
+      background-image: url('https://web.line.me/static/desktop/2.1.0/img/bg_chat.5f8e3b6.png');
+      background-size: cover;
+    }
+
+    .message {
+      margin-bottom: 10px;
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 18px;
+      line-height: 1.4;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .message-user {
+      background: #DCF8C6;
+      margin-left: auto;
+      margin-right: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    .message-bot {
+      background: white;
+      margin-right: auto;
+      margin-left: 5px;
+      border-top-left-radius: 5px;
+    }
+
+    .message-time {
+      font-size: 10px;
+      color: #666;
+      margin-top: 3px;
+      text-align: right;
+    }
+
+    .chat-input-container {
+      display: flex;
+      padding: 10px;
+      background: white;
+      border-top: 1px solid #ddd;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    .chat-send {
+      background: #00B900;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      margin-left: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .weather-info {
+        margin-top: 10px;
+        align-self: flex-end;
+      }
+      
+      .weather-details {
+        right: 10px;
+        left: 10px;
+        width: auto;
+      }
+      
+      .filter-bar { flex-direction: column; }
+      .detail-popup { top: 5%; }
+      .chat-popup {
+        width: 90%;
+        right: 5%;
+        bottom: 70px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-content h1 {
+        font-size: 20px;
+      }
+      
+      .weather-info {
+        padding: 6px 10px;
+        font-size: 14px;
+      }
+      
+      .weather-icon {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <h1>Lapor Mangan! - Purwokerto</h1>
+    </div>
+    
+    <div class="weather-info" id="weatherInfo" onclick="toggleWeatherDetails()">
+      <i class="fas fa-cloud-sun weather-icon" id="weatherIcon"></i>
+      <span class="weather-temp" id="weatherTemp">--°C</span>
+    </div>
+    
+    <div class="weather-details" id="weatherDetails">
+      <div class="weather-details-header">
+        <h3>Cuaca Purwokerto</h3>
+        <small id="weatherDate">Hari ini</small>
+      </div>
+      <div class="weather-details-main">
+        <i class="fas fa-cloud-sun weather-details-icon" id="weatherDetailsIcon"></i>
+        <div>
+          <div class="weather-details-temp" id="weatherDetailsTemp">--°C</div>
+          <div class="weather-details-desc" id="weatherDetailsDesc">--</div>
         </div>
-        <!-- Add Place Modal -->
-        <div class="modal" id="addPlaceModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-utensils"></i> Tambah Tempat Kuliner</h3>
-                    <button id="closeModal" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addPlaceForm">
-                        <div class="form-group">
-                            <label for="namaKuliner">Nama Kuliner *</label>
-                            <input type="text" id="namaKuliner" required placeholder="Contoh: Soto Sokaraja">
-                        </div>
-                        <div class="form-group">
-                            <label for="kategori">Kategori *</label>
-                            <select id="kategori" required>
-                                <option value="">Pilih Kategori</option>
-                                <option value="Soto Tradisional">Soto Tradisional</option>
-                                <option value="Bakso">Bakso</option>
-                                <option value="Gorengan">Gorengan</option>
-                                <option value="Ayam Penyet">Ayam Penyet</option>
-                                <option value="Ayam Kampung">Ayam Kampung</option>
-                                <option value="Restoran Sunda">Restoran Sunda</option>
-                                <option value="Restoran Cina">Restoran Cina</option>
-                                <option value="Food Court">Food Court</option>
-                                <option value="Jajanan Tradisional">Jajanan Tradisional</option>
-                                <option value="Olahan Daging">Olahan Daging</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="alamat">Alamat *</label>
-                            <textarea id="alamat" required placeholder="Contoh: Jl. Jend. Sudirman No. 58, Purwokerto"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="jamBuka">Jam Buka *</label>
-                            <input type="time" id="jamBuka" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="jamTutup">Jam Tutup *</label>
-                            <input type="time" id="jamTutup" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="hargaMin">Harga Minimum (Rp) *</label>
-                            <input type="number" id="hargaMin" required placeholder="Contoh: 15000">
-                        </div>
-                        <div class="form-group">
-                            <label for="hargaMax">Harga Maksimum (Rp) *</label>
-                            <input type="number" id="hargaMax" required placeholder="Contoh: 25000">
-                        </div>
-                        <div class="form-group">
-                            <label for="tukangParkir">Tukang Parkir *</label>
-                            <select id="tukangParkir" required>
-                                <option value="">Pilih Opsi</option>
-                                <option value="Ada">Ada</option>
-                                <option value="Tidak Ada">Tidak Ada</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="cancelAdd">Batal</button>
-                    <button class="btn btn-primary" id="submitAdd">Tambah Tempat</button>
-                </div>
-            </div>
+      </div>
+      <div class="weather-details-stats">
+        <div class="weather-stat">
+          <i class="fas fa-temperature-low"></i>
+          <span>Min: <span id="weatherMinTemp">--°C</span></span>
         </div>
-        <script>
-            // Data kuliner dari tabel
-            let kulinerData = [
-                {
-                    id: 1,
-                    nama_kuliner: "Soto Sokaraja",
-                    kategori: "Soto Tradisional",
-                    alamat: "Jl. Jend. Sudirman No. 58, Purwokerto",
-                    latitude: -7.424120,
-                    longitude: 109.233450,
-                    jam_buka: "08:00",
-                    jam_tutup: "20:00",
-                    harga_min: 15000,
-                    harga_max: 25000,
-                    foto_url: "https://tokopedia.com/image/soto-sokaraja.jpg",
-                    tukang_parkir: "Ada"
-                },
-                {
-                    id: 2,
-                    nama_kuliner: "Bakso Samiasih",
-                    kategori: "Bakso",
-                    alamat: "Jl. Pramuka No. 23, Purwokerto Selatan",
-                    latitude: -7.425000,
-                    longitude: 109.234500,
-                    jam_buka: "09:00",
-                    jam_tutup: "20:30",
-                    harga_min: 17000,
-                    harga_max: 30000,
-                    foto_url: "https://rctiplus.com/image/bakso-samiasih.jpg",
-                    tukang_parkir: "Ada"
-                },
-                {
-                    id: 3,
-                    nama_kuliner: "Bakso Pekih",
-                    kategori: "Bakso",
-                    alamat: "Jl. Pekih, Sokanegara, Purwokerto Timur",
-                    latitude: -7.408700,
-                    longitude: 109.248900,
-                    jam_buka: "09:00",
-                    jam_tutup: "20:00",
-                    harga_min: 25000,
-                    harga_max: 35000,
-                    foto_url: "https://astomanis.com/image/bakso-pekih.jpg",
-                    tukang_parkir: "Tidak Ada"
-                },
-                {
-                    id: 4,
-                    nama_kuliner: "Bakso Satlantas",
-                    kategori: "Bakso",
-                    alamat: "Jl. Sudagaran No.2, Sodagaran, Purwokerto Kulon",
-                    latitude: -7.427500,
-                    longitude: 109.228700,
-                    jam_buka: "10:00",
-                    jam_tutup: "21:00",
-                    harga_min: 20000,
-                    harga_max: 30000,
-                    foto_url: "https://astomanis.com/image/bakso-satlantas.jpg",
-                    tukang_parkir: "Ada"
-                },
-                {
-                    id: 5,
-                    nama_kuliner: "Tempe Mendoan",
-                    kategori: "Gorengan",
-                    alamat: "Berbagai kios di Purwokerto (pasar tradisional & tepi jalan)",
-                    latitude: null,
-                    longitude: null,
-                    jam_buka: "07:00",
-                    jam_tutup: "18:00",
-                    harga_min: 5000,
-                    harga_max: 10000,
-                    foto_url: "https://tokopedia.com/image/tempe-mendoan.jpg",
-                    tukang_parkir: "Tidak Ada"
-                },
-                {
-                    id: 6,
-                    nama_kuliner: "Getuk Sokaraja",
-                    kategori: "Jajanan Tradisional",
-                    alamat: "Jl. Jend. Sudirman & Pasar Tradisional Sokaraja",
-                    latitude: null,
-                    longitude: null,
-                    jam_buka: "07:00",
-                    jam_tutup: "17:00",
-                    harga_min: 8000,
-                    harga_max: 15000,
-                    foto_url: "https://tokopedia.com/image/getuk-sokaraja.jpg",
-                    tukang_parkir: "Tidak Ada"
-                },
-                {
-                    id: 7,
-                    nama_kuliner: "Paru Mercon Gita Beb",
-                    kategori: "Olahan Daging",
-                    alamat: "Jl. Sidaluhur, Rempoah, Baturaden",
-                    latitude: -7.329000,
-                    longitude: 109.197000,
-                    jam_buka: "11:00",
-                    jam_tutup: "18:00",
-                    harga_min: 20000,
-                    harga_max: 30000,
-                    foto_url: "https://joglosemarbus.com/image/paru-mercon-gita-beb.jpg",
-                    tukang_parkir: "Ada"
-                },
-                {
-                    id: 8,
-                    nama_kuliner: "Ayam Penyet Pak Memeng",
-                    kategori: "Ayam Penyet",
-                    alamat: "Jl. KH. Safi I, Kebondalem, Purwokerto",
-                    latitude: -7.430000,
-                    longitude: 109.230000,
-                    jam_buka: "10:00",
-                    jam_tutup: "22:00",
-                    harga_min: 15000,
-                    harga_max: 25000,
-                    foto_url: "https://joglosemarbus.com/image/ayam-penyet-pak-memeng.jpg",
-                    tukang_parkir: "Ada"
-                },
-                {
-                    id: 9,
-                    nama_kuliner: "Djago Jowo",
-                    kategori: "Ayam Kampung",
-                    alamat: "Jl. Prof. DR. HR. Bunyamin, Purwokerto Utara",
-                    latitude: -7.418000,
-                    longitude: 109.230500,
-                    jam_buka: "10:00",
-                    jam_tutup: "21:00",
-                    harga_min: 25000,
-                    harga_max: 80000,
-                    foto_url: "https://horego.com/image/djago-jowo.jpg",
-                    tukang_parkir: "Ada"
-                },
-                {
-                    id: 10,
-                    nama_kuliner: "Gubug Makan Mang Engking",
-                    kategori: "Restoran Sunda",
-                    alamat: "Jl. Prof. DR. HR. Bunyamin, Pabuaran, Purwokerto Utara",
-                    latitude: -7.417800,
-                    longitude: 109.231200,
-                    jam_buka: "10:00",
-                    jam_tutup: "22:00",
-                    harga_min: 22000,
-                    harga_max: 125000,
-                    foto_url: "https://horego.com/image/gubug-mang-engking.jpg",
-                    tukang_parkir: "Ada"
-                },
-                {
-                    id: 11,
-                    nama_kuliner: "Ambalika Resto",
-                    kategori: "Restoran Cina",
-                    alamat: "Jl. Dr. Angka No.71, Karangkobar, Sokanegara, Purwokerto Timur",
-                    latitude: -7.409500,
-                    longitude: 109.247500,
-                    jam_buka: "05:30",
-                    jam_tutup: "22:00",
-                    harga_min: 125000,
-                    harga_max: 150000,
-                    foto_url: "https://bobobox.com/image/ambalika-resto.jpg",
-                    tukang_parkir: "Ada"
-                },
-                {
-                    id: 12,
-                    nama_kuliner: "Andhang Pangrenan",
-                    kategori: "Food Court",
-                    alamat: "Kawasan Andhang Pangrenan, Windusara, Karangklesem, Purwokerto Selatan",
-                    latitude: -7.429000,
-                    longitude: 109.209000,
-                    jam_buka: "08:00",
-                    jam_tutup: "22:00",
-                    harga_min: 5000,
-                    harga_max: 30000,
-                    foto_url: "https://bobobox.com/image/andhang-pangrenan.jpg",
-                    tukang_parkir: "Ada"
-                }
-            ];
+        <div class="weather-stat">
+          <i class="fas fa-temperature-high"></i>
+          <span>Max: <span id="weatherMaxTemp">--°C</span></span>
+        </div>
+        <div class="weather-stat">
+          <i class="fas fa-tint"></i>
+          <span>Kelembapan: <span id="weatherHumidity">--%</span></span>
+        </div>
+        <div class="weather-stat">
+          <i class="fas fa-wind"></i>
+          <span>Angin: <span id="weatherWind">-- m/s</span></span>
+        </div>
+      </div>
+    </div>
+  </header>
 
-            // Koordinat tengah peta
-            const centerLat = -7.4212405;
-            const centerLng = 109.2422016;
+  <div id="map"></div>
 
-            // Fungsi untuk mendapatkan kelas warna berdasarkan kategori
-            function getCategoryClass(kategori) {
-                const categoryMap = {
-                    'Soto Tradisional': 'soto',
-                    'Bakso': 'bakso',
-                    'Gorengan': 'gorengan',
-                    'Ayam Penyet': 'ayam',
-                    'Ayam Kampung': 'ayam',
-                    'Restoran Sunda': 'restoran',
-                    'Restoran Cina': 'restoran',
-                    'Food Court': 'foodcourt',
-                    'Jajanan Tradisional': 'gorengan',
-                    'Olahan Daging': 'ayam'
-                };
-                return categoryMap[kategori] || 'soto';
-            }
+  <div class="container">
+    <div class="filter-bar">
+      <input id="search" placeholder="Cari nama kuliner..." />
+      <select id="filter">
+        <option value="">Semua</option>
+        <option value="Soto">Soto</option>
+        <option value="Gorengan">Gorengan</option>
+        <option value="Jajanan Tradisional">Jajanan Tradisional</option>
+        <option value="Camilan Kering">Camilan Kering</option>
+        <option value="Kue Tradisional">Kue Tradisional</option>
+        <option value="Kuliner Unik">Kuliner Unik</option>
+        <option value="Sayuran">Sayuran</option>
+        <option value="Dodol">Dodol</option>
+        <option value="Kue Kering">Kue Kering</option>
+        <option value="Makanan Ringan">Makanan Ringan</option>
+        <option value="Camilan">Camilan</option>
+        <option value="Camilan Manis">Camilan Manis</option>
+        <option value="Minuman">Minuman</option>
+      </select>
+      <button onclick="showWeatherRec()">Rekomendasi Cuaca</button>
+    </div>
 
-            // Fungsi untuk mendapatkan deskripsi berdasarkan nama kuliner
-            function getPlaceDescription(nama_kuliner) {
-                const descriptions = {
-                    'Soto Sokaraja': 'Soto khas Purwokerto yang terkenal dengan kuahnya yang gurih dan bahan rempah pilihan. Cocok untuk sarapan pagi.',
-                    'Bakso Samiasih': 'Terkenal dengan baksonya yang kenyal dan kuah kaldu yang gurih. Tempat favorit warga Purwokerto sejak puluhan tahun.',
-                    'Bakso Pekih': 'Bakso legendaris dengan rasa autentik. Lokasinya yang strategis membuat selalu ramai dikunjungi.',
-                    'Bakso Satlantas': 'Bakso dengan porsi besar dan rasa yang konsisten. Cocok untuk makan siang yang mengenyangkan.',
-                    'Tempe Mendoan': 'Jajanan tradisional yang digoreng setengah matang. Nikmat disantap hangat dengan cabai rawit.',
-                    'Getuk Sokaraja': 'Jajanan khas Banyumas yang terbuat dari singkong. Tekstur lembut dengan berbagai pilihan rasa.',
-                    'Paru Mercon Gita Beb': 'Olahan paru sapi yang pedas menggigit. Cocok untuk pecinta makanan pedas.',
-                    'Ayam Penyet Pak Memeng': 'Ayam penyet dengan sambal yang pedas dan lezat. Ayamnya digoreng krispi dan dipenyet agar lebih meresap.',
-                    'Djago Jowo': 'Spesialis ayam kampung dengan bumbu tradisional. Dagingnya empuk dan bumbunya meresap.',
-                    'Gubug Makan Mang Engking': 'Restoran Sunda yang menyajikan makanan tradisional dengan suasana pedesaan yang nyaman.',
-                    'Ambalika Resto': 'Restoran Cina otentik dengan berbagai pilihan menu klasik. Cocok untuk acara keluarga.',
-                    'Andhang Pangrenan': 'Food court dengan berbagai pilihan kuliner. Tempat nongkrong yang nyaman dengan harga terjangkau.'
-                };
-                return descriptions[nama_kuliner] || 'Tempat kuliner yang populer di Purwokerto dengan pelayanan ramah dan makanan berkualitas.';
-            }
+    <div id="list"></div>
+  </div>
 
-            // Fungsi untuk mendapatkan rating berdasarkan nama kuliner
-            function getPlaceRating(nama_kuliner) {
-                const ratings = {
-                    'Soto Sokaraja': '4.7',
-                    'Bakso Samiasih': '4.5',
-                    'Bakso Pekih': '4.6',
-                    'Bakso Satlantas': '4.4',
-                    'Tempe Mendoan': '4.2',
-                    'Getuk Sokaraja': '4.3',
-                    'Paru Mercon Gita Beb': '4.8',
-                    'Ayam Penyet Pak Memeng': '4.5',
-                    'Djago Jowo': '4.6',
-                    'Gubug Makan Mang Engking': '4.4',
-                    'Ambalika Resto': '4.3',
-                    'Andhang Pangrenan': '4.2'
-                };
-                return ratings[nama_kuliner] || '4.5';
-            }
+  <!-- Detail Popup -->
+  <div class="detail-popup" id="detailPopup">
+    <span class="close-btn" onclick="closeDetail()">×</span>
+    <div id="detailContent"></div>
+  </div>
 
-            // Fungsi untuk mendapatkan jumlah ulasan berdasarkan nama kuliner
-            function getPlaceReviews(nama_kuliner) {
-                const reviews = {
-                    'Soto Sokaraja': '245',
-                    'Bakso Samiasih': '189',
-                    'Bakso Pekih': '156',
-                    'Bakso Satlantas': '134',
-                    'Tempe Mendoan': '98',
-                    'Getuk Sokaraja': '112',
-                    'Paru Mercon Gita Beb': '167',
-                    'Ayam Penyet Pak Memeng': '201',
-                    'Djago Jowo': '178',
-                    'Gubug Makan Mang Engking': '145',
-                    'Ambalika Resto': '123',
-                    'Andhang Pangrenan': '156'
-                };
-                return reviews[nama_kuliner] || Math.floor(Math.random() * 200 + 50);
-            }
+  <!-- LINE-style Chatbot -->
+  <div class="chatbot" onclick="toggleChat()">💬</div>
+  <div class="chat-popup" id="chatPopup">
+    <div class="chat-header">
+      <span>MakanBot</span>
+      <span class="chat-close" onclick="toggleChat()">×</span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="message message-bot">
+        Halo! Ada yang bisa saya bantu cari kuliner di Purwokerto?
+        <div class="message-time">8:23 PM</div>
+      </div>
+    </div>
+    <div class="chat-input-container">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ketik pesan..." onkeypress="if(event.key=='Enter') sendChat()">
+      <button class="chat-send" onclick="sendChat()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
 
-            // Fungsi untuk mengonversi koordinat latitude/longitude ke posisi pixel
-            function latLngToPixel(lat, lng) {
-                // Faktor skala untuk konversi (disesuaikan dengan ukuran peta)
-                const scale = 10000;
-                
-                // Hitung offset dari titik tengah
-                const x = (lng - centerLng) * scale + 50;
-                const y = (centerLat - lat) * scale + 50;
-                
-                return { x: x, y: y };
-            }
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const kulinerData = [
+      {
+        nama: "Soto Sokaraja",
+        kategori: "Soto",
+        alamat: "Jl. Sokaraja, Purwokerto",
+        jam: "07:00 - 15:00",
+        harga: "Rp 12.000 - 20.000",
+        deskripsi: "Kuah kaldu sapi + kacang, disajikan dengan ketupat dan kerupuk.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tersedia",
+        rute: "Area Sokaraja",
+        lat: -7.4220,
+        lng: 109.2300,
+        keliling: false
+      },
+      {
+        nama: "Tempe Mendoan",
+        kategori: "Gorengan",
+        alamat: "Pasar Sokaraja, Purwokerto",
+        jam: "06:00 - 18:00",
+        harga: "Rp 2.000 - 5.000",
+        deskripsi: "Tempe digoreng setengah matang, renyah di luar lembut di dalam.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tersedia",
+        rute: "Pasar Sokaraja",
+        lat: -7.4200,
+        lng: 109.2300,
+        keliling: true
+      },
+      {
+        nama: "Getuk Goreng",
+        kategori: "Jajanan Tradisional",
+        alamat: "Jl. Sudirman, Purwokerto",
+        jam: "08:00 - 17:00",
+        harga: "Rp 5.000 - 10.000",
+        deskripsi: "Singkong digoreng, isi gula aren, renyah di luar lembut di dalam.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Sudirman - Alun-Alun",
+        lat: -7.4210,
+        lng: 109.2400,
+        keliling: true
+      },
+      {
+        nama: "Klanting",
+        kategori: "Camilan Kering",
+        alamat: "Pasar Baru, Purwokerto",
+        jam: "09:00 - 17:00",
+        harga: "Rp 5.000 - 10.000",
+        deskripsi: "Cemilan singkong berbentuk anting, asin gurih.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Baru - Terminal",
+        lat: -7.4250,
+        lng: 109.2350,
+        keliling: true
+      },
+      {
+        nama: "Cenil",
+        kategori: "Jajanan Tradisional",
+        alamat: "Jl. Dr. Soeparno, Purwokerto",
+        jam: "08:00 - 16:00",
+        harga: "Rp 3.000 - 5.000",
+        deskripsi: "Singkong berwarna-warni, kenyal, ditaburi kelapa.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Sekitar kampus UNSOED",
+        lat: -7.4300,
+        lng: 109.2450,
+        keliling: true
+      },
+      {
+        nama: "Nopia",
+        kategori: "Kue Tradisional",
+        alamat: "Jl. Sudirman, Purwokerto",
+        jam: "07:00 - 18:00",
+        harga: "Rp 3.000 - 6.000",
+        deskripsi: "Kue isi gula merah, kacang, atau cokelat, dipanggang di tungku.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Sudirman - Pasar Wage",
+        lat: -7.4180,
+        lng: 109.2380,
+        keliling: true
+      },
+      {
+        nama: "Kraca",
+        kategori: "Kuliner Unik",
+        alamat: "Pasar Malam Purwokerto",
+        jam: "18:00 - 23:00",
+        harga: "Rp 8.000 - 12.000",
+        deskripsi: "Keong kecil dimasak pedas, dijual di pinggir jalan malam.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Pasar Malam - Alun-Alun",
+        lat: -7.4200,
+        lng: 109.2500,
+        keliling: true
+      },
+      {
+        nama: "Kuluban / Kluban",
+        kategori: "Sayuran",
+        alamat: "Jl. HR Bunyamin, Purwokerto",
+        jam: "10:00 - 15:00",
+        harga: "Rp 8.000 - 12.000",
+        deskripsi: "Sayuran rebus + sambal kelapa, mirip salad.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. HR Bunyamin - Pasar Kliwon",
+        lat: -7.4160,
+        lng: 109.2320,
+        keliling: false
+      },
+      {
+        nama: "Jenang Jaket",
+        kategori: "Dodol",
+        alamat: "Pasar Wage, Purwokerto",
+        jam: "08:00 - 16:00",
+        harga: "Rp 5.000 - 10.000",
+        deskripsi: "Tepung ketan + santan + gula merah, lembut dan manis.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Wage - Terminal",
+        lat: -7.4270,
+        lng: 109.2400,
+        keliling: true
+      },
+      {
+        nama: "Jalabiya",
+        kategori: "Kue Kering",
+        alamat: "Jl. Pramuka, Purwokerto",
+        jam: "09:00 - 17:00",
+        harga: "Rp 4.000 - 7.000",
+        deskripsi: "Singkong isi gula merah, bentuk seperti donat.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Pramuka - Pasar Baru",
+        lat: -7.4220,
+        lng: 109.2360,
+        keliling: true
+      },
+      {
+        nama: "Sahoun",
+        kategori: "Makanan Ringan",
+        alamat: "Jl. Gatot Subroto, Purwokerto",
+        jam: "10:00 - 16:00",
+        harga: "Rp 8.000 - 12.000",
+        deskripsi: "Soun berkuah ayam, kenyal dan gurih.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Gatot Subroto - Kampus UNSOED",
+        lat: -7.4190,
+        lng: 109.2320,
+        keliling: false
+      },
+      {
+        nama: "Wajik Kletik",
+        kategori: "Camilan Manis",
+        alamat: "Jl. Dr. Cipto, Purwokerto",
+        jam: "08:00 - 17:00",
+        harga: "Rp 3.000 - 6.000",
+        deskripsi: "Wajik kenyal dari gula jawa.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Dr. Cipto - Pasar Kliwon",
+        lat: -7.4240,
+        lng: 109.2380,
+        keliling: true
+      },
+      {
+        nama: "Combro",
+        kategori: "Camilan",
+        alamat: "Jl. HR Bunyamin, Purwokerto",
+        jam: "07:00 - 18:00",
+        harga: "Rp 3.000 - 5.000",
+        deskripsi: "Singkong isi oncom pedas, goreng renyah.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. HR Bunyamin - Alun-Alun",
+        lat: -7.4180,
+        lng: 109.2300,
+        keliling: true
+      },
+      {
+        nama: "Lumpia Boom",
+        kategori: "Makanan Ringan",
+        alamat: "Jl. Sudirman, Purwokerto",
+        jam: "09:00 - 18:00",
+        harga: "Rp 10.000 - 15.000",
+        deskripsi: "Lumpia besar isi sayur, telur, ayam, dll.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Sudirman - Pasar Wage",
+        lat: -7.4210,
+        lng: 109.2410,
+        keliling: true
+      },
+      {
+        nama: "Cimplung",
+        kategori: "Camilan",
+        alamat: "Jl. Pramuka, Purwokerto",
+        jam: "08:00 - 16:00",
+        harga: "Rp 3.000 - 5.000",
+        deskripsi: "Singkong + kelapa + gula aren, manis dan gurih.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Pramuka - Terminal",
+        lat: -7.4250,
+        lng: 109.2340,
+        keliling: true
+      }
+    ];
 
-            // Fungsi untuk membuka rute di Google Maps
-            function openDirectionsInGoogleMaps(lat, lng, placeName) {
-                if (lat && lng) {
-                    // URL Google Maps untuk rute (dari lokasi pengguna ke destinasi)
-                    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${encodeURIComponent(placeName)}`;
-                    window.open(googleMapsUrl, '_blank');
-                } else {
-                    // Jika tidak ada koordinat, cari berdasarkan alamat
-                    const address = kulinerData.find(p => p.nama_kuliner === placeName)?.alamat || placeName;
-                    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-                    window.open(googleMapsUrl, '_blank');
-                }
-            }
+    // Initialize map centered on Purwokerto
+    const map = L.map('map').setView([-7.4212, 109.2422], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-            // Fungsi untuk membuka rute di aplikasi peta lain (Waze, Apple Maps, dll)
-            function openDirectionsInOtherMaps(lat, lng, placeName) {
-                if (lat && lng) {
-                    // Untuk mobile, kita bisa menggunakan URL scheme
-                    // Contoh untuk Waze: waze://?ll=latitude,longitude&navigate=yes
-                    // Untuk Apple Maps: http://maps.apple.com/?daddr=latitude,longitude
-                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                        // Jika pengguna menggunakan mobile, tawarkan beberapa opsi
-                        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                        if (isIOS) {
-                            // Apple Maps
-                            const appleMapsUrl = `http://maps.apple.com/?daddr=${lat},${lng}`;
-                            window.open(appleMapsUrl, '_blank');
-                        } else {
-                            // Google Maps atau Waze
-                            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-                            window.open(googleMapsUrl, '_blank');
-                        }
-                    } else {
-                        // Untuk desktop, arahkan ke Google Maps
-                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-                        window.open(googleMapsUrl, '_blank');
-                    }
-                } else {
-                    // Jika tidak ada koordinat, cari berdasarkan alamat
-                    const address = kulinerData.find(p => p.nama_kuliner === placeName)?.alamat || placeName;
-                    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-                    window.open(googleMapsUrl, '_blank');
-                }
-            }
+    let markers = [];
 
-            // Fungsi untuk merender daftar tempat kuliner
-            function renderPlacesList(places = kulinerData) {
-                const placesList = document.getElementById('placesList');
-                placesList.innerHTML = '';
-                
-                places.forEach((place, index) => {
-                    const placeCard = document.createElement('div');
-                    placeCard.className = `place-card ${index === 0 ? 'active' : ''}`;
-                    placeCard.dataset.id = place.id;
-                    
-                    // Tambahkan ikon tukang parkir jika ada
-                    const parkingIcon = place.tukang_parkir === "Ada" ? 
-                        `<span class="parking-info"><i class="fas fa-car"></i> Parkir</span>` : '';
-                    
-                    placeCard.innerHTML = `
-                        <div class="place-name">
-                            <span>${place.nama_kuliner} ${parkingIcon}</span>
-                            <span class="place-rating"><i class="fas fa-star"></i> ${getPlaceRating(place.nama_kuliner)}</span>
-                        </div>
-                        <div class="place-category">${place.kategori}</div>
-                        <div class="place-info">
-                            <div><i class="fas fa-clock"></i> ${place.jam_buka} - ${place.jam_tutup}</div>
-                            ${place.latitude && place.longitude ? 
-                                `<div><i class="fas fa-map-marker-alt"></i> ${(Math.random() * 2 + 0.5).toFixed(1)}km</div>` : 
-                                `<div class="no-coordinates"><i class="fas fa-exclamation-circle"></i> Lokasi umum</div>`
-                            }
-                            <div><i class="fas fa-tag"></i> Rp${place.harga_min.toLocaleString()} - Rp${place.harga_max.toLocaleString()}</div>
-                        </div>
-                    `;
-                    
-                    placesList.appendChild(placeCard);
-                });
-                
-                // Update total places count
-                document.getElementById('totalPlaces').textContent = places.length;
-                
-                // Tambahkan event listener untuk kartu tempat
-                document.querySelectorAll('.place-card').forEach(card => {
-                    card.addEventListener('click', function() {
-                        const placeId = parseInt(this.dataset.id);
-                        const place = kulinerData.find(p => p.id === placeId);
-                        if (place) {
-                            setActivePlace(place);
-                        }
-                    });
-                });
-            }
+    // OpenWeatherMap API Key and Purwokerto coordinates
+    const API_KEY = '360cd1393e0f16a61618fd4e441a39b8';
+    const PURWOKERTO_LAT = -7.4212;
+    const PURWOKERTO_LON = 109.2422;
 
-            // Fungsi untuk merender marker di peta
-            function renderMapMarkers() {
-                const mapPlaceholder = document.querySelector('.map-placeholder');
-                
-                // Hapus marker yang sudah ada (kecuali user location)
-                document.querySelectorAll('.location-marker').forEach(marker => {
-                    if (!marker.classList.contains('user-location')) {
-                        marker.remove();
-                    }
-                });
-                
-                kulinerData.forEach((place, index) => {
-                    if (place.latitude && place.longitude) {
-                        const marker = document.createElement('div');
-                        marker.className = `location-marker ${getCategoryClass(place.kategori)} ${index === 0 ? 'active' : ''}`;
-                        marker.dataset.id = place.id;
-                        marker.textContent = place.kategori.split(' ')[0].substring(0, 2);
-                        marker.title = place.nama_kuliner;
-                        
-                        // Konversi koordinat ke posisi pixel
-                        const pos = latLngToPixel(place.latitude, place.longitude);
-                        
-                        marker.style.top = `${pos.y}%`;
-                        marker.style.left = `${pos.x}%`;
-                        
-                        marker.addEventListener('click', function() {
-                            const placeId = parseInt(this.dataset.id);
-                            const place = kulinerData.find(p => p.id === placeId);
-                            if (place) {
-                                setActivePlace(place);
-                            }
-                        });
-                        
-                        mapPlaceholder.appendChild(marker);
-                    }
-                });
-            }
+    // Weather icons mapping
+    const weatherIcons = {
+      '01d': 'fas fa-sun',           // clear sky (day)
+      '01n': 'fas fa-moon',          // clear sky (night)
+      '02d': 'fas fa-cloud-sun',     // few clouds (day)
+      '02n': 'fas fa-cloud-moon',    // few clouds (night)
+      '03d': 'fas fa-cloud',         // scattered clouds
+      '03n': 'fas fa-cloud',
+      '04d': 'fas fa-cloud',         // broken clouds
+      '04n': 'fas fa-cloud',
+      '09d': 'fas fa-cloud-rain',    // shower rain
+      '09n': 'fas fa-cloud-rain',
+      '10d': 'fas fa-cloud-sun-rain',// rain (day)
+      '10n': 'fas fa-cloud-moon-rain',// rain (night)
+      '11d': 'fas fa-bolt',         // thunderstorm
+      '11n': 'fas fa-bolt',
+      '13d': 'fas fa-snowflake',     // snow
+      '13n': 'fas fa-snowflake',
+      '50d': 'fas fa-smog',         // mist
+      '50n': 'fas fa-smog'
+    };
 
-            // Fungsi untuk mengatur tempat aktif
-            function setActivePlace(place) {
-                // Update kartu aktif di sidebar
-                document.querySelectorAll('.place-card').forEach(card => {
-                    card.classList.remove('active');
-                    if (parseInt(card.dataset.id) === place.id) {
-                        card.classList.add('active');
-                    }
-                });
-                
-                // Update marker aktif di peta
-                document.querySelectorAll('.location-marker').forEach(marker => {
-                    marker.classList.remove('active');
-                    if (parseInt(marker.dataset.id) === place.id) {
-                        marker.classList.add('active');
-                    }
-                });
-                
-                // Update overlay peta
-                const mapOverlay = document.getElementById('mapOverlay');
-                
-                // Tambahkan ikon tukang parkir jika ada
-                const parkingInfo = place.tukang_parkir === "Ada" ? 
-                    `<div><i class="fas fa-car"></i> Ada Tukang Parkir</div>` : 
-                    `<div><i class="fas fa-car"></i> Tidak Ada Tukang Parkir</div>`;
-                
-                mapOverlay.innerHTML = `
-                    <h3>${place.nama_kuliner}</h3>
-                    <p>${getPlaceDescription(place.nama_kuliner)}</p>
-                    <div class="place-info">
-                        <div><i class="fas fa-clock"></i> ${place.jam_buka} - ${place.jam_tutup}</div>
-                        <div><i class="fas fa-star"></i> ${getPlaceRating(place.nama_kuliner)} (${getPlaceReviews(place.nama_kuliner)} ulasan)</div>
-                        <div><i class="fas fa-tag"></i> Rp${place.harga_min.toLocaleString()} - Rp${place.harga_max.toLocaleString()}</div>
-                        ${parkingInfo}
-                    </div>
-                    <button class="directions-btn" onclick="openDirectionsInGoogleMaps(${place.latitude || 'null'}, ${place.longitude || 'null'}, '${place.nama_kuliner}')">
-                        <i class="fas fa-directions"></i> Buka di Google Maps
-                    </button>
-                `;
-            }
+    // Fetch weather data
+    async function fetchWeather() {
+      try {
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${PURWOKERTO_LAT}&lon=${PURWOKERTO_LON}&appid=${API_KEY}&units=metric&lang=id`
+        );
+        
+        if (!response.ok) {
+          throw new Error('Gagal mengambil data cuaca');
+        }
+        
+        const data = await response.json();
+        updateWeatherUI(data);
+      } catch (error) {
+        console.error('Error fetching weather:', error);
+        document.getElementById('weatherIcon').className = 'fas fa-exclamation-triangle weather-icon';
+        document.getElementById('weatherTemp').textContent = 'Error';
+      }
+    }
 
-            // Fungsi filter berdasarkan kategori
-            function filterByCategory(category) {
-                if (category === 'semua') {
-                    renderPlacesList();
-                    return;
-                }
-                
-                const filteredPlaces = kulinerData.filter(place => {
-                    if (category === 'soto') return place.kategori.includes('Soto');
-                    if (category === 'bakso') return place.kategori.includes('Bakso');
-                    if (category === 'gorengan') return place.kategori.includes('Gorengan') || place.kategori.includes('Jajanan');
-                    if (category === 'ayam') return place.kategori.includes('Ayam');
-                    if (category === 'restoran') return place.kategori.includes('Restoran');
-                    if (category === 'foodcourt') return place.kategori.includes('Food Court');
-                    return false;
-                });
-                
-                renderPlacesList(filteredPlaces);
-            }
+    // Update weather UI
+    function updateWeatherUI(data) {
+      const weather = data.weather[0];
+      const main = data.main;
+      const wind = data.wind;
+      
+      // Update header weather info
+      const iconClass = weatherIcons[weather.icon] || 'fas fa-cloud';
+      document.getElementById('weatherIcon').className = iconClass + ' weather-icon';
+      document.getElementById('weatherTemp').textContent = `${Math.round(main.temp)}°C`;
+      
+      // Update weather details
+      document.getElementById('weatherDetailsIcon').className = iconClass + ' weather-details-icon';
+      document.getElementById('weatherDetailsTemp').textContent = `${Math.round(main.temp)}°C`;
+      document.getElementById('weatherDetailsDesc').textContent = weather.description;
+      document.getElementById('weatherMinTemp').textContent = `${Math.round(main.temp_min)}°C`;
+      document.getElementById('weatherMaxTemp').textContent = `${Math.round(main.temp_max)}°C`;
+      document.getElementById('weatherHumidity').textContent = main.humidity;
+      document.getElementById('weatherWind').textContent = wind.speed;
+      
+      // Update date
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const today = new Date().toLocaleDateString('id-ID', options);
+      document.getElementById('weatherDate').textContent = today;
+    }
 
-            // Fungsi pencarian
-            function searchPlaces(query) {
-                if (!query.trim()) {
-                    renderPlacesList();
-                    return;
-                }
-                
-                const filteredPlaces = kulinerData.filter(place => 
-                    place.nama_kuliner.toLowerCase().includes(query.toLowerCase()) ||
-                    place.kategori.toLowerCase().includes(query.toLowerCase()) ||
-                    place.alamat.toLowerCase().includes(query.toLowerCase())
-                );
-                
-                renderPlacesList(filteredPlaces);
-            }
+    // Toggle weather details
+    function toggleWeatherDetails() {
+      const details = document.getElementById('weatherDetails');
+      details.classList.toggle('show');
+    }
 
-            // Fungsi chatbot
-            function handleChatMessage(message) {
-                const lowerMsg = message.toLowerCase();
-                let response = '';
-                
-                if (lowerMsg.includes('bakso') || lowerMsg.includes('meatball')) {
-                    response = 'Berdasarkan lokasi Anda, saya rekomendasikan <strong>Bakso Samiasih</strong> (0.5km). Terkenal dengan baksonya yang kenyal dan kuah kaldu yang gurih! ⭐4.5';
-                } else if (lowerMsg.includes('soto') || lowerMsg.includes('soup')) {
-                    response = 'Saya rekomendasikan <strong>Soto Sokaraja</strong> (0.8km). Soto khas Purwokerto dengan kuah gurih dan bahan rempah pilihan! ⭐4.7';
-                } else if (lowerMsg.includes('murah') || lowerMsg.includes('hemat')) {
-                    response = 'Rekomendasi tempat makan hemat: <strong>Tempe Mendoan</strong> (mulai Rp5.000) dan <strong>Andhang Pangrenan</strong> (mulai Rp5.000).';
-                } else if (lowerMsg.includes('buka') || lowerMsg.includes('jam')) {
-                    response = 'Saat ini <strong>Soto Sokaraja</strong>, <strong>Bakso Samiasih</strong>, dan <strong>Gubug Makan Mang Engking</strong> sedang buka.';
-                } else if (lowerMsg.includes('pedas') || lowerMsg.includes('spicy')) {
-                    response = 'Untuk pecinta pedas, saya rekomendasikan <strong>Paru Mercon Gita Beb</strong> yang terkenal dengan olahan paru pedas menggigit!';
-                } else if (lowerMsg.includes('parkir') || lowerMsg.includes('parking')) {
-                    response = 'Tempat dengan fasilitas parkir yang tersedia: <strong>Soto Sokaraja</strong>, <strong>Bakso Samiasih</strong>, <strong>Bakso Satlantas</strong>, <strong>Paru Mercon Gita Beb</strong>, <strong>Ayam Penyet Pak Memeng</strong>, <strong>Djago Jowo</strong>, <strong>Gubug Makan Mang Engking</strong>, <strong>Ambalika Resto</strong>, dan <strong>Andhang Pangrenan</strong>.';
-                } else {
-                    response = 'Saya bisa bantu rekomendasikan kuliner berdasarkan preferensi Anda. Coba tanyakan seperti "Rekomendasikan bakso terdekat" atau "Tempat makan dengan parkir".';
-                }
-                
-                return response;
-            }
+    // Close weather details when clicking outside
+    document.addEventListener('click', function(event) {
+      const weatherInfo = document.getElementById('weatherInfo');
+      const weatherDetails = document.getElementById('weatherDetails');
+      
+      if (!weatherInfo.contains(event.target) && !weatherDetails.contains(event.target)) {
+        weatherDetails.classList.remove('show');
+      }
+    });
 
-            // Fungsi untuk menambah tempat kuliner baru
-            function addNewPlace(placeData) {
-                const newId = Math.max(...kulinerData.map(p => p.id)) + 1;
-                const newPlace = {
-                    id: newId,
-                    nama_kuliner: placeData.namaKuliner,
-                    kategori: placeData.kategori,
-                    alamat: placeData.alamat,
-                    latitude: null, // Untuk implementasi nyata, ini akan diisi dengan koordinat dari geocoding
-                    longitude: null,
-                    jam_buka: placeData.jamBuka,
-                    jam_tutup: placeData.jamTutup,
-                    harga_min: parseInt(placeData.hargaMin),
-                    harga_max: parseInt(placeData.hargaMax),
-                    foto_url: "https://placehold.co/300x200?text=Foto+Tempat",
-                    tukang_parkir: placeData.tukangParkir
-                };
-                
-                kulinerData.push(newPlace);
-                renderPlacesList();
-                renderMapMarkers();
-                
-                // Reset form dan tutup modal
-                document.getElementById('addPlaceForm').reset();
-                document.getElementById('addPlaceModal').style.display = 'none';
-                
-                // Tampilkan notifikasi
-                alert(`Terima kasih! Tempat kuliner "${placeData.namaKuliner}" berhasil ditambahkan dan akan segera dimoderasi.`);
-            }
+    function renderMap() {
+      // Clear existing markers
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+      
+      // Add new markers
+      kulinerData.forEach((item, index) => {
+        const icon = item.keliling ? '🛺' : '🏠';
+        const marker = L.marker([item.lat, item.lng], {
+          icon: L.divIcon({ 
+            html: `<div style="font-size:20px;">${icon}</div>`, 
+            className: 'marker-icon', 
+            iconSize: [30, 30] 
+          })
+        }).addTo(map)
+          .bindPopup(`<b>${item.nama}</b><br>${item.kategori}`)
+          .on('click', () => showDetail(index));
+        
+        markers.push(marker);
+      });
+    }
 
-            // Event Listeners
-            document.addEventListener('DOMContentLoaded', function() {
-                // Render daftar tempat dan marker
-                renderPlacesList();
-                renderMapMarkers();
-                
-                // Filter tag interaction
-                document.querySelectorAll('.filter-tag').forEach(tag => {
-                    tag.addEventListener('click', function() {
-                        document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
-                        filterByCategory(this.dataset.category);
-                    });
-                });
-                
-                // Search input
-                const searchInput = document.getElementById('searchInput');
-                const suggestionsBox = document.getElementById('searchSuggestions');
-                // Hapus event input lain jika ada
-                searchInput.oninput = null;
-                searchInput.addEventListener('input', function() {
-                    const query = this.value.trim().toLowerCase();
-                    if (!query) {
-                        suggestionsBox.style.display = 'none';
-                        suggestionsBox.innerHTML = '';
-                        renderPlacesList();
-                        return;
-                    }
-                    // Binary search prefix
-                    function binarySearchByName(arr, query) {
-                        let left = 0, right = arr.length - 1;
-                        let results = [];
-                        while (left <= right) {
-                            let mid = Math.floor((left + right) / 2);
-                            let name = arr[mid].nama_kuliner.toLowerCase();
-                            if (name.startsWith(query)) {
-                                // Cari semua yang prefix-nya sama (ke kiri & kanan)
-                                let l = mid, r = mid;
-                                while (l > 0 && arr[l-1].nama_kuliner.toLowerCase().startsWith(query)) l--;
-                                while (r < arr.length-1 && arr[r+1].nama_kuliner.toLowerCase().startsWith(query)) r++;
-                                for (let i = l; i <= r; i++) results.push(arr[i]);
-                                break;
-                            } else if (name < query) {
-                                left = mid + 1;
-                            } else {
-                                right = mid - 1;
-                            }
-                        }
-                        return results;
-                    }
-                    const filtered = binarySearchByName(kulinerData, query);
-                    let html = '';
-                    if (filtered.length === 0) {
-                        html = '<div class="suggestion-notfound">Tidak ditemukan</div>';
-                    } else {
-                        html = filtered.map(place =>
-                            `<div class="suggestion-item" data-id="${place.id}">${place.nama_kuliner} <span style="color:#888;font-size:0.9em;">(${place.kategori})</span></div>`
-                        ).join('');
-                    }
-                    suggestionsBox.innerHTML = html;
-                    suggestionsBox.style.display = 'block';
-                });
+    function renderList(search = "", category = "") {
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+      
+      const filteredData = kulinerData.filter(d =>
+        d.nama.toLowerCase().includes(search.toLowerCase()) &&
+        (category === "" || d.kategori === category)
+      );
+      
+      if (filteredData.length === 0) {
+        list.innerHTML = "<p style='text-align:center;'>Tidak ada hasil ditemukan</p>";
+        return;
+      }
+      
+      filteredData.forEach((d, i) => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+          <h3>${d.nama}</h3>
+          <p>${d.kategori}</p>
+          <small>${d.alamat}</small>
+          <small>• ${d.jam} • ${d.harga}</small>
+        `;
+        div.onclick = () => showDetail(i);
+        list.appendChild(div);
+      });
+    }
 
-                // Klik suggestion
-                suggestionsBox.onclick = null;
-                suggestionsBox.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('suggestion-item')) {
-                        const id = e.target.getAttribute('data-id');
-                        const place = kulinerData.find(p => p.id == id);
-                        if (place) {
-                            renderPlacesList([place]);
-                            searchInput.value = place.nama_kuliner;
-                            suggestionsBox.style.display = 'none';
-                        }
-                    }
-                });
+    function showDetail(index) {
+      const item = kulinerData[index];
+      const content = `
+        <h3>${item.nama}</h3>
+        <p><strong>Kategori:</strong> ${item.kategori}</p>
+        <p><strong>Alamat:</strong> ${item.alamat}</p>
+        <p><strong>Jam Operasional:</strong> ${item.jam}</p>
+        <p><strong>Harga:</strong> ${item.harga}</p>
+        <p><strong>Deskripsi:</strong> ${item.deskripsi}</p>
+        <p><strong>Parkir:</strong> ${item.parkir}</p>
+        <p><strong>Rute:</strong> ${item.rute}</p>
+        <p><strong>Tipe:</strong> ${item.keliling ? 'Pedagang Keliling' : 'Warung/Toko Tetap'}</p>
+        <img src="${item.foto}" alt="${item.nama}">
+      `;
+      document.getElementById("detailContent").innerHTML = content;
+      document.getElementById("detailPopup").style.display = "block";
+      
+      // Center map on this item
+      map.setView([item.lat, item.lng], 15);
+    }
 
-                // Sembunyikan dropdown jika klik di luar
-                document.addEventListener('click', function(e) {
-                    if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
-                        suggestionsBox.style.display = 'none';
-                    }
-                });
+    function closeDetail() {
+      document.getElementById("detailPopup").style.display = "none";
+    }
 
-                // Tekan Enter di input search
-                searchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        searchPlaces(searchInput.value);
-                        suggestionsBox.style.display = 'none';
-                    }
-                });
-                
-                // Chatbot toggle
-                document.getElementById('chatbotToggle').addEventListener('click', function() {
-                    document.getElementById('chatbotContainer').style.display = 'block';
-                    this.classList.remove('pulse');
-                });
-                
-                document.getElementById('closeChatbot').addEventListener('click', function() {
-                    document.getElementById('chatbotContainer').style.display = 'none';
-                    document.getElementById('chatbotToggle').classList.add('pulse');
-                });
-                
-                // Chatbot send message
-                const chatInput = document.getElementById('chatInput');
-                const sendButton = document.getElementById('sendButton');
-                const chatBody = document.getElementById('chatbotBody');
-                
-                function sendMessage() {
-                    const message = chatInput.value.trim();
-                    if (message) {
-                        // Add user message
-                        const userMessageDiv = document.createElement('div');
-                        userMessageDiv.className = 'message user-message';
-                        userMessageDiv.textContent = message;
-                        chatBody.appendChild(userMessageDiv);
-                        
-                        // Clear input
-                        chatInput.value = '';
-                        
-                        // Scroll to bottom
-                        chatBody.scrollTop = chatBody.scrollHeight;
-                        
-                        // Simulate bot response after delay
-                        setTimeout(() => {
-                            const botMessageDiv = document.createElement('div');
-                            botMessageDiv.className = 'message bot-message';
-                            botMessageDiv.innerHTML = `<strong>LaporBot:</strong> ${handleChatMessage(message)}`;
-                            chatBody.appendChild(botMessageDiv);
-                            chatBody.scrollTop = chatBody.scrollHeight;
-                        }, 1000);
-                    }
-                }
-                
-                sendButton.addEventListener('click', sendMessage);
-                chatInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        sendMessage();
-                    }
-                });
-                
-                // Add Place Modal
-                const addPlaceBtn = document.getElementById('addPlaceBtn');
-                const closeModal = document.getElementById('closeModal');
-                const cancelAdd = document.getElementById('cancelAdd');
-                const submitAdd = document.getElementById('submitAdd');
-                const addPlaceModal = document.getElementById('addPlaceModal');
-                
-                addPlaceBtn.addEventListener('click', function() {
-                    addPlaceModal.style.display = 'flex';
-                });
-                
-                closeModal.addEventListener('click', function() {
-                    addPlaceModal.style.display = 'none';
-                });
-                
-                cancelAdd.addEventListener('click', function() {
-                    addPlaceModal.style.display = 'none';
-                });
-                
-                submitAdd.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const formData = {
-                        namaKuliner: document.getElementById('namaKuliner').value,
-                        kategori: document.getElementById('kategori').value,
-                        alamat: document.getElementById('alamat').value,
-                        jamBuka: document.getElementById('jamBuka').value,
-                        jamTutup: document.getElementById('jamTutup').value,
-                        hargaMin: document.getElementById('hargaMin').value,
-                        hargaMax: document.getElementById('hargaMax').value,
-                        tukangParkir: document.getElementById('tukangParkir').value
-                    };
-                    
-                    if (formData.namaKuliner && formData.kategori && formData.alamat && 
-                        formData.jamBuka && formData.jamTutup && 
-                        formData.hargaMin && formData.hargaMax && formData.tukangParkir) {
-                        addNewPlace(formData);
-                    } else {
-                        alert('Mohon lengkapi semua field yang wajib diisi!');
-                    }
-                });
-                
-                // Directions button
-                document.getElementById('directionsBtn').addEventListener('click', function() {
-                    // Buka rute untuk tempat pertama (Soto Sokaraja) sebagai contoh
-                    const firstPlace = kulinerData[0];
-                    openDirectionsInGoogleMaps(firstPlace.latitude, firstPlace.longitude, firstPlace.nama_kuliner);
-                });
-                
-                // Close modal when clicking outside
-                window.addEventListener('click', function(event) {
-                    if (event.target === addPlaceModal) {
-                        addPlaceModal.style.display = 'none';
-                    }
-                });
-                
-                // Auto-open chatbot after 3 seconds
-                setTimeout(() => {
-                    if(document.getElementById('chatbotContainer').style.display !== 'block') {
-                        document.getElementById('chatbotToggle').classList.add('pulse');
-                    }
-                }, 3000);
-                
-                // Handle window resize for responsive design
-                window.addEventListener('resize', function() {
-                    // Re-render markers to adjust positions
-                    renderMapMarkers();
-                });
+    function toggleChat() {
+      const chat = document.getElementById("chatPopup");
+      chat.style.display = chat.style.display === "block" ? "none" : "block";
+      if (chat.style.display === "block") {
+        document.getElementById("chatInput").focus();
+      }
+    }
+
+    async function sendChat() {
+      const input = document.getElementById("chatInput").value.trim();
+      const chatMessages = document.getElementById("chatMessages");
+
+      if (!input) return;
+
+      // Format waktu sekarang
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12;
+      const timeString = `${formattedHours}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
+
+      // Tambahkan pesan user
+      chatMessages.innerHTML += `
+        <div class="message message-user">
+          ${input}
+          <div class="message-time">${timeString}</div>
+        </div>
+      `;
+      document.getElementById("chatInput").value = "";
+      
+      // Scroll ke bawah
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Simple responses for common questions
+      let reply = "";
+      if (input.toLowerCase().includes("rekomendasi") || input.toLowerCase().includes("sarankan")) {
+        const randomFood = kulinerData[Math.floor(Math.random() * kulinerData.length)];
+        reply = `Saya merekomendasikan ${randomFood.nama} (${randomFood.kategori}) di ${randomFood.alamat}. Buka jam ${randomFood.jam} dengan harga sekitar ${randomFood.harga}.`;
+      } 
+      else if (input.toLowerCase().includes("soto")) {
+        reply = "Di Purwokerto ada Soto Sokaraja yang terkenal. Lokasinya di Jl. Sokaraja, buka jam 07:00-15:00 dengan harga Rp 12.000-20.000. Soto ini unik karena menggunakan kuah kaldu sapi dengan kacang.";
+      }
+      else if (input.toLowerCase().includes("mendoan")) {
+        reply = "Tempe Mendoan khas Purwokerto bisa ditemukan di Pasar Sokaraja. Harganya terjangkau Rp 2.000-5.000 per potong. Tempe digoreng setengah matang sehingga renyah di luar tapi lembut di dalam.";
+      }
+      else if (input.toLowerCase().includes("hallo") || input.toLowerCase().includes("hai")) {
+        reply = "Halo! Saya siap membantu Anda menemukan kuliner terbaik di Purwokerto. Ada yang bisa saya bantu?";
+      }
+      else if (input.toLowerCase().includes("cuaca")) {
+        const weatherTemp = document.getElementById('weatherTemp').textContent;
+        const weatherDesc = document.getElementById('weatherDetailsDesc').textContent;
+        reply = `Cuaca Purwokerto saat ini: ${weatherDesc}, suhu ${weatherTemp}.`;
+      }
+      else {
+        reply = "Terima kasih pertanyaannya. Di Purwokerto banyak kuliner khas seperti Soto Sokaraja, Tempe Mendoan, Getuk Goreng, dan lainnya. Mau cari makanan jenis apa? Saya bisa bantu rekomendasi.";
+      }
+
+      // Simulate typing delay
+      setTimeout(() => {
+        chatMessages.innerHTML += `
+          <div class="message message-bot">
+            ${reply}
+            <div class="message-time">${timeString}</div>
+          </div>
+        `;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1000);
+    }
+
+    function showWeatherRec() {
+      const weatherDesc = document.getElementById('weatherDetailsDesc').textContent;
+      const currentTemp = parseInt(document.getElementById('weatherTemp').textContent);
+      const weatherIcon = document.getElementById('weatherIcon').className;
+      
+      let recs = [];
+      let weatherType = '';
+      
+      if (weatherDesc.toLowerCase().includes('hujan') || currentTemp < 24) {
+        weatherType = 'Hujan/Dingin';
+        recs = [
+          { nama: "Soto Sokaraja", deskripsi: "kuah hangat dengan kacang", harga: "Rp 12.000-20.000", lokasi: "Jl. Sokaraja" },
+          { nama: "Kopi Joss", deskripsi: "kopi panas dengan arang menyala", harga: "Rp 8.000-15.000", lokasi: "Pasar Wage" },
+          { nama: "Bakso", deskripsi: "kuah kaldu hangat", harga: "Rp 10.000-18.000", lokasi: "Jl. Sudirman" },
+          { nama: "Wedang Ronde", deskripsi: "minuman hangat dengan bola-bola ketan", harga: "Rp 5.000-8.000", lokasi: "Pasar Sokaraja" },
+          { nama: "Sop Ayam", deskripsi: "kuah bening yang menghangatkan", harga: "Rp 15.000-25.000", lokasi: "Jl. Gatot Subroto" }
+        ];
+      } else if (weatherDesc.toLowerCase().includes('cerah') || currentTemp > 28) {
+        weatherType = 'Cerah/Panas';
+        recs = [
+          { nama: "Es Dawet Ayu", deskripsi: "minuman segar dari tepung beras dan santan", harga: "Rp 5.000-8.000", lokasi: "Pasar Wage" },
+          { nama: "Es Kelapa Muda", deskripsi: "menyegarkan di hari panas", harga: "Rp 8.000-12.000", lokasi: "Jl. Sudirman" },
+          { nama: "Soto Dingin", deskripsi: "soto dengan kuah yang tidak terlalu panas", harga: "Rp 12.000-18.000", lokasi: "Jl. Sokaraja" },
+          { nama: "Es Campur", deskripsi: "berbagai buah dengan sirup dan es", harga: "Rp 6.000-10.000", lokasi: "Pasar Sokaraja" },
+          { nama: "Es Cendol", deskripsi: "minuman tradisional dengan santan", harga: "Rp 4.000-7.000", lokasi: "Jl. Gatot Subroto" }
+        ];
+      } else {
+        weatherType = 'Berawan/Sedang';
+        recs = [
+          { nama: "Tempe Mendoan", deskripsi: "gorengan hangat yang gurih", harga: "Rp 2.000-5.000", lokasi: "Pasar Sokaraja" },
+          { nama: "Lumpia Boom", deskripsi: "lumpia besar dengan isian beragam", harga: "Rp 8.000-15.000", lokasi: "Jl. Sudirman" },
+          { nama: "Sahoun", deskripsi: "soun berkuah ayam yang gurih", harga: "Rp 10.000-15.000", lokasi: "Jl. Gatot Subroto" },
+          { nama: "Nopia", deskripsi: "kue tradisional isi gula merah", harga: "Rp 3.000-6.000", lokasi: "Pasar Wage" },
+          { nama: "Jenang Jaket", deskripsi: "dodol lembut dan manis", harga: "Rp 5.000-10.000", lokasi: "Pasar Sokaraja" }
+        ];
+      }
+      
+      // Create and show custom popup
+      showWeatherPopup(weatherDesc, currentTemp, weatherIcon, weatherType, recs);
+    }
+
+    function showWeatherPopup(weatherDesc, currentTemp, weatherIcon, weatherType, recommendations) {
+      // Remove existing popup if any
+      const existingPopup = document.getElementById('weatherRecommendationPopup');
+      if (existingPopup) {
+        existingPopup.remove();
+      }
+
+      // Create popup container
+      const popup = document.createElement('div');
+      popup.id = 'weatherRecommendationPopup';
+      popup.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        animation: fadeIn 0.3s ease;
+      `;
+
+      // Create popup content
+      const popupContent = document.createElement('div');
+      popupContent.style.cssText = `
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        position: relative;
+      `;
+
+      // Create header with close button
+      const header = document.createElement('div');
+      header.style.cssText = `
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+      `;
+
+      const title = document.createElement('h2');
+      title.textContent = '🌤️ Rekomendasi Cuaca & Kuliner';
+      title.style.cssText = `
+        color: var(--red);
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      `;
+
+      const closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '×';
+      closeBtn.style.cssText = `
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: #999;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      `;
+      closeBtn.onmouseover = () => closeBtn.style.background = '#f0f0f0';
+      closeBtn.onmouseout = () => closeBtn.style.background = 'transparent';
+      closeBtn.onclick = () => popup.remove();
+
+      header.appendChild(title);
+      header.appendChild(closeBtn);
+
+      // Create weather info section
+      const weatherInfo = document.createElement('div');
+      weatherInfo.style.cssText = `
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+      `;
+
+      const weatherIconDiv = document.createElement('div');
+      weatherIconDiv.innerHTML = `<i class="${weatherIcon}" style="font-size: 3rem; margin-bottom: 10px;"></i>`;
+      
+      const weatherText = document.createElement('div');
+      weatherText.innerHTML = `
+        <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 5px;">${weatherDesc}</div>
+        <div style="font-size: 1.5rem; font-weight: 700;">${currentTemp}°C</div>
+        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">Purwokerto</div>
+      `;
+
+      weatherInfo.appendChild(weatherIconDiv);
+      weatherInfo.appendChild(weatherText);
+
+      // Create filter section
+      const filterSection = document.createElement('div');
+      filterSection.style.cssText = `
+        margin-bottom: 20px;
+        text-align: center;
+      `;
+
+      const filterLabel = document.createElement('div');
+      filterLabel.textContent = 'Filter berdasarkan:';
+      filterLabel.style.cssText = `
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 10px;
+      `;
+
+      const filterButtons = document.createElement('div');
+      filterButtons.style.cssText = `
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      `;
+
+      const filterOptions = [
+        { id: 'all', label: 'Semua', color: '#c53e4e' },
+        { id: 'makanan', label: 'Makanan', color: '#2980b9' },
+        { id: 'minuman', label: 'Minuman', color: '#27ae60' },
+        { id: 'snack', label: 'Snack', color: '#f39c12' }
+      ];
+
+      let currentFilter = 'all';
+      let filteredRecs = recommendations;
+
+      filterOptions.forEach(option => {
+        const btn = document.createElement('button');
+        btn.textContent = option.label;
+        btn.style.cssText = `
+          padding: 8px 16px;
+          border: none;
+          border-radius: 20px;
+          background: ${option.id === 'all' ? option.color : '#f0f0f0'};
+          color: ${option.id === 'all' ? 'white' : '#666'};
+          cursor: pointer;
+          font-size: 0.9rem;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        `;
+        
+        btn.onclick = () => {
+          // Update button styles
+          filterButtons.querySelectorAll('button').forEach(b => {
+            b.style.background = '#f0f0f0';
+            b.style.color = '#666';
+          });
+          btn.style.background = option.color;
+          btn.style.color = 'white';
+          
+          // Filter recommendations
+          currentFilter = option.id;
+          if (currentFilter === 'all') {
+            filteredRecs = recommendations;
+          } else {
+            filteredRecs = recommendations.filter(rec => {
+              if (currentFilter === 'makanan') {
+                return rec.nama.toLowerCase().includes('soto') || rec.nama.toLowerCase().includes('bakso') || 
+                       rec.nama.toLowerCase().includes('sop') || rec.nama.toLowerCase().includes('sahoun');
+              } else if (currentFilter === 'minuman') {
+                return rec.nama.toLowerCase().includes('es') || rec.nama.toLowerCase().includes('kopi') || 
+                       rec.nama.toLowerCase().includes('wedang');
+              } else if (currentFilter === 'snack') {
+                return rec.nama.toLowerCase().includes('mendoan') || rec.nama.toLowerCase().includes('lumpia') || 
+                       rec.nama.toLowerCase().includes('nopia') || rec.nama.toLowerCase().includes('jenang');
+              }
+              return true;
             });
-        </script>
-        <!-- Tambahkan Leaflet CSS dan JS sebelum </body> -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-        <script>
-        // --- LEAFLET MAP ---
-        let leafletMap;
-        let leafletMarkers = [];
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi peta Purwokerto
-            leafletMap = L.map('map').setView([-7.4212405, 109.2422016], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(leafletMap);
-            // Tambahkan marker kuliner
-            function renderLeafletMarkers(places = kulinerData) {
-                leafletMarkers.forEach(m => leafletMap.removeLayer(m));
-                leafletMarkers = [];
-                places.forEach(place => {
-                    if (place.latitude && place.longitude) {
-                        const marker = L.marker([place.latitude, place.longitude]).addTo(leafletMap);
-                        marker.bindPopup(`<b>${place.nama_kuliner}</b><br>${place.alamat}<br>Rating: ${getPlaceRating(place.nama_kuliner)} (${getPlaceReviews(place.nama_kuliner)} ulasan)`);
-                        leafletMarkers.push(marker);
-                    }
-                });
-            }
-            renderLeafletMarkers();
-            // Zoom in/out
-            document.getElementById('zoomInBtn').onclick = () => leafletMap.zoomIn();
-            document.getElementById('zoomOutBtn').onclick = () => leafletMap.zoomOut();
-            // Lokasi saya
-            document.getElementById('locateBtn').onclick = () => {
-                leafletMap.locate({setView: true, maxZoom: 16});
-            };
-            leafletMap.on('locationfound', function(e) {
-                L.marker(e.latlng).addTo(leafletMap).bindPopup('Lokasi Anda').openPopup();
-            });
-            // Layer peta (opsional, bisa dikembangkan)
-            // Jika ingin filter marker sesuai sidebar, bisa tambahkan event di filterByCategory/searchPlaces
-            // Contoh: renderLeafletMarkers(filteredPlaces)
+          }
+          
+          // Update recommendations display
+          updateRecommendationsDisplay();
+        };
+        
+        filterButtons.appendChild(btn);
+      });
+
+      filterSection.appendChild(filterLabel);
+      filterSection.appendChild(filterButtons);
+
+      // Create recommendations section
+      const recommendationsSection = document.createElement('div');
+      recommendationsSection.id = 'recommendationsContainer';
+
+      function updateRecommendationsDisplay() {
+        recommendationsSection.innerHTML = '';
+        
+        if (filteredRecs.length === 0) {
+          const noResults = document.createElement('div');
+          noResults.textContent = 'Tidak ada rekomendasi untuk filter ini.';
+          noResults.style.cssText = `
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+          `;
+          recommendationsSection.appendChild(noResults);
+          return;
+        }
+
+        filteredRecs.forEach((rec, index) => {
+          const recCard = document.createElement('div');
+          recCard.style.cssText = `
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--red);
+            transition: all 0.3s ease;
+            cursor: pointer;
+          `;
+          
+          recCard.onmouseover = () => {
+            recCard.style.transform = 'translateY(-2px)';
+            recCard.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+          };
+          
+          recCard.onmouseout = () => {
+            recCard.style.transform = 'translateY(0)';
+            recCard.style.boxShadow = 'none';
+          };
+
+          recCard.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <h3 style="color: var(--red); margin: 0; font-size: 1.1rem;">${rec.nama}</h3>
+              <span style="background: var(--red); color: white; padding: 4px 8px; border-radius: 10px; font-size: 0.8rem; font-weight: 600;">${weatherType}</span>
+            </div>
+            <p style="color: #666; margin: 0 0 10px 0; font-size: 0.9rem;">${rec.deskripsi}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
+              <span style="color: #27ae60; font-weight: 600;">💰 ${rec.harga}</span>
+              <span style="color: #2980b9; font-weight: 600;">📍 ${rec.lokasi}</span>
+            </div>
+          `;
+
+          recommendationsSection.appendChild(recCard);
         });
-        </script>
-        <!-- --- Sidebar Resize --- -->
-        <script>
-        const sidebar = document.getElementById('sidebar');
-        const handle = document.getElementById('sidebarResizeHandle');
-        let isResizing = false;
-        let startX, startWidth;
-        handle.addEventListener('mousedown', function(e) {
-            isResizing = true;
-            startX = e.clientX;
-            startWidth = sidebar.offsetWidth;
-            document.body.style.cursor = 'ew-resize';
-            document.body.style.userSelect = 'none';
-        });
-        document.addEventListener('mousemove', function(e) {
-            if (!isResizing) return;
-            let newWidth = startWidth + (e.clientX - startX);
-            newWidth = Math.max(180, Math.min(400, newWidth));
-            sidebar.style.width = newWidth + 'px';
-        });
-        document.addEventListener('mouseup', function() {
-            if (isResizing) {
-                isResizing = false;
-                document.body.style.cursor = '';
-                document.body.style.userSelect = '';
-            }
-        });
-        </script>
-    </body>
-    </html>
+      }
+
+      // Initial display
+      updateRecommendationsDisplay();
+
+      // Assemble popup
+      popupContent.appendChild(header);
+      popupContent.appendChild(weatherInfo);
+      popupContent.appendChild(filterSection);
+      popupContent.appendChild(recommendationsSection);
+      popup.appendChild(popupContent);
+
+      // Add to body
+      document.body.appendChild(popup);
+
+      // Close on outside click
+      popup.onclick = (e) => {
+        if (e.target === popup) {
+          popup.remove();
+        }
+      };
+
+      // Auto close after 30 seconds
+      setTimeout(() => {
+        if (document.getElementById('weatherRecommendationPopup')) {
+          popup.remove();
+        }
+      }, 30000);
+    }
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', () => {
+      renderMap();
+      renderList();
+      fetchWeather(); // Load weather data
+      
+      // Refresh weather every 30 minutes
+      setInterval(fetchWeather, 30 * 60 * 1000);
+      
+      // Search functionality
+      document.getElementById("search").addEventListener("input", (e) => {
+        const search = e.target.value;
+        const category = document.getElementById("filter").value;
+        renderList(search, category);
+      });
+
+      // Filter functionality
+      document.getElementById("filter").addEventListener("change", (e) => {
+        const search = document.getElementById("search").value;
+        const category = e.target.value;
+        renderList(search, category);
+      });
+      
+      // Allow pressing Enter in chat
+      document.getElementById("chatInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendChat();
+      });
+    });
+  </script>
+</body>
+</html>
