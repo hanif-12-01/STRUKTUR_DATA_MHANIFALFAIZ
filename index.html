@@ -155,7 +155,8 @@
 
     .filter-bar input,
     .filter-bar select,
-    .filter-bar button {
+    .filter-bar button,
+    .filter-bar a.lapor-button {
       flex: 1;
       padding: 10px;
       border: 1px solid var(--light-red);
@@ -171,6 +172,24 @@
 
     .filter-bar button:hover {
       background: #b03545;
+    }
+
+    .lapor-button {
+      background: var(--blue);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 500;
+      border: none; /* Override the default border */
+    }
+
+    .lapor-button:hover {
+      background: #2471a3;
     }
 
     .card {
@@ -234,6 +253,7 @@
     .chatbot:hover {
       transform: scale(1.1);
     }
+
 
     /* LINE-style Chat Interface */
     .chat-popup {
@@ -489,6 +509,9 @@
         <option value="Minuman">Minuman</option>
       </select>
       <button onclick="showWeatherRec()">Rekomendasi Cuaca</button>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScJ8tkZau-NVdhbmd0cWFKY25VBm0Ajjxvqo-rLYAO_iGb2qg/viewform?usp=dialog" target="_blank" class="lapor-button">
+        <i class="fas fa-plus-circle"></i> Lapor
+      </a>
     </div>
 
     <div id="list"></div>
