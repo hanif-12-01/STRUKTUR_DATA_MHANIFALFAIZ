@@ -7,7 +7,383 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --red: #c53e4e;
+      --light-red: #d8c2cf;
+      --bg: #f8f9fa;
+      --white: #ffffff;
+      --text: #333;
+      --blue: #2980b9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background: var(--bg); color: var(--text); }
+
+    header {
+      background: var(--red);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: relative;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    header img { height: 40px; }
+
+    .weather-info {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .weather-info:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .weather-icon {
+      font-size: 20px;
+    }
+
+    .weather-temp {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .weather-details {
+      position: absolute;
+      top: 100%;
+      right: 20px;
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      z-index: 1000;
+      width: 250px;
+      display: none;
+      color: var(--text);
+    }
+
+    .weather-details.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #map {
+      height: 60vh;
+      width: 100%;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar input,
+    .filter-bar select,
+    .filter-bar button {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid var(--light-red);
+      border-radius: 8px;
+      min-width: 120px;
+    }
+
+    .filter-bar button {
+      background: var(--red);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .filter-bar button:hover {
+      background: #b03545;
+    }
+
+    .card {
+      background: var(--white);
+      border-left: 5px solid var(--red);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover { transform: translateY(-3px); }
+
+    .card h3 { color: var(--red); }
+    .card small { color: #666; }
+
+    .detail-popup {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      z-index: 9999;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .detail-popup img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--red);
+    }
+
+    /* Tombol Tambah Kuliner */
+    .filter-bar .add-btn {
+      background: #27ae60;
+      color: white;
+      min-width: 120px;
+    }
+
+    /* Chatbot */
+    .chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--red);
+      color: white;
+      border-radius: 50%;
+      padding: 15px;
+      cursor: pointer;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .chatbot:hover {
+      transform: scale(1.1);
+    }
+
+    .chat-popup {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: white;
+      border-radius: 15px;
+      width: 300px;
+      height: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+      flex-direction: column;
+      z-index: 999;
+    }
+
+    .chat-header {
+      background: #00B900;
+      color: white;
+      padding: 12px 15px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-close {
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #e5ddd5;
+      background-image: url('https://web.line.me/static/desktop/2.1.0/img/bg_chat.5f8e3b6.png');
+      background-size: cover;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      margin-bottom: 10px;
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 18px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .message-user {
+      background: #DCF8C6;
+      margin-left: auto;
+      margin-right: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    .message-bot {
+      background: white;
+      margin-right: auto;
+      margin-left: 5px;
+      border-top-left-radius: 5px;
+    }
+
+    .typing-indicator {
+      background: white !important;
+      margin-right: auto;
+      margin-left: 5px;
+      border-top-left-radius: 5px;
+      padding: 12px 16px;
+    }
+
+    .typing-dots {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .typing-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #999;
+      animation: typing 1.4s infinite ease-in-out;
+    }
+
+    @keyframes typing {
+      0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .message-time {
+      font-size: 10px;
+      color: #666;
+      margin-top: 3px;
+      text-align: right;
+    }
+
+    .chat-input-container {
+      display: flex;
+      padding: 10px;
+      background: white;
+      border-top: 1px solid #ddd;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    .chat-send {
+      background: #00B900;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      margin-left: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Modal Tambah Kuliner */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-content h2 {
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .modal-content label {
+      display: block;
+      font-weight: 600;
+      margin: 15px 0 5px;
+    }
+
+    .modal-content input,
+    .modal-content select,
+    .modal-content textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .modal-content button[type="submit"] {
+      width: 100%;
+      background: var(--red);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
@@ -181,6 +557,240 @@
   </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="script.js"></script>
+  <script>
+    const kulinerData = [
+      {
+        nama: "Soto Sokaraja",
+        kategori: "Soto",
+        alamat: "Jl. Sokaraja, Purwokerto",
+        jam: "07:00 - 15:00",
+        harga: "Rp 12.000 - 20.000",
+        deskripsi: "Kuah kaldu sapi + kacang, disajikan dengan ketupat dan kerupuk.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tersedia",
+        rute: "Area Sokaraja",
+        lat: -7.4220,
+        lng: 109.2300,
+        keliling: false
+      },
+      {
+        nama: "Tempe Mendoan",
+        kategori: "Gorengan",
+        alamat: "Pasar Sokaraja, Purwokerto",
+        jam: "06:00 - 18:00",
+        harga: "Rp 2.000 - 5.000",
+        deskripsi: "Tempe digoreng setengah matang, renyah di luar lembut di dalam.",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tersedia",
+        rute: "Pasar Sokaraja",
+        lat: -7.4200,
+        lng: 109.2300,
+        keliling: true
+      }
+    ];
+
+    // Initialize map
+    const map = L.map('map').setView([-7.4212, 109.2422], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    let markers = [];
+
+    function renderMap() {
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+      kulinerData.forEach((item, index) => {
+        const icon = item.keliling ? '🛺' : '🏠';
+        const marker = L.marker([item.lat, item.lng], {
+          icon: L.divIcon({ 
+            html: `<div style="font-size:20px;">${icon}</div>`, 
+            className: 'marker-icon', 
+            iconSize: [30, 30] 
+          })
+        }).addTo(map)
+          .bindPopup(`<b>${item.nama}</b><br>${item.kategori}`)
+          .on('click', () => showDetail(index));
+        markers.push(marker);
+      });
+    }
+
+    function renderList(search = "", category = "") {
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+      const filteredData = kulinerData.filter(d =>
+        d.nama.toLowerCase().includes(search.toLowerCase()) &&
+        (category === "" || d.kategori === category)
+      );
+      
+      if (filteredData.length === 0) {
+        list.innerHTML = "<p style='text-align:center;'>Tidak ada hasil ditemukan</p>";
+        return;
+      }
+      
+      filteredData.forEach((d, i) => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+          <h3>${d.nama}</h3>
+          <p>${d.kategori}</p>
+          <small>${d.alamat}</small>
+          <small>• ${d.jam} • ${d.harga}</small>
+        `;
+        div.onclick = () => showDetail(i);
+        list.appendChild(div);
+      });
+    }
+
+    function showDetail(index) {
+      const item = kulinerData[index];
+      const content = `
+        <h3>${item.nama}</h3>
+        <p><strong>Kategori:</strong> ${item.kategori}</p>
+        <p><strong>Alamat:</strong> ${item.alamat}</p>
+        <p><strong>Jam Operasional:</strong> ${item.jam}</p>
+        <p><strong>Harga:</strong> ${item.harga}</p>
+        <p><strong>Deskripsi:</strong> ${item.deskripsi}</p>
+        <p><strong>Parkir:</strong> ${item.parkir}</p>
+        <p><strong>Rute:</strong> ${item.rute}</p>
+        <p><strong>Tipe:</strong> ${item.keliling ? 'Pedagang Keliling' : 'Warung/Toko Tetap'}</p>
+        <img src="${item.foto}" alt="${item.nama}">
+      `;
+      document.getElementById("detailContent").innerHTML = content;
+      document.getElementById("detailPopup").style.display = "block";
+      map.setView([item.lat, item.lng], 15);
+    }
+
+    function closeDetail() {
+      document.getElementById("detailPopup").style.display = "none";
+    }
+
+    // Tambah Kuliner
+    function openAddForm() {
+      document.getElementById('addKulinerModal').style.display = 'block';
+    }
+
+    function closeAddForm() {
+      document.getElementById('addKulinerModal').style.display = 'none';
+      document.getElementById('addKulinerForm').reset();
+    }
+
+    document.getElementById('addKulinerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const newKuliner = {
+        nama: document.getElementById('addNama').value,
+        kategori: document.getElementById('addKategori').value,
+        alamat: document.getElementById('addAlamat').value,
+        jam: document.getElementById('addJam').value || '08:00 - 17:00',
+        harga: document.getElementById('addHarga').value || 'Rp 5.000 - 10.000',
+        deskripsi: document.getElementById('addDeskripsi').value || 'Kuliner khas Purwokerto',
+        foto: document.getElementById('addFoto').value || 'https://i.imgur.com/8z3L5kL.jpg',
+        parkir: document.getElementById('addParkir').value,
+        rute: document.getElementById('addRute').value || document.getElementById('addAlamat').value,
+        lat: parseFloat(document.getElementById('addLat').value),
+        lng: parseFloat(document.getElementById('addLng').value),
+        keliling: document.getElementById('addKeliling').value === 'true'
+      };
+
+      if (isNaN(newKuliner.lat) || isNaN(newKuliner.lng)) {
+        alert('Latitude dan Longitude harus berupa angka!');
+        return;
+      }
+
+      kulinerData.push(newKuliner);
+      renderMap();
+      renderList();
+      closeAddForm();
+      alert(`✅ Lokasi "${newKuliner.nama}" berhasil ditambahkan!`);
+    });
+
+    // Chatbot
+    function toggleChat() {
+      const chat = document.getElementById("chatPopup");
+      chat.style.display = chat.style.display === "flex" ? "none" : "flex";
+      if (chat.style.display === "flex") {
+        document.getElementById("chatInput").focus();
+      }
+    }
+
+    function sendChat() {
+      const input = document.getElementById("chatInput").value.trim();
+      const chatMessages = document.getElementById("chatMessages");
+      if (!input) return;
+
+      const now = new Date();
+      const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+      // User message
+      chatMessages.innerHTML += `
+        <div class="message message-user">
+          ${input}
+          <div class="message-time">${timeString}</div>
+        </div>
+      `;
+      document.getElementById("chatInput").value = "";
+
+      // Show typing
+      const typing = document.createElement('div');
+      typing.className = 'message message-bot typing-indicator';
+      typing.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+      chatMessages.appendChild(typing);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Generate response
+      setTimeout(() => {
+        chatMessages.removeChild(typing);
+        const reply = generateResponse(input);
+        chatMessages.innerHTML += `
+          <div class="message message-bot">
+            ${reply}
+            <div class="message-time">${timeString}</div>
+          </div>
+        `;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1000);
+    }
+
+    function generateResponse(input) {
+      const text = input.toLowerCase();
+      if (text.includes('rekomendasi') || text.includes('sarankan')) {
+        const random = kulinerData[Math.floor(Math.random() * kulinerData.length)];
+        return `🍽️ Rekomendasi aku: <b>${random.nama}</b> (${random.kategori}) di ${random.alamat}. Harga ${random.harga}`;
+      } else if (text.includes('soto')) {
+        return "🍜 Soto Sokaraja di Jl. Sokaraja, buka 07:00-15:00, harga Rp 12.000-20.000. Kuah sapi + kacang!";
+      } else if (text.includes('mendoan')) {
+        return "🥢 Tempe Mendoan di Pasar Sokaraja, hanya Rp 2.000-5.000. Goreng setengah matang, renyah!";
+      } else if (text.includes('lapar')) {
+        return "🍛 Kak lapar? Coba Soto Sokaraja atau Tempe Mendoan. Keduanya mengenyangkan!";
+      } else if (text.includes('ha')) {
+        return "🥤 Kak haus? Di Purwokerto ada Es Dawet Ayu segar hanya Rp 5.000!";
+      } else {
+        return "🤗 Aku bisa bantu cari kuliner berdasarkan nama, kategori, atau mood Kak! Coba tanya 'rekomendasi dong'";
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderMap();
+      renderList();
+      fetchWeather();
+
+      document.getElementById("search").addEventListener("input", (e) => {
+        const search = e.target.value;
+        const category = document.getElementById("filter").value;
+        renderList(search, category);
+      });
+
+      document.getElementById("filter").addEventListener("change", (e) => {
+        const search = document.getElementById("search").value;
+        const category = e.target.value;
+        renderList(search, category);
+      });
+
+      document.getElementById("chatInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendChat();
+      });
+    });
+  </script>
 </body>
 </html>
