@@ -16,10 +16,8 @@
       --text: #333;
       --blue: #2980b9;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
     body { background: var(--bg); color: var(--text); }
-
     header {
       background: var(--red);
       color: var(--white);
@@ -29,17 +27,16 @@
       justify-content: space-between;
       gap: 10px;
       position: relative;
+      flex-wrap: wrap;
     }
-
     .header-content {
       display: flex;
       align-items: center;
       gap: 10px;
       flex: 1;
+      min-width: 200px;
     }
-
     header img { height: 40px; }
-
     .weather-info {
       background: rgba(255, 255, 255, 0.2);
       padding: 8px 12px;
@@ -50,21 +47,18 @@
       cursor: pointer;
       transition: all 0.3s ease;
       backdrop-filter: blur(5px);
+      white-space: nowrap;
     }
-
     .weather-info:hover {
       background: rgba(255, 255, 255, 0.3);
     }
-
     .weather-icon {
       font-size: 20px;
     }
-
     .weather-temp {
       font-weight: 600;
       font-size: 16px;
     }
-
     .weather-details {
       position: absolute;
       top: 100%;
@@ -78,81 +72,29 @@
       display: none;
       color: var(--text);
     }
-
     .weather-details.show {
       display: block;
       animation: fadeIn 0.3s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    .weather-details-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .weather-details-main {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    .weather-details-icon {
-      font-size: 40px;
-      color: var(--blue);
-    }
-
-    .weather-details-temp {
-      font-size: 28px;
-      font-weight: 600;
-    }
-
-    .weather-details-desc {
-      text-transform: capitalize;
-    }
-
-    .weather-details-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .weather-stat {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 14px;
-    }
-
-    .weather-stat i {
-      color: var(--blue);
-      width: 20px;
-      text-align: center;
-    }
-
     #map {
       height: 60vh;
       width: 100%;
     }
-
     .container {
       padding: 20px;
       max-width: 800px;
       margin: auto;
     }
-
     .filter-bar {
       display: flex;
       gap: 10px;
       margin-bottom: 15px;
+      flex-wrap: wrap;
     }
-
     .filter-bar input,
     .filter-bar select,
     .filter-bar button {
@@ -160,19 +102,17 @@
       padding: 10px;
       border: 1px solid var(--light-red);
       border-radius: 8px;
+      min-width: 120px;
     }
-
     .filter-bar button {
       background: var(--red);
       color: white;
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     .filter-bar button:hover {
       background: #b03545;
     }
-
     .card {
       background: var(--white);
       border-left: 5px solid var(--red);
@@ -183,12 +123,9 @@
       cursor: pointer;
       transition: transform 0.2s ease;
     }
-
     .card:hover { transform: translateY(-3px); }
-
     .card h3 { color: var(--red); }
     .card small { color: #666; }
-
     .detail-popup {
       display: none;
       position: fixed;
@@ -203,20 +140,24 @@
       max-width: 400px;
       width: 90%;
     }
-
     .detail-popup img {
       width: 100%;
       border-radius: 8px;
       margin-top: 10px;
     }
-
     .close-btn {
       float: right;
       cursor: pointer;
       font-size: 20px;
       color: var(--red);
     }
-
+    /* Tombol Tambah Kuliner */
+    .filter-bar .add-btn {
+      background: #27ae60;
+      color: white;
+      min-width: 120px;
+    }
+    /* Chatbot */
     .chatbot {
       position: fixed;
       bottom: 20px;
@@ -230,12 +171,9 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
       transition: transform 0.3s ease;
     }
-
     .chatbot:hover {
       transform: scale(1.1);
     }
-
-    /* LINE-style Chat Interface */
     .chat-popup {
       display: none;
       position: fixed;
@@ -250,7 +188,6 @@
       flex-direction: column;
       z-index: 999;
     }
-
     .chat-header {
       background: #00B900;
       color: white;
@@ -260,12 +197,10 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .chat-close {
       cursor: pointer;
       font-size: 20px;
     }
-
     .chat-messages {
       flex: 1;
       padding: 10px;
@@ -274,35 +209,27 @@
       background-image: url('https://web.line.me/static/desktop/2.1.0/img/bg_chat.5f8e3b6.png');
       background-size: cover;
       scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      max-height: 300px;
-      min-height: 200px;
     }
-
     .message {
       margin-bottom: 10px;
       max-width: 80%;
       padding: 8px 12px;
       border-radius: 18px;
       line-height: 1.4;
-      position: relative;
       word-wrap: break-word;
     }
-
     .message-user {
       background: #DCF8C6;
       margin-left: auto;
       margin-right: 5px;
       border-top-right-radius: 5px;
     }
-
     .message-bot {
       background: white;
       margin-right: auto;
       margin-left: 5px;
       border-top-left-radius: 5px;
     }
-
     .typing-indicator {
       background: white !important;
       margin-right: auto;
@@ -310,13 +237,11 @@
       border-top-left-radius: 5px;
       padding: 12px 16px;
     }
-
     .typing-dots {
       display: flex;
       align-items: center;
       gap: 4px;
     }
-
     .typing-dots span {
       width: 8px;
       height: 8px;
@@ -324,15 +249,6 @@
       background: #999;
       animation: typing 1.4s infinite ease-in-out;
     }
-
-    .typing-dots span:nth-child(1) {
-      animation-delay: -0.32s;
-    }
-
-    .typing-dots span:nth-child(2) {
-      animation-delay: -0.16s;
-    }
-
     @keyframes typing {
       0%, 80%, 100% {
         transform: scale(0.8);
@@ -343,21 +259,18 @@
         opacity: 1;
       }
     }
-
     .message-time {
       font-size: 10px;
       color: #666;
       margin-top: 3px;
       text-align: right;
     }
-
     .chat-input-container {
       display: flex;
       padding: 10px;
       background: white;
       border-top: 1px solid #ddd;
     }
-
     .chat-input {
       flex: 1;
       padding: 8px 12px;
@@ -365,7 +278,6 @@
       border-radius: 20px;
       outline: none;
     }
-
     .chat-send {
       background: #00B900;
       color: white;
@@ -379,61 +291,59 @@
       align-items: center;
       justify-content: center;
     }
-
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .weather-info {
-        margin-top: 10px;
-        align-self: flex-end;
-      }
-      
-      .weather-details {
-        right: 10px;
-        left: 10px;
-        width: auto;
-      }
-      
-      .filter-bar { flex-direction: column; }
-      .detail-popup { top: 5%; }
-      .chat-popup {
-        width: 90%;
-        right: 5%;
-        bottom: 70px;
-      }
+    /* Modal Google Form */
+    .modal-iframe {
+      width: 90%;
+      max-width: 800px;
+      height: 80vh;
+      margin: 5% auto;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
     }
-
-    @media (max-width: 480px) {
-      .header-content h1 {
-        font-size: 20px;
+    .modal-iframe-content {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .filter-bar {
+        flex-direction: column;
       }
-      
-      .weather-info {
-        padding: 6px 10px;
-        font-size: 14px;
+      .filter-bar input,
+      .filter-bar select,
+      .filter-bar button {
+        width: 100%;
       }
-      
-      .weather-icon {
-        font-size: 16px;
+      .chat-popup {
+        width: calc(100% - 40px);
+        right: 20px;
+        left: 20px;
       }
     }
   </style>
 </head>
 <body>
-
   <header>
     <div class="header-content">
       <h1>Lapor Mangan! - Purwokerto</h1>
     </div>
-    
     <div class="weather-info" id="weatherInfo" onclick="toggleWeatherDetails()">
       <i class="fas fa-cloud-sun weather-icon" id="weatherIcon"></i>
       <span class="weather-temp" id="weatherTemp">--°C</span>
     </div>
-    
     <div class="weather-details" id="weatherDetails">
       <div class="weather-details-header">
         <h3>Cuaca Purwokerto</h3>
@@ -466,9 +376,7 @@
       </div>
     </div>
   </header>
-
   <div id="map"></div>
-
   <div class="container">
     <div class="filter-bar">
       <input id="search" placeholder="Cari nama kuliner..." />
@@ -487,19 +395,29 @@
         <option value="Camilan">Camilan</option>
         <option value="Camilan Manis">Camilan Manis</option>
         <option value="Minuman">Minuman</option>
+        <option value="Sate">Sate</option>
+        <option value="Bakso">Bakso</option>
+        <option value="Mie">Mie</option>
+        <option value="Makanan Berat">Makanan Berat</option>
+        <option value="Nasi Goreng">Nasi Goreng</option>
       </select>
       <button onclick="showWeatherRec()">Rekomendasi Cuaca</button>
+      <button onclick="openGoogleForm()">📋 Tambah Informasi</button>
     </div>
-
     <div id="list"></div>
   </div>
-
   <!-- Detail Popup -->
   <div class="detail-popup" id="detailPopup">
     <span class="close-btn" onclick="closeDetail()">×</span>
     <div id="detailContent"></div>
   </div>
-
+  <!-- Modal Google Form -->
+  <div id="googleFormModal" class="modal">
+    <div class="modal-iframe">
+      <span class="close-btn" onclick="closeGoogleForm()" style="position: absolute; right: 15px; top: 15px; z-index: 10001;">&times;</span>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScJ8tkZau-NVdhbmd0cWFKY25VBm0Ajjxvqo-rLYAO_iGb2qg/viewform?embedded=true" class="modal-iframe-content"></iframe>
+    </div>
+  </div>
   <!-- LINE-style Chatbot -->
   <div class="chatbot" onclick="toggleChat()">💬</div>
   <div class="chat-popup" id="chatPopup">
@@ -509,31 +427,32 @@
     </div>
     <div class="chat-messages" id="chatMessages">
       <div class="message message-bot">
-        <span id="initialGreeting">Halo! Ada yang bisa saya bantu cari kuliner di Purwokerto?</span>
-        <div class="message-time">8:23 PM</div>
+        <span>Halo! Aku MakanBot 🍽️ Mau cari kuliner apa di Purwokerto hari ini?</span>
+        <div class="message-time">Baru saja</div>
       </div>
     </div>
     <div class="chat-input-container">
       <input type="text" class="chat-input" id="chatInput" placeholder="Ketik pesan..." onkeypress="if(event.key=='Enter') sendChat()">
       <button class="chat-send" onclick="sendChat()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 2L11 13" stroke="white" stroke-width="2"/>
+          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2"/>
         </svg>
       </button>
     </div>
   </div>
-
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
+    // Data kuliner dari file markdown
     const kulinerData = [
+      // Soto
       {
         nama: "Soto Sokaraja",
         kategori: "Soto",
-        alamat: "Jl. Sokaraja, Purwokerto",
+        alamat: "Jl. Sokaraja",
         jam: "07:00 - 15:00",
         harga: "Rp 12.000 - 20.000",
-        deskripsi: "Kuah kaldu sapi + kacang, disajikan dengan ketupat dan kerupuk.",
+        deskripsi: "Kuah kaldu sapi + kacang, ketupat, kerupuk",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Tersedia",
         rute: "Area Sokaraja",
@@ -542,12 +461,83 @@
         keliling: false
       },
       {
+        nama: "Soto Tauco",
+        kategori: "Soto",
+        alamat: "Jl. Gerilya",
+        jam: "08:00 - 16:00",
+        harga: "Rp 15.000 - 25.000",
+        deskripsi: "Kuah tauco khas, tauge, ayam suwir",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Gerilya",
+        lat: -7.4210,
+        lng: 109.2400,
+        keliling: false
+      },
+      {
+        nama: "Soto Kecik",
+        kategori: "Soto",
+        alamat: "Jl. Kecik",
+        jam: "07:00 - 14:00",
+        harga: "Rp 12.000 - 18:000",
+        deskripsi: "Kuah bening, ayam kampung",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Kecik",
+        lat: -7.4230,
+        lng: 109.2350,
+        keliling: false
+      },
+      {
+        nama: "Soto Dower",
+        kategori: "Soto",
+        alamat: "Jl. Dower",
+        jam: "08:00 - 16:00",
+        harga: "Rp 13.000 - 20.000",
+        deskripsi: "Kuah santan, bumbu rempah khas",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Dower",
+        lat: -7.4240,
+        lng: 109.2320,
+        keliling: false
+      },
+      {
+        nama: "Soto Petirtaan",
+        kategori: "Soto",
+        alamat: "Jl. Petirtaan",
+        jam: "07:00 - 14:00",
+        harga: "Rp 12.000 - 18.000",
+        deskripsi: "Kuah bening, ayam kampung",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Petirtaan",
+        lat: -7.4250,
+        lng: 109.2380,
+        keliling: false
+      },
+      {
+        nama: "Soto Bening",
+        kategori: "Soto",
+        alamat: "Jl. Merdeka",
+        jam: "07:00 - 14:00",
+        harga: "Rp 12.000 - 18.000",
+        deskripsi: "Kuah bening, ayam kampung",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Merdeka",
+        lat: -7.4200,
+        lng: 109.2450,
+        keliling: false
+      },
+      // Gorengan
+      {
         nama: "Tempe Mendoan",
         kategori: "Gorengan",
-        alamat: "Pasar Sokaraja, Purwokerto",
+        alamat: "Pasar Sokaraja",
         jam: "06:00 - 18:00",
         harga: "Rp 2.000 - 5.000",
-        deskripsi: "Tempe digoreng setengah matang, renyah di luar lembut di dalam.",
+        deskripsi: "Digoreng setengah matang",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Tersedia",
         rute: "Pasar Sokaraja",
@@ -556,292 +546,760 @@
         keliling: true
       },
       {
-        nama: "Getuk Goreng",
-        kategori: "Jajanan Tradisional",
-        alamat: "Jl. Sudirman, Purwokerto",
+        nama: "Tahu Brontak",
+        kategori: "Gorengan",
+        alamat: "Pasar Sokaraja",
         jam: "08:00 - 17:00",
-        harga: "Rp 5.000 - 10.000",
-        deskripsi: "Singkong digoreng, isi gula aren, renyah di luar lembut di dalam.",
+        harga: "Rp 3.000 - 6.000",
+        deskripsi: "Tahu isi sayuran",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Ya",
-        rute: "Jl. Sudirman - Alun-Alun",
-        lat: -7.4210,
+        rute: "Pasar Sokaraja",
+        lat: -7.4205,
+        lng: 109.2305,
+        keliling: true
+      },
+      {
+        nama: "Tahu Gimbal",
+        kategori: "Gorengan",
+        alamat: "Alun-Alun Purwokerto",
+        jam: "15:00 - 22:00",
+        harga: "Rp 10.000 - 15.000",
+        deskripsi: "Tahu + udang goreng, bumbu kacang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Alun-Alun",
+        lat: -7.4100,
         lng: 109.2400,
         keliling: true
       },
       {
-        nama: "Klanting",
-        kategori: "Camilan Kering",
-        alamat: "Pasar Baru, Purwokerto",
-        jam: "09:00 - 17:00",
+        nama: "Tahu Gejrot",
+        kategori: "Gorengan",
+        alamat: "Jl. Kolonel Sugiono",
+        jam: "15:00 - 22:00",
+        harga: "Rp 8.000 - 12.000",
+        deskripsi: "Tahu goreng kuah asam pedas",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Kolonel Sugiono",
+        lat: -7.4150,
+        lng: 109.2420,
+        keliling: true
+      },
+      // Jajanan Tradisional
+      {
+        nama: "Getuk Goreng",
+        kategori: "Jajanan Tradisional",
+        alamat: "Jl. Sudirman",
+        jam: "08:00 - 17:00",
         harga: "Rp 5.000 - 10.000",
-        deskripsi: "Cemilan singkong berbentuk anting, asin gurih.",
+        deskripsi: "Singkong isi gula aren",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Ya",
-        rute: "Pasar Baru - Terminal",
-        lat: -7.4250,
-        lng: 109.2350,
+        rute: "Jl. Sudirman - Alun-Alun",
+        lat: -7.4100,
+        lng: 109.2450,
         keliling: true
       },
       {
         nama: "Cenil",
         kategori: "Jajanan Tradisional",
-        alamat: "Jl. Dr. Soeparno, Purwokerto",
+        alamat: "Jl. Dr. Soeparno",
         jam: "08:00 - 16:00",
         harga: "Rp 3.000 - 5.000",
-        deskripsi: "Singkong berwarna-warni, kenyal, ditaburi kelapa.",
+        deskripsi: "Singkong berwarna-warni",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Tidak",
         rute: "Sekitar kampus UNSOED",
-        lat: -7.4300,
+        lat: -7.4050,
+        lng: 109.2500,
+        keliling: true
+      },
+      {
+        nama: "Gethuk Lindri",
+        kategori: "Jajanan Tradisional",
+        alamat: "Jl. S. Parman",
+        jam: "08:00 - 17:00",
+        harga: "Rp 7.000 - 12.000",
+        deskripsi: "Getuk berwarna-warni",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. S. Parman - Pasar Wage",
+        lat: -7.4120,
+        lng: 109.2480,
+        keliling: true
+      },
+      {
+        nama: "Klepon",
+        kategori: "Jajanan Tradisional",
+        alamat: "Pasar Kliwon",
+        jam: "08:00 - 16:00",
+        harga: "Rp 2.000 - 3.000",
+        deskripsi: "Bola ketan isi gula merah",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Pasar Kliwon",
+        lat: -7.4180,
+        lng: 109.2430,
+        keliling: true
+      },
+      {
+        nama: "Onde-onde",
+        kategori: "Jajanan Tradisional",
+        alamat: "Jl. Pramuka",
+        jam: "08:00 - 17:00",
+        harga: "Rp 2.000 - 3.000",
+        deskripsi: "Bola tepung ketan isi kacang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Pramuka",
+        lat: -7.4160,
+        lng: 109.2460,
+        keliling: true
+      },
+      {
+        nama: "Lupis",
+        kategori: "Jajanan Tradisional",
+        alamat: "Pasar Pon",
+        jam: "07:00 - 14:00",
+        harga: "Rp 3.000 - 5.000",
+        deskripsi: "Ketan bungkus daun",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Pon",
+        lat: -7.4190,
+        lng: 109.2410,
+        keliling: true
+      },
+      {
+        nama: "Gethuk",
+        kategori: "Jajanan Tradisional",
+        alamat: "Jl. Sumpah Pemuda",
+        jam: "08:00 - 16:00",
+        harga: "Rp 5.000 - 8.000",
+        deskripsi: "Singkong halus + gula merah",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Sumpah Pemuda",
+        lat: -7.4140,
+        lng: 109.2440,
+        keliling: true
+      },
+      {
+        nama: "Lemper",
+        kategori: "Jajanan Tradisional",
+        alamat: "Pasar Wage",
+        jam: "08:00 - 16:00",
+        harga: "Rp 3.000 - 5.000",
+        deskripsi: "Ketupat isi abon ayam",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Wage",
+        lat: -7.4170,
+        lng: 109.2420,
+        keliling: true
+      },
+      // Camilan Kering
+      {
+        nama: "Klanting",
+        kategori: "Camilan Kering",
+        alamat: "Pasar Baru",
+        jam: "09:00 - 17:00",
+        harga: "Rp 5.000 - 10.000",
+        deskripsi: "Cemilan singkong berbentuk anting",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Baru - Terminal",
+        lat: -7.4200,
+        lng: 109.2380,
+        keliling: true
+      },
+      {
+        nama: "Lanting",
+        kategori: "Camilan Kering",
+        alamat: "Pasar Kliwon",
+        jam: "08:00 - 16:00",
+        harga: "Rp 10.000 - 15.000",
+        deskripsi: "Ketan bulat kecil renyah",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Pasar Kliwon - Alun-Alun",
+        lat: -7.4180,
+        lng: 109.2430,
+        keliling: true
+      },
+      {
+        nama: "Intip",
+        kategori: "Camilan Kering",
+        alamat: "Pasar Pon",
+        jam: "07:00 - 14:00",
+        harga: "Rp 5.000 - 10.000",
+        deskripsi: "Kerak nasi kering digoreng",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Pon",
+        lat: -7.4190,
+        lng: 109.2410,
+        keliling: true
+      },
+      {
+        nama: "Dage",
+        kategori: "Camilan Kering",
+        alamat: "Jl. Sudirman",
+        jam: "09:00 - 16:00",
+        harga: "Rp 5.000 - 8.000",
+        deskripsi: "Ampas kacang + cabe rawit",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Sudirman",
+        lat: -7.4100,
+        lng: 109.2450,
+        keliling: true
+      },
+      // Kue Tradisional
+      {
+        nama: "Nopia",
+        kategori: "Kue Tradisional",
+        alamat: "Jl. Sudirman",
+        jam: "07:00 - 18:00",
+        harga: "Rp 3.000 - 6.000",
+        deskripsi: "Isi gula merah/kacang/cokelat",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Sudirman - Pasar Wage",
+        lat: -7.4100,
         lng: 109.2450,
         keliling: true
       },
       {
-        nama: "Nopia",
+        nama: "Serabi Notosuman",
         kategori: "Kue Tradisional",
-        alamat: "Jl. Sudirman, Purwokerto",
-        jam: "07:00 - 18:00",
-        harga: "Rp 3.000 - 6.000",
-        deskripsi: "Kue isi gula merah, kacang, atau cokelat, dipanggang di tungku.",
+        alamat: "Jl. Notosuman",
+        jam: "14:00 - 20:00",
+        harga: "Rp 5.000 - 8.000",
+        deskripsi: "Topping gula merah + santan",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
-        parkir: "Ya",
-        rute: "Jl. Sudirman - Pasar Wage",
-        lat: -7.4180,
-        lng: 109.2380,
+        parkir: "Tidak",
+        rute: "Jl. Notosuman",
+        lat: -7.4110,
+        lng: 109.2460,
+        keliling: false
+      },
+      {
+        nama: "Nagasari",
+        kategori: "Kue Tradisional",
+        alamat: "Jl. Dr. Cipto",
+        jam: "08:00 - 16:00",
+        harga: "Rp 2.000 - 3.000",
+        deskripsi: "Tepung beras + pisang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Dr. Cipto",
+        lat: -7.4080,
+        lng: 109.2480,
         keliling: true
       },
+      // Kuliner Unik
       {
         nama: "Kraca",
         kategori: "Kuliner Unik",
         alamat: "Pasar Malam Purwokerto",
         jam: "18:00 - 23:00",
         harga: "Rp 8.000 - 12.000",
-        deskripsi: "Keong kecil dimasak pedas, dijual di pinggir jalan malam.",
+        deskripsi: "Keong kecil masak pedas",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Tidak",
         rute: "Pasar Malam - Alun-Alun",
-        lat: -7.4200,
-        lng: 109.2500,
-        keliling: true
-      },
-      {
-        nama: "Kuluban / Kluban",
-        kategori: "Sayuran",
-        alamat: "Jl. HR Bunyamin, Purwokerto",
-        jam: "10:00 - 15:00",
-        harga: "Rp 8.000 - 12.000",
-        deskripsi: "Sayuran rebus + sambal kelapa, mirip salad.",
-        foto: "https://i.imgur.com/8z3L5kL.jpg",
-        parkir: "Ya",
-        rute: "Jl. HR Bunyamin - Pasar Kliwon",
-        lat: -7.4160,
-        lng: 109.2320,
-        keliling: false
-      },
-      {
-        nama: "Jenang Jaket",
-        kategori: "Dodol",
-        alamat: "Pasar Wage, Purwokerto",
-        jam: "08:00 - 16:00",
-        harga: "Rp 5.000 - 10.000",
-        deskripsi: "Tepung ketan + santan + gula merah, lembut dan manis.",
-        foto: "https://i.imgur.com/8z3L5kL.jpg",
-        parkir: "Ya",
-        rute: "Pasar Wage - Terminal",
-        lat: -7.4270,
+        lat: -7.4100,
         lng: 109.2400,
         keliling: true
       },
+      // Sayuran
+      {
+        nama: "Kuluban / Kluban",
+        kategori: "Sayuran",
+        alamat: "Jl. HR Bunyamin",
+        jam: "10:00 - 15:00",
+        harga: "Rp 8.000 - 12.000",
+        deskripsi: "Sayuran rebus + sambal kelapa",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. HR Bunyamin - Pasar Kliwon",
+        lat: -7.4090,
+        lng: 109.2420,
+        keliling: false
+      },
+      // Dodol
+      {
+        nama: "Jenang Jaket",
+        kategori: "Dodol",
+        alamat: "Pasar Wage",
+        jam: "08:00 - 16:00",
+        harga: "Rp 5.000 - 10.000",
+        deskripsi: "Tepung ketan + santan + gula merah",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Wage - Terminal",
+        lat: -7.4170,
+        lng: 109.2420,
+        keliling: true
+      },
+      // Kue Kering
       {
         nama: "Jalabiya",
         kategori: "Kue Kering",
-        alamat: "Jl. Pramuka, Purwokerto",
+        alamat: "Jl. Pramuka",
         jam: "09:00 - 17:00",
         harga: "Rp 4.000 - 7.000",
-        deskripsi: "Singkong isi gula merah, bentuk seperti donat.",
+        deskripsi: "Singkong isi gula merah",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Tidak",
         rute: "Jl. Pramuka - Pasar Baru",
-        lat: -7.4220,
-        lng: 109.2360,
+        lat: -7.4160,
+        lng: 109.2460,
         keliling: true
       },
+      // Makanan Ringan
       {
         nama: "Sahoun",
         kategori: "Makanan Ringan",
-        alamat: "Jl. Gatot Subroto, Purwokerto",
+        alamat: "Jl. Gatot Subroto",
         jam: "10:00 - 16:00",
         harga: "Rp 8.000 - 12.000",
-        deskripsi: "Soun berkuah ayam, kenyal dan gurih.",
+        deskripsi: "Soun berkuah ayam",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Ya",
         rute: "Jl. Gatot Subroto - Kampus UNSOED",
-        lat: -7.4190,
-        lng: 109.2320,
+        lat: -7.4070,
+        lng: 109.2490,
         keliling: false
-      },
-      {
-        nama: "Wajik Kletik",
-        kategori: "Camilan Manis",
-        alamat: "Jl. Dr. Cipto, Purwokerto",
-        jam: "08:00 - 17:00",
-        harga: "Rp 3.000 - 6.000",
-        deskripsi: "Wajik kenyal dari gula jawa.",
-        foto: "https://i.imgur.com/8z3L5kL.jpg",
-        parkir: "Tidak",
-        rute: "Jl. Dr. Cipto - Pasar Kliwon",
-        lat: -7.4240,
-        lng: 109.2380,
-        keliling: true
-      },
-      {
-        nama: "Combro",
-        kategori: "Camilan",
-        alamat: "Jl. HR Bunyamin, Purwokerto",
-        jam: "07:00 - 18:00",
-        harga: "Rp 3.000 - 5.000",
-        deskripsi: "Singkong isi oncom pedas, goreng renyah.",
-        foto: "https://i.imgur.com/8z3L5kL.jpg",
-        parkir: "Ya",
-        rute: "Jl. HR Bunyamin - Alun-Alun",
-        lat: -7.4180,
-        lng: 109.2300,
-        keliling: true
       },
       {
         nama: "Lumpia Boom",
         kategori: "Makanan Ringan",
-        alamat: "Jl. Sudirman, Purwokerto",
+        alamat: "Jl. Sudirman",
         jam: "09:00 - 18:00",
         harga: "Rp 10.000 - 15.000",
-        deskripsi: "Lumpia besar isi sayur, telur, ayam, dll.",
+        deskripsi: "Lumpia besar isi sayur/telur/ayam",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Ya",
         rute: "Jl. Sudirman - Pasar Wage",
-        lat: -7.4210,
-        lng: 109.2410,
+        lat: -7.4100,
+        lng: 109.2450,
+        keliling: true
+      },
+      // Camilan
+      {
+        nama: "Combro",
+        kategori: "Camilan",
+        alamat: "Jl. HR Bunyamin",
+        jam: "07:00 - 18:00",
+        harga: "Rp 3.000 - 5.000",
+        deskripsi: "Singkong isi oncom pedas",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. HR Bunyamin - Alun-Alun",
+        lat: -7.4090,
+        lng: 109.2420,
         keliling: true
       },
       {
         nama: "Cimplung",
         kategori: "Camilan",
-        alamat: "Jl. Pramuka, Purwokerto",
+        alamat: "Jl. Pramuka",
         jam: "08:00 - 16:00",
         harga: "Rp 3.000 - 5.000",
-        deskripsi: "Singkong + kelapa + gula aren, manis dan gurih.",
+        deskripsi: "Singkong + kelapa + gula aren",
         foto: "https://i.imgur.com/8z3L5kL.jpg",
         parkir: "Tidak",
         rute: "Jl. Pramuka - Terminal",
-        lat: -7.4250,
-        lng: 109.2340,
+        lat: -7.4160,
+        lng: 109.2460,
         keliling: true
+      },
+      // Camilan Manis
+      {
+        nama: "Wajik Kletik",
+        kategori: "Camilan Manis",
+        alamat: "Jl. Dr. Cipto",
+        jam: "08:00 - 17:00",
+        harga: "Rp 3.000 - 6.000",
+        deskripsi: "Wajik kenyal dari gula jawa",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Dr. Cipto - Pasar Kliwon",
+        lat: -7.4080,
+        lng: 109.2480,
+        keliling: true
+      },
+      // Minuman
+      {
+        nama: "Dawet Ayu",
+        kategori: "Minuman",
+        alamat: "Pasar Wage",
+        jam: "08:00 - 17:00",
+        harga: "Rp 5.000 - 8.000",
+        deskripsi: "Cendol, santan, gula jawa",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Wage",
+        lat: -7.4170,
+        lng: 109.2420,
+        keliling: true
+      },
+      {
+        nama: "Es Gempol",
+        kategori: "Minuman",
+        alamat: "Pasar Wage",
+        jam: "10:00 - 18:00",
+        harga: "Rp 7.000 - 10.000",
+        deskripsi: "Gempol, santan, gula merah",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Wage",
+        lat: -7.4170,
+        lng: 109.2420,
+        keliling: true
+      },
+      {
+        nama: "Es Cendol Dawet",
+        kategori: "Minuman",
+        alamat: "Jl. Dr. Soeparno",
+        jam: "10:00 - 18:00",
+        harga: "Rp 5.000 - 8.000",
+        deskripsi: "Tepung beras, santan, gula merah",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Dr. Soeparno",
+        lat: -7.4050,
+        lng: 109.2500,
+        keliling: true
+      },
+      {
+        nama: "Wedang Ronde",
+        kategori: "Minuman",
+        alamat: "Pasar Malam Purwokerto",
+        jam: "18:00 - 23:00",
+        harga: "Rp 8.000 - 12.000",
+        deskripsi: "Bola ketan, jahe, kacang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Pasar Malam Purwokerto",
+        lat: -7.4100,
+        lng: 109.2400,
+        keliling: true
+      },
+      {
+        nama: "Es Puter",
+        kategori: "Minuman",
+        alamat: "Jl. Sudirman",
+        jam: "10:00 - 18:00",
+        harga: "Rp 5.000 - 10.000",
+        deskripsi: "Es krim tradisional",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Sudirman",
+        lat: -7.4100,
+        lng: 109.2450,
+        keliling: true
+      },
+      // Sate
+      {
+        nama: "Sate Bebek Kaleng",
+        kategori: "Sate",
+        alamat: "Jl. Perintis Kemerdekaan",
+        jam: "16:00 - 22:00",
+        harga: "Rp 20.000 - 30.000",
+        deskripsi: "Sate bebek + bumbu kacang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Perintis Kemerdekaan",
+        lat: -7.4060,
+        lng: 109.2470,
+        keliling: false
+      },
+      {
+        nama: "Sate Ambal",
+        kategori: "Sate",
+        alamat: "Jl. Ambal",
+        jam: "16:00 - 22:00",
+        harga: "Rp 20.000 - 30.000",
+        deskripsi: "Sate ayam bumbu kacang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Ambal",
+        lat: -7.4040,
+        lng: 109.2490,
+        keliling: false
+      },
+      {
+        nama: "Sate Kelinci",
+        kategori: "Sate",
+        alamat: "Jl. Karang Bolong",
+        jam: "17:00 - 23:00",
+        harga: "Rp 25.000 - 35.000",
+        deskripsi: "Daging kelinci bumbu kecap",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Karang Bolong",
+        lat: -7.4030,
+        lng: 109.2510,
+        keliling: false
+      },
+      {
+        nama: "Sate Maranggi",
+        kategori: "Sate",
+        alamat: "Jl. Maranggi",
+        jam: "16:00 - 22:00",
+        harga: "Rp 25.000 - 35.000",
+        deskripsi: "Daging sapi bumbu kecap/kacang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Maranggi",
+        lat: -7.4020,
+        lng: 109.2530,
+        keliling: false
+      },
+      {
+        nama: "Sate Kambing",
+        kategori: "Sate",
+        alamat: "Jl. Ahmad Yani",
+        jam: "17:00 - 23:00",
+        harga: "Rp 25.000 - 40.000",
+        deskripsi: "Daging kambing + kecap",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Ahmad Yani",
+        lat: -7.4010,
+        lng: 109.2550,
+        keliling: false
+      },
+      {
+        nama: "Sate Ayam",
+        kategori: "Sate",
+        alamat: "Alun-Alun Purwokerto",
+        jam: "17:00 - 23:00",
+        harga: "Rp 15.000 - 25.000",
+        deskripsi: "Ayam bumbu kacang/kecap",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Alun-Alun Purwokerto",
+        lat: -7.4100,
+        lng: 109.2400,
+        keliling: true
+      },
+      // Bakso
+      {
+        nama: "Bakso Grabag",
+        kategori: "Bakso",
+        alamat: "Jl. Gatot Subroto",
+        jam: "10:00 - 22:00",
+        harga: "Rp 12.000 - 20.000",
+        deskripsi: "Bakso urat + kaldu sapi",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Gatot Subroto",
+        lat: -7.4070,
+        lng: 109.2490,
+        keliling: false
+      },
+      {
+        nama: "Bakso Mercon",
+        kategori: "Bakso",
+        alamat: "Jl. Jend. Sudirman",
+        jam: "10:00 - 22:00",
+        harga: "Rp 15.000 - 25.000",
+        deskripsi: "Bakso pedas level bisa dipilih",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Jend. Sudirman",
+        lat: -7.4100,
+        lng: 109.2450,
+        keliling: false
+      },
+      {
+        nama: "Bakso Tusuk",
+        kategori: "Bakso",
+        alamat: "Pasar Malam Purwokerto",
+        jam: "18:00 - 23:00",
+        harga: "Rp 1.000 - 2.000/tusuk",
+        deskripsi: "Bakso kecil saus kacang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Pasar Malam Purwokerto",
+        lat: -7.4100,
+        lng: 109.2400,
+        keliling: true
+      },
+      {
+        nama: "Bakso Urat",
+        kategori: "Bakso",
+        alamat: "Jl. S. Parman",
+        jam: "10:00 - 22:00",
+        harga: "Rp 15.000 - 25.000",
+        deskripsi: "Bakso isi urat sapi",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. S. Parman",
+        lat: -7.4120,
+        lng: 109.2480,
+        keliling: false
+      },
+      // Mie
+      {
+        nama: "Mie Ongklok",
+        kategori: "Mie",
+        alamat: "Jl. Prof. HR. Bunyamin",
+        jam: "10:00 - 20:00",
+        harga: "Rp 12.000 - 18.000",
+        deskripsi: "Mie kuah kental tepung kanji",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Prof. HR. Bunyamin",
+        lat: -7.4090,
+        lng: 109.2420,
+        keliling: false
+      },
+      {
+        nama: "Mie Lethek",
+        kategori: "Mie",
+        alamat: "Jl. Pahlawan",
+        jam: "08:00 - 16:00",
+        harga: "Rp 10.000 - 15.000",
+        deskripsi: "Mie tradisional tepung singkong",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. Pahlawan",
+        lat: -7.4080,
+        lng: 109.2430,
+        keliling: false
+      },
+      // Makanan Berat
+      {
+        nama: "Empal Basah",
+        kategori: "Makanan Berat",
+        alamat: "Warung Empal Bu Yati",
+        jam: "10:00 - 20:00",
+        harga: "Rp 15.000 - 25.000",
+        deskripsi: "Daging sapi kuah santan",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. HR Bunyamin",
+        lat: -7.4090,
+        lng: 109.2420,
+        keliling: false
+      },
+      {
+        nama: "Grombyang",
+        kategori: "Makanan Berat",
+        alamat: "Pasar Wage",
+        jam: "06:00 - 12:00",
+        harga: "Rp 15.000 - 25.000",
+        deskripsi: "Nasi + kuah santan + daging",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Wage",
+        lat: -7.4170,
+        lng: 109.2420,
+        keliling: false
+      },
+      {
+        nama: "Nasi Penggel",
+        kategori: "Makanan Berat",
+        alamat: "Jl. Pemuda",
+        jam: "17:00 - 23:00",
+        harga: "Rp 15.000 - 25.000",
+        deskripsi: "Ayam/bebek goreng + sambal",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Pemuda",
+        lat: -7.4070,
+        lng: 109.2440,
+        keliling: false
+      },
+      {
+        nama: "Kupat Tahu",
+        kategori: "Makanan Berat",
+        alamat: "Pasar Wage",
+        jam: "06:00 - 12:00",
+        harga: "Rp 10.000 - 15.000",
+        deskripsi: "Ketupat, tahu, tauge + bumbu",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Pasar Wage",
+        lat: -7.4170,
+        lng: 109.2420,
+        keliling: false
+      },
+      {
+        nama: "Rujak Cingur",
+        kategori: "Makanan Berat",
+        alamat: "Jl. S. Parman",
+        jam: "10:00 - 18:00",
+        harga: "Rp 15.000 - 20.000",
+        deskripsi: "Sayur + buah + cingur sapi",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Tidak",
+        rute: "Jl. S. Parman",
+        lat: -7.4120,
+        lng: 109.2480,
+        keliling: false
+      },
+      {
+        nama: "Pecel Madiun",
+        kategori: "Makanan Berat",
+        alamat: "Jl. Merdeka",
+        jam: "08:00 - 16:00",
+        harga: "Rp 12.000 - 18.000",
+        deskripsi: "Sayuran rebus + bumbu kacang",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Merdeka",
+        lat: -7.4200,
+        lng: 109.2450,
+        keliling: false
+      },
+      {
+        nama: "Rawon",
+        kategori: "Makanan Berat",
+        alamat: "Jl. Jend. Gatot Subroto",
+        jam: "10:00 - 20:00",
+        harga: "Rp 20.000 - 30.000",
+        deskripsi: "Sup daging kuah hitam keluak",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Jend. Gatot Subroto",
+        lat: -7.4070,
+        lng: 109.2490,
+        keliling: false
+      },
+      // Nasi Goreng
+      {
+        nama: "Nasi Goreng Mercon",
+        kategori: "Nasi Goreng",
+        alamat: "Jl. Dr. Angka",
+        jam: "17:00 - 23:00",
+        harga: "Rp 15.000 - 25.000",
+        deskripsi: "Nasi goreng super pedas",
+        foto: "https://i.imgur.com/8z3L5kL.jpg",
+        parkir: "Ya",
+        rute: "Jl. Dr. Angka",
+        lat: -7.4060,
+        lng: 109.2500,
+        keliling: false
       }
     ];
 
-    // Initialize map centered on Purwokerto
+    // Initialize map
     const map = L.map('map').setView([-7.4212, 109.2422], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-
     let markers = [];
-
-    // OpenWeatherMap API Key and Purwokerto coordinates
-    const API_KEY = '360cd1393e0f16a61618fd4e441a39b8';
-    const PURWOKERTO_LAT = -7.4212;
-    const PURWOKERTO_LON = 109.2422;
-
-    // Weather icons mapping
-    const weatherIcons = {
-      '01d': 'fas fa-sun',           // clear sky (day)
-      '01n': 'fas fa-moon',          // clear sky (night)
-      '02d': 'fas fa-cloud-sun',     // few clouds (day)
-      '02n': 'fas fa-cloud-moon',    // few clouds (night)
-      '03d': 'fas fa-cloud',         // scattered clouds
-      '03n': 'fas fa-cloud',
-      '04d': 'fas fa-cloud',         // broken clouds
-      '04n': 'fas fa-cloud',
-      '09d': 'fas fa-cloud-rain',    // shower rain
-      '09n': 'fas fa-cloud-rain',
-      '10d': 'fas fa-cloud-sun-rain',// rain (day)
-      '10n': 'fas fa-cloud-moon-rain',// rain (night)
-      '11d': 'fas fa-bolt',         // thunderstorm
-      '11n': 'fas fa-bolt',
-      '13d': 'fas fa-snowflake',     // snow
-      '13n': 'fas fa-snowflake',
-      '50d': 'fas fa-smog',         // mist
-      '50n': 'fas fa-smog'
-    };
-
-    // Fetch weather data
-    async function fetchWeather() {
-      try {
-        const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${PURWOKERTO_LAT}&lon=${PURWOKERTO_LON}&appid=${API_KEY}&units=metric&lang=id`
-        );
-        
-        if (!response.ok) {
-          throw new Error('Gagal mengambil data cuaca');
-        }
-        
-        const data = await response.json();
-        updateWeatherUI(data);
-      } catch (error) {
-        console.error('Error fetching weather:', error);
-        document.getElementById('weatherIcon').className = 'fas fa-exclamation-triangle weather-icon';
-        document.getElementById('weatherTemp').textContent = 'Error';
-      }
-    }
-
-    // Update weather UI
-    function updateWeatherUI(data) {
-      const weather = data.weather[0];
-      const main = data.main;
-      const wind = data.wind;
-      
-      // Update header weather info
-      const iconClass = weatherIcons[weather.icon] || 'fas fa-cloud';
-      document.getElementById('weatherIcon').className = iconClass + ' weather-icon';
-      document.getElementById('weatherTemp').textContent = `${Math.round(main.temp)}°C`;
-      
-      // Update weather details
-      document.getElementById('weatherDetailsIcon').className = iconClass + ' weather-details-icon';
-      document.getElementById('weatherDetailsTemp').textContent = `${Math.round(main.temp)}°C`;
-      document.getElementById('weatherDetailsDesc').textContent = weather.description;
-      document.getElementById('weatherMinTemp').textContent = `${Math.round(main.temp_min)}°C`;
-      document.getElementById('weatherMaxTemp').textContent = `${Math.round(main.temp_max)}°C`;
-      document.getElementById('weatherHumidity').textContent = main.humidity;
-      document.getElementById('weatherWind').textContent = wind.speed;
-      
-      // Update date
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const today = new Date().toLocaleDateString('id-ID', options);
-      document.getElementById('weatherDate').textContent = today;
-    }
-
-    // Toggle weather details
-    function toggleWeatherDetails() {
-      const details = document.getElementById('weatherDetails');
-      details.classList.toggle('show');
-    }
-
-    // Close weather details when clicking outside
-    document.addEventListener('click', function(event) {
-      const weatherInfo = document.getElementById('weatherInfo');
-      const weatherDetails = document.getElementById('weatherDetails');
-      
-      if (!weatherInfo.contains(event.target) && !weatherDetails.contains(event.target)) {
-        weatherDetails.classList.remove('show');
-      }
-    });
-
     function renderMap() {
-      // Clear existing markers
       markers.forEach(m => map.removeLayer(m));
       markers = [];
-      
-      // Add new markers
       kulinerData.forEach((item, index) => {
         const icon = item.keliling ? '🛺' : '🏠';
         const marker = L.marker([item.lat, item.lng], {
@@ -853,25 +1311,20 @@
         }).addTo(map)
           .bindPopup(`<b>${item.nama}</b><br>${item.kategori}`)
           .on('click', () => showDetail(index));
-        
         markers.push(marker);
       });
     }
-
     function renderList(search = "", category = "") {
       const list = document.getElementById("list");
       list.innerHTML = "";
-      
       const filteredData = kulinerData.filter(d =>
         d.nama.toLowerCase().includes(search.toLowerCase()) &&
         (category === "" || d.kategori === category)
       );
-      
       if (filteredData.length === 0) {
         list.innerHTML = "<p style='text-align:center;'>Tidak ada hasil ditemukan</p>";
         return;
       }
-      
       filteredData.forEach((d, i) => {
         const div = document.createElement("div");
         div.className = "card";
@@ -885,7 +1338,6 @@
         list.appendChild(div);
       });
     }
-
     function showDetail(index) {
       const item = kulinerData[index];
       const content = `
@@ -902,61 +1354,33 @@
       `;
       document.getElementById("detailContent").innerHTML = content;
       document.getElementById("detailPopup").style.display = "block";
-      
-      // Center map on this item
       map.setView([item.lat, item.lng], 15);
     }
-
     function closeDetail() {
       document.getElementById("detailPopup").style.display = "none";
     }
-
+    // Google Form Modal
+    function openGoogleForm() {
+      document.getElementById('googleFormModal').style.display = 'block';
+    }
+    function closeGoogleForm() {
+      document.getElementById('googleFormModal').style.display = 'none';
+    }
+    // Chatbot
     function toggleChat() {
       const chat = document.getElementById("chatPopup");
-      chat.style.display = chat.style.display === "block" ? "none" : "block";
-      if (chat.style.display === "block") {
+      chat.style.display = chat.style.display === "flex" ? "none" : "flex";
+      if (chat.style.display === "flex") {
         document.getElementById("chatInput").focus();
       }
     }
-
-    // Function to smoothly scroll chat to bottom
-    function scrollChatToBottom() {
-      const chatMessages = document.getElementById("chatMessages");
-      if (chatMessages) {
-        // Force scroll to bottom with multiple attempts
-        const scrollToBottom = () => {
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        };
-        
-        // Immediate scroll
-        scrollToBottom();
-        
-        // Use requestAnimationFrame for smooth scrolling
-        requestAnimationFrame(scrollToBottom);
-        
-        // Double-check after a short delay
-        setTimeout(scrollToBottom, 50);
-        
-        // Final check after longer delay to ensure content is rendered
-        setTimeout(scrollToBottom, 200);
-      }
-    }
-
-    async function sendChat() {
+    function sendChat() {
       const input = document.getElementById("chatInput").value.trim();
       const chatMessages = document.getElementById("chatMessages");
-
       if (!input) return;
-
-      // Format waktu sekarang
       const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const formattedHours = hours % 12 || 12;
-      const timeString = `${formattedHours}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
-
-      // Tambahkan pesan user
+      const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+      // User message
       chatMessages.innerHTML += `
         <div class="message message-user">
           ${input}
@@ -964,722 +1388,213 @@
         </div>
       `;
       document.getElementById("chatInput").value = "";
-      
-      // Scroll ke bawah dengan fungsi yang lebih robust
-      scrollChatToBottom();
-
-      // Show typing indicator
-      const typingIndicator = document.createElement('div');
-      typingIndicator.className = 'message message-bot typing-indicator';
-      typingIndicator.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
-      chatMessages.appendChild(typingIndicator);
-      scrollChatToBottom();
-
-      try {
-        // Enhanced AI response using API
-        const reply = await getAIResponse(input);
-        
-        // Remove typing indicator
-        chatMessages.removeChild(typingIndicator);
-        
-        // Add AI response
+      // Show typing
+      const typing = document.createElement('div');
+      typing.className = 'message message-bot typing-indicator';
+      typing.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+      chatMessages.appendChild(typing);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      // Generate response
+      setTimeout(() => {
+        chatMessages.removeChild(typing);
+        const reply = generateResponse(input);
         chatMessages.innerHTML += `
           <div class="message message-bot">
             ${reply}
             <div class="message-time">${timeString}</div>
           </div>
         `;
-        scrollChatToBottom();
-      } catch (error) {
-        // Fallback to personalized responses if API fails
-        chatMessages.removeChild(typingIndicator);
-        
-        let reply = "";
-        
-        // Get personalized context for fallback
-        const budget = userContext.budget;
-        const mood = userContext.mood;
-        const preferences = userContext.preferences;
-        const timeOfDay = userContext.timeOfDay;
-        
-        if (input.toLowerCase().includes("rekomendasi") || input.toLowerCase().includes("sarankan")) {
-          if (budget === 'low') {
-            reply = "Kak, untuk budget hemat saya sarankan: 🍜 Tempe Mendoan (Rp 2.000-5.000) di Pasar Sokaraja, 🥤 Es Dawet Ayu (Rp 5.000-8.000), dan 🍡 Cenil (Rp 3.000-5.000). Semua enak dan terjangkau!";
-          } else if (budget === 'high') {
-            reply = "Untuk Kak yang suka premium, saya rekomendasikan: 🍲 Soto Sokaraja (Rp 12.000-20.000) di Jl. Sokaraja, 🥘 Sop Ayam (Rp 15.000-25.000) di Jl. Gatot Subroto, dan ☕ Kopi Joss (Rp 8.000-15.000) di Pasar Wage.";
-          } else {
-            const randomFood = kulinerData[Math.floor(Math.random() * kulinerData.length)];
-            reply = `Saya merekomendasikan ${randomFood.nama} (${randomFood.kategori}) di ${randomFood.alamat}. Buka jam ${randomFood.jam} dengan harga sekitar ${randomFood.harga}.`;
-          }
-        } 
-        else if (input.toLowerCase().includes("soto")) {
-          reply = "🍜 Soto Sokaraja khas Purwokerto! Lokasinya di Jl. Sokaraja, buka jam 07:00-15:00 dengan harga Rp 12.000-20.000. Unik karena menggunakan kuah kaldu sapi dengan kacang. Cocok banget untuk makan siang!";
-        }
-        else if (input.toLowerCase().includes("mendoan")) {
-          reply = "🥢 Tempe Mendoan khas Purwokerto bisa ditemukan di Pasar Sokaraja. Harganya terjangkau Rp 2.000-5.000 per potong. Tempe digoreng setengah matang sehingga renyah di luar tapi lembut di dalam. Perfect untuk cemilan!";
-        }
-        else if (input.toLowerCase().includes("hallo") || input.toLowerCase().includes("hai")) {
-          const greeting = getPersonalizedGreeting();
-          reply = greeting;
-        }
-        else if (input.toLowerCase().includes("cuaca")) {
-          const weatherTemp = document.getElementById('weatherTemp').textContent;
-          const weatherDesc = document.getElementById('weatherDetailsDesc').textContent;
-          reply = `🌤️ Cuaca Purwokerto saat ini: ${weatherDesc}, suhu ${weatherTemp}.`;
-        }
-        else if (mood === 'hungry') {
-          reply = "🍽️ Kak lapar ya? Untuk makan berat saya sarankan: 🍜 Soto Sokaraja, 🥘 Bakso, atau 🍲 Sop Ayam. Semua mengenyangkan dan enak!";
-        }
-        else if (mood === 'thirsty') {
-          reply = "🥤 Kak haus? Coba minuman segar: 🥥 Es Kelapa Muda, 🍧 Es Campur, atau 🥤 Es Dawet Ayu. Semua menyegarkan!";
-        }
-        else if (mood === 'snack') {
-          reply = "🍡 Untuk cemilan, saya sarankan: 🥢 Tempe Mendoan, 🍡 Cenil, atau 🍪 Klanting. Semua enak dan terjangkau!";
-        }
-        else if (preferences.includes('spicy')) {
-          reply = "🌶️ Kak suka pedas ya? Coba Tempe Mendoan dengan sambal, atau Soto Sokaraja yang bisa ditambah cabai. Keduanya ada level kepedasan yang bisa disesuaikan!";
-        }
-        else if (preferences.includes('sweet')) {
-          reply = "🍰 Kak suka manis? Perfect! Coba 🍡 Cenil, 🍧 Es Campur, atau 🥤 Es Dawet Ayu. Semua manis dan enak!";
-        }
-        else {
-          reply = "Terima kasih pertanyaannya Kak! Di Purwokerto banyak kuliner khas seperti Soto Sokaraja, Tempe Mendoan, Getuk Goreng, dan lainnya. Mau cari makanan jenis apa? Saya bisa bantu rekomendasi yang sesuai dengan preferensi Kak!";
-        }
-
-        chatMessages.innerHTML += `
-          <div class="message message-bot">
-            ${reply}
-            <div class="message-time">${timeString}</div>
-          </div>
-        `;
-        scrollChatToBottom();
-      }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1000);
     }
-
-    // User context tracking
-    let userContext = {
-      preferences: [],
-      budget: null,
-      dietary: [],
-      lastSearches: [],
-      mood: null,
-      timeOfDay: null
-    };
-
-    // Function to analyze user input and update context
-    function updateUserContext(input) {
-      const lowerInput = input.toLowerCase();
-      
-      // Check for reset command
-      if (lowerInput.includes('reset') || lowerInput.includes('hapus') || lowerInput.includes('clear')) {
-        resetUserContext();
-        return 'preferences_reset';
-      }
-      
-      // Detect budget preferences
-      if (lowerInput.includes('murah') || lowerInput.includes('hemat') || lowerInput.includes('budget')) {
-        userContext.budget = 'low';
-      } else if (lowerInput.includes('mahal') || lowerInput.includes('premium') || lowerInput.includes('restoran')) {
-        userContext.budget = 'high';
-      }
-      
-      // Detect dietary preferences
-      if (lowerInput.includes('vegetarian') || lowerInput.includes('sayur') || lowerInput.includes('tidak makan daging')) {
-        userContext.dietary.push('vegetarian');
-      }
-      if (lowerInput.includes('halal') || lowerInput.includes('islam')) {
-        userContext.dietary.push('halal');
-      }
-      if (lowerInput.includes('pedas') || lowerInput.includes('spicy')) {
-        userContext.preferences.push('spicy');
-      }
-      if (lowerInput.includes('manis') || lowerInput.includes('dessert') || lowerInput.includes('kue')) {
-        userContext.preferences.push('sweet');
-      }
-      
-      // Detect mood
-      if (lowerInput.includes('lapar') || lowerInput.includes('makan')) {
-        userContext.mood = 'hungry';
-      } else if (lowerInput.includes('haus') || lowerInput.includes('minum')) {
-        userContext.mood = 'thirsty';
-      } else if (lowerInput.includes('cemilan') || lowerInput.includes('snack')) {
-        userContext.mood = 'snack';
-      }
-      
-      // Detect time of day
-      const now = new Date();
-      const hour = now.getHours();
-      if (hour >= 6 && hour < 11) {
-        userContext.timeOfDay = 'breakfast';
-      } else if (hour >= 11 && hour < 15) {
-        userContext.timeOfDay = 'lunch';
-      } else if (hour >= 15 && hour < 19) {
-        userContext.timeOfDay = 'afternoon';
+    function generateResponse(input) {
+      const text = input.toLowerCase();
+      if (text.includes('rekomendasi') || text.includes('sarankan')) {
+        const random = kulinerData[Math.floor(Math.random() * kulinerData.length)];
+        return `🍽️ Rekomendasi aku: <b>${random.nama}</b> (${random.kategori}) di ${random.alamat}. Harga ${random.harga}`;
+      } else if (text.includes('soto')) {
+        const soto = kulinerData.find(k => k.nama === "Soto Sokaraja");
+        if (soto) {
+          return `🍜 ${soto.nama} di ${soto.alamat}, buka ${soto.jam}, harga ${soto.harga}. ${soto.deskripsi}!`;
+        }
+      } else if (text.includes('mendoan')) {
+        const mendoan = kulinerData.find(k => k.nama === "Tempe Mendoan");
+        if (mendoan) {
+          return `🥢 ${mendoan.nama} di ${mendoan.alamat}, hanya ${mendoan.harga}. ${mendoan.deskripsi}!`;
+        }
+      } else if (text.includes('lapar')) {
+        return "🍛 Kak lapar? Coba Soto Sokaraja atau Tempe Mendoan. Keduanya mengenyangkan!";
+      } else if (text.includes('ha')) {
+        return "🥤 Kak haus? Di Purwokerto ada Es Dawet Ayu segar hanya Rp 5.000!";
       } else {
-        userContext.timeOfDay = 'dinner';
+        return "🤗 Aku bisa bantu cari kuliner berdasarkan nama, kategori, atau mood Kak! Coba tanya 'rekomendasi dong'";
       }
-      
-      // Add to recent searches
-      userContext.lastSearches.unshift(input);
-      if (userContext.lastSearches.length > 5) {
-        userContext.lastSearches.pop();
-      }
+      return "Maaf, aku tidak mengerti. Coba tanya 'rekomendasi kuliner' atau sebut nama makanan tertentu.";
     }
-
-    // Function to reset user context
-    function resetUserContext() {
-      userContext = {
-        preferences: [],
-        budget: null,
-        dietary: [],
-        lastSearches: [],
-        mood: null,
-        timeOfDay: null
-      };
-    }
-
-    // Function to get personalized greeting
-    function getPersonalizedGreeting() {
-      const now = new Date();
-      const hour = now.getHours();
-      let greeting = '';
-      
-      if (hour >= 5 && hour < 12) {
-        greeting = 'Selamat pagi!';
-      } else if (hour >= 12 && hour < 15) {
-        greeting = 'Selamat siang!';
-      } else if (hour >= 15 && hour < 18) {
-        greeting = 'Selamat sore!';
-      } else {
-        greeting = 'Selamat malam!';
-      }
-      
-      let contextInfo = '';
-      if (userContext.budget) {
-        contextInfo += ` Saya lihat Kak suka makanan ${userContext.budget === 'low' ? 'yang ekonomis' : 'premium'}.`;
-      }
-      if (userContext.preferences.length > 0) {
-        contextInfo += ` Kak juga suka makanan ${userContext.preferences.join(', ')}.`;
-      }
-      
-      return greeting + contextInfo + ' Ada yang bisa saya bantu untuk rekomendasi kuliner Purwokerto?';
-    }
-
-    async function getAIResponse(userInput) {
-      const API_KEY = 'AIzaSyBx6wxIFqWHRB9JQBe2Cd5mjlnrGfnpRCw';
-      
-      // Update user context based on input
-      const contextUpdate = updateUserContext(userInput);
-      
-      // Handle reset command
-      if (contextUpdate === 'preferences_reset') {
-        return "Baik Kak! Saya sudah menghapus semua preferensi Kak. Sekarang saya akan memberikan rekomendasi yang lebih umum. Ada yang bisa saya bantu?";
-      }
-      
-      // Get current weather info for context
-      const weatherTemp = document.getElementById('weatherTemp')?.textContent || '25°C';
-      const weatherDesc = document.getElementById('weatherDetailsDesc')?.textContent || 'Cerah';
-      
-      // Create personalized context with more specific instructions
-      const context = `
-        Anda adalah asisten kuliner personal untuk kota Purwokerto. Berikan rekomendasi yang disesuaikan dengan preferensi pengguna.
-        
-        INFORMASI KULINER PURWOKERTO:
-        - Soto Sokaraja: kuah kaldu sapi dengan kacang, harga Rp 12.000-20.000, lokasi Jl. Sokaraja
-        - Tempe Mendoan: tempe goreng setengah matang, harga Rp 2.000-5.000, lokasi Pasar Sokaraja
-        - Getuk Goreng: singkong goreng dengan gula aren, harga Rp 5.000-10.000
-        - Klanting: cemilan singkong berbentuk anting, harga Rp 5.000-10.000
-        - Cenil: singkong kenyal berwarna-warni, harga Rp 3.000-5.000
-        - Es Dawet Ayu: minuman segar dari tepung beras dan santan, harga Rp 5.000-8.000
-        - Bakso: kuah kaldu hangat, harga Rp 10.000-18.000, lokasi Jl. Sudirman
-        - Kopi Joss: kopi panas dengan arang menyala, harga Rp 8.000-15.000, lokasi Pasar Wage
-        - Wedang Ronde: minuman hangat dengan bola-bola ketan, harga Rp 5.000-8.000, lokasi Pasar Sokaraja
-        - Sop Ayam: kuah bening yang menghangatkan, harga Rp 15.000-25.000, lokasi Jl. Gatot Subroto
-        - Es Kelapa Muda: menyegarkan di hari panas, harga Rp 8.000-12.000, lokasi Jl. Sudirman
-        - Es Campur: berbagai buah dengan sirup dan es, harga Rp 6.000-10.000, lokasi Pasar Sokaraja
-        - Es Cendol: minuman tradisional dengan santan, harga Rp 4.000-7.000, lokasi Jl. Gatot Subroto
-        
-        PREFERENSI PENGGUNA:
-        - Budget: ${userContext.budget || 'tidak spesifik'}
-        - Dietary: ${userContext.dietary.join(', ') || 'tidak ada batasan'}
-        - Preferensi: ${userContext.preferences.join(', ') || 'tidak spesifik'}
-        - Mood: ${userContext.mood || 'tidak spesifik'}
-        - Waktu: ${userContext.timeOfDay || 'tidak spesifik'}
-        - Pencarian terakhir: ${userContext.lastSearches.slice(0, 3).join(', ') || 'tidak ada'}
-        
-        CUACA SAAT INI: ${weatherDesc}, suhu ${weatherTemp}
-        
-        INSTRUKSI KHUSUS:
-        1. Berikan rekomendasi yang disesuaikan dengan preferensi pengguna
-        2. Jika pengguna mencari makanan murah, fokus pada makanan di bawah Rp 15.000
-        3. Jika pengguna mencari makanan premium, sarankan restoran atau makanan dengan kualitas tinggi
-        4. Jika pengguna vegetarian, sarankan makanan berbasis sayur
-        5. Jika pengguna suka pedas, sarankan makanan dengan level kepedasan
-        6. Jika pengguna suka manis, sarankan dessert atau minuman manis
-        7. Sesuaikan dengan waktu makan (sarapan, makan siang, makan malam, cemilan)
-        8. Berikan jawaban yang ramah, personal, dan dalam bahasa Indonesia
-        9. Gunakan nama pengguna jika tersedia atau panggil dengan "Kak" atau "Mas/Mbak"
-        10. Jika pengguna bertanya tentang makanan yang tidak ada dalam daftar, sarankan alternatif yang tersedia
-        11. Berikan jawaban yang singkat, jelas, dan langsung ke inti
-        12. Jika pengguna lapar, sarankan makanan berat. Jika haus, sarankan minuman
-        13. Gunakan emoji yang sesuai untuk membuat jawaban lebih menarik
-        14. Berikan 2-3 rekomendasi yang berbeda untuk variasi
-      `;
-
-      const prompt = `${context}\n\nUser: ${userInput}\n\nAssistant:`;
-
+    // Rekomendasi Cuaca berbasis API
+    async function fetchWeather() {
       try {
-        // Add timeout to make it more responsive
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        // Ganti YOUR_API_KEY dengan API key OpenWeatherMap Anda
+        const API_KEY = 'YOUR_API_KEY'; // <-- Masukkan API key Anda di sini
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Purwokerto,id&appid=${API_KEY}&units=metric&lang=id`);
         
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: prompt
-              }]
-            }],
-            generationConfig: {
-              temperature: 0.8,
-              topK: 40,
-              topP: 0.95,
-              maxOutputTokens: 600,
-            }
-          }),
-          signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
-
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error('Gagal mengambil data cuaca');
         }
-
+        
         const data = await response.json();
         
-        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-          return data.candidates[0].content.parts[0].text;
-        } else {
-          throw new Error('Invalid response format');
-        }
+        // Update UI
+        document.getElementById("weatherTemp").textContent = `${Math.round(data.main.temp)}°C`;
+        document.getElementById("weatherDetailsTemp").textContent = `${Math.round(data.main.temp)}°C`;
+        document.getElementById("weatherMinTemp").textContent = `${Math.round(data.main.temp_min)}°C`;
+        document.getElementById("weatherMaxTemp").textContent = `${Math.round(data.main.temp_max)}°C`;
+        document.getElementById("weatherHumidity").textContent = `${data.main.humidity}%`;
+        document.getElementById("weatherWind").textContent = `${data.wind.speed} m/s`;
+        document.getElementById("weatherDetailsDesc").textContent = data.weather[0].description;
+        
+        // Set icon
+        const iconCode = data.weather[0].icon;
+        const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+        document.getElementById("weatherIcon").outerHTML = `<img src="${iconUrl}" class="weather-icon" style="width:20px;height:20px;">`;
+        document.getElementById("weatherDetailsIcon").outerHTML = `<img src="${iconUrl}" class="weather-details-icon" style="width:40px;height:40px;">`;
+        
+        // Update tanggal
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("weatherDate").textContent = today.toLocaleDateString('id-ID', options);
+        
       } catch (error) {
-        console.error('AI API Error:', error);
-        if (error.name === 'AbortError') {
-          throw new Error('Request timeout - using fallback response');
-        }
-        throw error;
+        console.error('Error fetching weather:', error);
+        // Fallback ke data simulasi jika API gagal
+        simulateWeather();
       }
     }
-
-    function showWeatherRec() {
-      const weatherDesc = document.getElementById('weatherDetailsDesc').textContent;
-      const currentTemp = parseInt(document.getElementById('weatherTemp').textContent);
-      const weatherIcon = document.getElementById('weatherIcon').className;
-      
-      let recs = [];
-      let weatherType = '';
-      
-      if (weatherDesc.toLowerCase().includes('hujan') || currentTemp < 24) {
-        weatherType = 'Hujan/Dingin';
-        recs = [
-          { nama: "Soto Sokaraja", deskripsi: "kuah hangat dengan kacang", harga: "Rp 12.000-20.000", lokasi: "Jl. Sokaraja" },
-          { nama: "Kopi Joss", deskripsi: "kopi panas dengan arang menyala", harga: "Rp 8.000-15.000", lokasi: "Pasar Wage" },
-          { nama: "Bakso", deskripsi: "kuah kaldu hangat", harga: "Rp 10.000-18.000", lokasi: "Jl. Sudirman" },
-          { nama: "Wedang Ronde", deskripsi: "minuman hangat dengan bola-bola ketan", harga: "Rp 5.000-8.000", lokasi: "Pasar Sokaraja" },
-          { nama: "Sop Ayam", deskripsi: "kuah bening yang menghangatkan", harga: "Rp 15.000-25.000", lokasi: "Jl. Gatot Subroto" }
-        ];
-      } else if (weatherDesc.toLowerCase().includes('cerah') || currentTemp > 28) {
-        weatherType = 'Cerah/Panas';
-        recs = [
-          { nama: "Es Dawet Ayu", deskripsi: "minuman segar dari tepung beras dan santan", harga: "Rp 5.000-8.000", lokasi: "Pasar Wage" },
-          { nama: "Es Kelapa Muda", deskripsi: "menyegarkan di hari panas", harga: "Rp 8.000-12.000", lokasi: "Jl. Sudirman" },
-          { nama: "Soto Dingin", deskripsi: "soto dengan kuah yang tidak terlalu panas", harga: "Rp 12.000-18.000", lokasi: "Jl. Sokaraja" },
-          { nama: "Es Campur", deskripsi: "berbagai buah dengan sirup dan es", harga: "Rp 6.000-10.000", lokasi: "Pasar Sokaraja" },
-          { nama: "Es Cendol", deskripsi: "minuman tradisional dengan santan", harga: "Rp 4.000-7.000", lokasi: "Jl. Gatot Subroto" }
-        ];
-      } else {
-        weatherType = 'Berawan/Sedang';
-        recs = [
-          { nama: "Tempe Mendoan", deskripsi: "gorengan hangat yang gurih", harga: "Rp 2.000-5.000", lokasi: "Pasar Sokaraja" },
-          { nama: "Lumpia Boom", deskripsi: "lumpia besar dengan isian beragam", harga: "Rp 8.000-15.000", lokasi: "Jl. Sudirman" },
-          { nama: "Sahoun", deskripsi: "soun berkuah ayam yang gurih", harga: "Rp 10.000-15.000", lokasi: "Jl. Gatot Subroto" },
-          { nama: "Nopia", deskripsi: "kue tradisional isi gula merah", harga: "Rp 3.000-6.000", lokasi: "Pasar Wage" },
-          { nama: "Jenang Jaket", deskripsi: "dodol lembut dan manis", harga: "Rp 5.000-10.000", lokasi: "Pasar Sokaraja" }
-        ];
-      }
-      
-      // Create and show custom popup
-      showWeatherPopup(weatherDesc, currentTemp, weatherIcon, weatherType, recs);
-    }
-
-    function showWeatherPopup(weatherDesc, currentTemp, weatherIcon, weatherType, recommendations) {
-      // Remove existing popup if any
-      const existingPopup = document.getElementById('weatherRecommendationPopup');
-      if (existingPopup) {
-        existingPopup.remove();
-      }
-
-      // Create popup container
-      const popup = document.createElement('div');
-      popup.id = 'weatherRecommendationPopup';
-      popup.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-        animation: fadeIn 0.3s ease;
-      `;
-
-      // Create popup content
-      const popupContent = document.createElement('div');
-      popupContent.style.cssText = `
-        background: white;
-        border-radius: 20px;
-        padding: 30px;
-        max-width: 500px;
-        width: 90%;
-        max-height: 80vh;
-        overflow-y: auto;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        position: relative;
-      `;
-
-      // Create header with close button
-      const header = document.createElement('div');
-      header.style.cssText = `
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #f0f0f0;
-      `;
-
-      const title = document.createElement('h2');
-      title.textContent = '🌤️ Rekomendasi Cuaca & Kuliner';
-      title.style.cssText = `
-        color: var(--red);
-        margin: 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-      `;
-
-      const closeBtn = document.createElement('button');
-      closeBtn.innerHTML = '×';
-      closeBtn.style.cssText = `
-        background: none;
-        border: none;
-        font-size: 2rem;
-        color: #999;
-        cursor: pointer;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-      `;
-      closeBtn.onmouseover = () => closeBtn.style.background = '#f0f0f0';
-      closeBtn.onmouseout = () => closeBtn.style.background = 'transparent';
-      closeBtn.onclick = () => popup.remove();
-
-      header.appendChild(title);
-      header.appendChild(closeBtn);
-
-      // Create weather info section
-      const weatherInfo = document.createElement('div');
-      weatherInfo.style.cssText = `
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 20px;
-        text-align: center;
-      `;
-
-      const weatherIconDiv = document.createElement('div');
-      weatherIconDiv.innerHTML = `<i class="${weatherIcon}" style="font-size: 3rem; margin-bottom: 10px;"></i>`;
-      
-      const weatherText = document.createElement('div');
-      weatherText.innerHTML = `
-        <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 5px;">${weatherDesc}</div>
-        <div style="font-size: 1.5rem; font-weight: 700;">${currentTemp}°C</div>
-        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">Purwokerto</div>
-      `;
-
-      weatherInfo.appendChild(weatherIconDiv);
-      weatherInfo.appendChild(weatherText);
-
-      // Create filter section
-      const filterSection = document.createElement('div');
-      filterSection.style.cssText = `
-        margin-bottom: 20px;
-        text-align: center;
-      `;
-
-      const filterLabel = document.createElement('div');
-      filterLabel.textContent = 'Filter berdasarkan:';
-      filterLabel.style.cssText = `
-        font-weight: 600;
-        color: var(--text);
-        margin-bottom: 10px;
-      `;
-
-      const filterButtons = document.createElement('div');
-      filterButtons.style.cssText = `
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        flex-wrap: wrap;
-      `;
-
-      const filterOptions = [
-        { id: 'all', label: 'Semua', color: '#c53e4e' },
-        { id: 'makanan', label: 'Makanan', color: '#2980b9' },
-        { id: 'minuman', label: 'Minuman', color: '#27ae60' },
-        { id: 'snack', label: 'Snack', color: '#f39c12' }
-      ];
-
-      let currentFilter = 'all';
-      let filteredRecs = recommendations;
-
-      filterOptions.forEach(option => {
-        const btn = document.createElement('button');
-        btn.textContent = option.label;
-        btn.style.cssText = `
-          padding: 8px 16px;
-          border: none;
-          border-radius: 20px;
-          background: ${option.id === 'all' ? option.color : '#f0f0f0'};
-          color: ${option.id === 'all' ? 'white' : '#666'};
-          cursor: pointer;
-          font-size: 0.9rem;
-          font-weight: 500;
-          transition: all 0.3s ease;
-        `;
-        
-        btn.onclick = () => {
-          // Update button styles
-          filterButtons.querySelectorAll('button').forEach(b => {
-            b.style.background = '#f0f0f0';
-            b.style.color = '#666';
-          });
-          btn.style.background = option.color;
-          btn.style.color = 'white';
-          
-          // Filter recommendations
-          currentFilter = option.id;
-          if (currentFilter === 'all') {
-            filteredRecs = recommendations;
-          } else {
-            filteredRecs = recommendations.filter(rec => {
-              if (currentFilter === 'makanan') {
-                return rec.nama.toLowerCase().includes('soto') || rec.nama.toLowerCase().includes('bakso') || 
-                       rec.nama.toLowerCase().includes('sop') || rec.nama.toLowerCase().includes('sahoun');
-              } else if (currentFilter === 'minuman') {
-                return rec.nama.toLowerCase().includes('es') || rec.nama.toLowerCase().includes('kopi') || 
-                       rec.nama.toLowerCase().includes('wedang');
-              } else if (currentFilter === 'snack') {
-                return rec.nama.toLowerCase().includes('mendoan') || rec.nama.toLowerCase().includes('lumpia') || 
-                       rec.nama.toLowerCase().includes('nopia') || rec.nama.toLowerCase().includes('jenang');
-              }
-              return true;
-            });
-          }
-          
-          // Update recommendations display
-          updateRecommendationsDisplay();
-        };
-        
-        filterButtons.appendChild(btn);
-      });
-
-      filterSection.appendChild(filterLabel);
-      filterSection.appendChild(filterButtons);
-
-      // Create recommendations section
-      const recommendationsSection = document.createElement('div');
-      recommendationsSection.id = 'recommendationsContainer';
-
-      function updateRecommendationsDisplay() {
-        recommendationsSection.innerHTML = '';
-        
-        if (filteredRecs.length === 0) {
-          const noResults = document.createElement('div');
-          noResults.textContent = 'Tidak ada rekomendasi untuk filter ini.';
-          noResults.style.cssText = `
-            text-align: center;
-            color: #999;
-            padding: 20px;
-            font-style: italic;
-          `;
-          recommendationsSection.appendChild(noResults);
-          return;
-        }
-
-        filteredRecs.forEach((rec, index) => {
-          const recCard = document.createElement('div');
-          recCard.style.cssText = `
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--red);
-            transition: all 0.3s ease;
-            cursor: pointer;
-          `;
-          
-          recCard.onmouseover = () => {
-            recCard.style.transform = 'translateY(-2px)';
-            recCard.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
-          };
-          
-          recCard.onmouseout = () => {
-            recCard.style.transform = 'translateY(0)';
-            recCard.style.boxShadow = 'none';
-          };
-
-          recCard.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-              <h3 style="color: var(--red); margin: 0; font-size: 1.1rem;">${rec.nama}</h3>
-              <span style="background: var(--red); color: white; padding: 4px 8px; border-radius: 10px; font-size: 0.8rem; font-weight: 600;">${weatherType}</span>
-            </div>
-            <p style="color: #666; margin: 0 0 10px 0; font-size: 0.9rem;">${rec.deskripsi}</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
-              <span style="color: #27ae60; font-weight: 600;">💰 ${rec.harga}</span>
-              <span style="color: #2980b9; font-weight: 600;">📍 ${rec.lokasi}</span>
-            </div>
-          `;
-
-          recommendationsSection.appendChild(recCard);
-        });
-      }
-
-      // Initial display
-      updateRecommendationsDisplay();
-
-      // Assemble popup
-      popupContent.appendChild(header);
-      popupContent.appendChild(weatherInfo);
-      popupContent.appendChild(filterSection);
-      popupContent.appendChild(recommendationsSection);
-      popup.appendChild(popupContent);
-
-      // Add to body
-      document.body.appendChild(popup);
-
-      // Close on outside click
-      popup.onclick = (e) => {
-        if (e.target === popup) {
-          popup.remove();
-        }
+    
+    // Fungsi simulasi cuaca (fallback)
+    function simulateWeather() {
+      console.log("Menggunakan data cuaca simulasi");
+      const weatherData = {
+        temp: 28,
+        minTemp: 22,
+        maxTemp: 32,
+        humidity: 75,
+        wind: 2.5,
+        description: "Berawan",
+        icon: "fa-cloud-sun"
       };
-
-      // Auto close after 30 seconds
-      setTimeout(() => {
-        if (document.getElementById('weatherRecommendationPopup')) {
-          popup.remove();
-        }
-      }, 30000);
+      
+      document.getElementById("weatherTemp").textContent = `${weatherData.temp}°C`;
+      document.getElementById("weatherDetailsTemp").textContent = `${weatherData.temp}°C`;
+      document.getElementById("weatherMinTemp").textContent = `${weatherData.minTemp}°C`;
+      document.getElementById("weatherMaxTemp").textContent = `${weatherData.maxTemp}°C`;
+      document.getElementById("weatherHumidity").textContent = `${weatherData.humidity}%`;
+      document.getElementById("weatherWind").textContent = `${weatherData.wind} m/s`;
+      document.getElementById("weatherDetailsDesc").textContent = weatherData.description;
+      document.getElementById("weatherIcon").className = `fas ${weatherData.icon} weather-icon`;
+      document.getElementById("weatherDetailsIcon").className = `fas ${weatherData.icon} weather-details-icon`;
+      
+      const today = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById("weatherDate").textContent = today.toLocaleDateString('id-ID', options);
     }
-
-    // Initialize the app
+    
+    function toggleWeatherDetails() {
+      const details = document.getElementById("weatherDetails");
+      details.classList.toggle("show");
+    }
+    
+    // Rekomendasi cuaca berdasarkan data API
+    function showWeatherRec() {
+      // Pastikan data cuaca sudah dimuat
+      fetchWeather().then(() => {
+        // Setelah data cuaca dimuat, tampilkan rekomendasi
+        setTimeout(() => {
+          const tempElement = document.getElementById("weatherTemp");
+          if (tempElement && tempElement.textContent !== "--°C") {
+            const temp = parseInt(tempElement.textContent);
+            let recommendation = "";
+            
+            if (temp < 20) {
+              recommendation = "Hari ini sedikit dingin, cocok menikmati Soto hangat seperti Soto Sokaraja atau Soto Bening!";
+            } else if (temp >= 20 && temp <= 25) {
+              recommendation = "Cuaca hari ini nyaman, pas untuk mencoba kuliner baru seperti Tempe Mendoan atau Tahu Gejrot!";
+            } else if (temp > 25 && temp <= 30) {
+              recommendation = "Hari ini cukup panas, cocok menikmati minuman segar seperti Es Dawet Ayu atau Es Cendol Dawet!";
+            } else {
+              recommendation = "Hari ini sangat panas, segeralah dengan minuman segar atau camilan dingin seperti Es Puter!";
+            }
+            
+            // Tampilkan rekomendasi di chatbot
+            const chatMessages = document.getElementById("chatMessages");
+            const now = new Date();
+            const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+            
+            chatMessages.innerHTML += `
+              <div class="message message-bot">
+                🌤️ Rekomendasi Cuaca: ${recommendation}
+                <div class="message-time">${timeString}</div>
+              </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Jika chatbot belum terbuka, buka dulu
+            const chat = document.getElementById("chatPopup");
+            if (chat.style.display !== "flex") {
+              toggleChat();
+            }
+          } else {
+            // Jika data cuaca belum tersedia, beri pesan fallback
+            const chatMessages = document.getElementById("chatMessages");
+            const now = new Date();
+            const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+            
+            chatMessages.innerHTML += `
+              <div class="message message-bot">
+                🌤️ Rekomendasi Cuaca: Cuaca hari ini sangat cocok untuk menikmati kuliner Purwokerto! Coba cari Soto Sokaraja atau Tempe Mendoan.
+                <div class="message-time">${timeString}</div>
+              </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            const chat = document.getElementById("chatPopup");
+            if (chat.style.display !== "flex") {
+              toggleChat();
+            }
+          }
+        }, 500); // Tunggu sebentar setelah fetchWeather selesai
+      });
+    }
+    
+    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       renderMap();
       renderList();
-      fetchWeather(); // Load weather data
       
-      // Set personalized greeting
-      const initialGreeting = document.getElementById('initialGreeting');
-      if (initialGreeting) {
-        initialGreeting.textContent = getPersonalizedGreeting();
-      }
+      // Coba fetch data cuaca dari API, fallback ke simulasi jika gagal
+      fetchWeather();
       
-      // Refresh weather every 30 minutes
-      setInterval(fetchWeather, 30 * 60 * 1000);
-      
-      // Search functionality
       document.getElementById("search").addEventListener("input", (e) => {
         const search = e.target.value;
         const category = document.getElementById("filter").value;
         renderList(search, category);
       });
-
-      // Filter functionality
       document.getElementById("filter").addEventListener("change", (e) => {
         const search = document.getElementById("search").value;
         const category = e.target.value;
         renderList(search, category);
       });
-      
-      // Allow pressing Enter in chat
       document.getElementById("chatInput").addEventListener("keypress", (e) => {
         if (e.key === "Enter") sendChat();
       });
-
-      // Initialize chat scroll to bottom
-      const chatMessages = document.getElementById("chatMessages");
-      if (chatMessages) {
-        // Scroll to bottom on page load
-        scrollChatToBottom();
-        
-        // Set up MutationObserver to auto-scroll when new messages are added
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-              // Check if any added nodes are message elements
-              const hasNewMessages = Array.from(mutation.addedNodes).some(node => 
-                node.nodeType === Node.ELEMENT_NODE && 
-                (node.classList.contains('message') || node.querySelector('.message'))
-              );
-              
-              if (hasNewMessages) {
-                // Immediate scroll
-                scrollChatToBottom();
-                
-                // Additional scroll after DOM update
-                setTimeout(() => {
-                  scrollChatToBottom();
-                }, 10);
-                
-                // Final scroll after longer delay
-                setTimeout(() => {
-                  scrollChatToBottom();
-                }, 100);
-              }
-            }
-          });
-        });
-        
-        // Start observing the chat messages container
-        observer.observe(chatMessages, {
-          childList: true,
-          subtree: true
-        });
-        
-        // Also add scroll event listener to ensure chat stays at bottom
-        chatMessages.addEventListener('scroll', () => {
-          // If user scrolls up, don't auto-scroll
-          const isAtBottom = chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 10;
-          if (!isAtBottom) {
-            // User has scrolled up, don't force scroll
-            return;
-          }
-        });
-      }
+      
+      // Close modals when clicking outside
+      window.addEventListener('click', (event) => {
+        const googleModal = document.getElementById('googleFormModal');
+        if (event.target === googleModal) {
+          closeGoogleForm();
+        }
+      });
     });
   </script>
 </body>
