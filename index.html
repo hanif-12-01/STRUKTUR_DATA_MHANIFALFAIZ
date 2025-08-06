@@ -157,139 +157,133 @@
       color: white;
       min-width: 120px;
     }
-    /* Chatbot */
-    .chatbot {
+    
+    /* ---------- STYLES UNTUK RAG CHATBOT ---------- */
+    /* Variabel warna dan style untuk chatbot, terinspirasi dari desain modern */
+    :root {
+      --rag-bg: #f5f5f5; /* Warna latar belakang utama chat */
+      --rag-surface: #fffffe; /* Warna permukaan untuk bubble chat bot */
+      --rag-txt: #243746; /* Warna teks utama */
+      --rag-accent: #0077b6; /* Warna aksen untuk bubble chat user dan tombol */
+      --rag-radius: 12px; /* Radius sudut untuk elemen UI */
+      --rag-shadow: 0 2px 6px rgba(0,0,0,.1); /* Bayangan untuk memberi kedalaman */
+    }
+
+    /* Tombol untuk membuka chatbot */
+    .chatbot-toggler {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: var(--red);
+      background: var(--rag-accent);
       color: white;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
       cursor: pointer;
       z-index: 999;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      box-shadow: var(--rag-shadow);
       transition: transform 0.3s ease;
     }
-    .chatbot:hover {
+    .chatbot-toggler:hover {
       transform: scale(1.1);
     }
-    .chat-popup {
-      display: none;
+
+    /* Kontainer popup chat */
+    .rag-chat-popup {
+      display: none; /* Awalnya disembunyikan */
       position: fixed;
-      bottom: 80px;
+      bottom: 90px;
       right: 20px;
-      background: white;
-      border-radius: 15px;
-      width: 300px;
-      height: 400px;
+      width: 350px;
+      height: 500px;
+      background: var(--rag-bg);
+      border-radius: var(--rag-radius);
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
       overflow: hidden;
+      display: flex;
       flex-direction: column;
-      z-index: 999;
+      z-index: 1000;
     }
-    .chat-header {
-      background: #00B900;
-      color: white;
-      padding: 12px 15px;
-      font-weight: 600;
+
+    /* Header dari popup chat */
+    .rag-chat-header {
+      padding: 1rem;
+      background: var(--rag-accent);
+      color: #fff;
+      font-weight: bold;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .chat-close {
+    .rag-chat-close {
       cursor: pointer;
       font-size: 20px;
     }
-    .chat-messages {
+
+    /* Area untuk menampilkan pesan-pesan chat */
+    #rag-chat-messages {
       flex: 1;
-      padding: 10px;
+      padding: 1rem;
       overflow-y: auto;
-      background: #e5ddd5;
-      background-image: url('https://web.line.me/static/desktop/2.1.0/img/bg_chat.5f8e3b6.png');
-      background-size: cover;
-      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
     }
-    .message {
-      margin-bottom: 10px;
+
+    /* Styling umum untuk setiap bubble pesan */
+    .rag-msg {
       max-width: 80%;
-      padding: 8px 12px;
-      border-radius: 18px;
+      padding: .75rem 1rem;
+      border-radius: var(--rag-radius);
+      box-shadow: var(--rag-shadow);
       line-height: 1.4;
-      word-wrap: break-word;
     }
-    .message-user {
-      background: #DCF8C6;
-      margin-left: auto;
-      margin-right: 5px;
-      border-top-right-radius: 5px;
+
+    /* Bubble pesan dari pengguna */
+    .rag-user {
+      align-self: flex-end;
+      background: var(--rag-accent);
+      color: #fff;
+      border-bottom-right-radius: 4px;
     }
-    .message-bot {
-      background: white;
-      margin-right: auto;
-      margin-left: 5px;
-      border-top-left-radius: 5px;
+
+    /* Bubble pesan dari bot */
+    .rag-bot {
+      align-self: flex-start;
+      background: var(--rag-surface);
+      color: var(--rag-txt);
+      border-bottom-left-radius: 4px;
     }
-    .typing-indicator {
-      background: white !important;
-      margin-right: auto;
-      margin-left: 5px;
-      border-top-left-radius: 5px;
-      padding: 12px 16px;
-    }
-    .typing-dots {
+
+    /* Form input untuk mengirim pesan */
+    #rag-chat-form {
       display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .typing-dots span {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #999;
-      animation: typing 1.4s infinite ease-in-out;
-    }
-    @keyframes typing {
-      0%, 80%, 100% {
-        transform: scale(0.8);
-        opacity: 0.5;
-      }
-      40% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-    .message-time {
-      font-size: 10px;
-      color: #666;
-      margin-top: 3px;
-      text-align: right;
-    }
-    .chat-input-container {
-      display: flex;
-      padding: 10px;
-      background: white;
+      gap: .5rem;
+      padding: 1rem;
       border-top: 1px solid #ddd;
+      background: #fff;
     }
-    .chat-input {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 20px;
+
+    /* Input field dan tombol */
+    #rag-chat-form input, #rag-chat-form button {
+      font: inherit;
+      padding: .65rem 1rem;
+      border-radius: var(--rag-radius);
+      border: 1px solid #ccd;
       outline: none;
     }
-    .chat-send {
-      background: #00B900;
-      color: white;
+    #rag-chat-form input {
+      flex: 1;
+    }
+    #rag-chat-form button {
+      background: var(--rag-accent);
+      color: #fff;
       border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      margin-left: 8px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     /* Modal Google Form */
     .modal-iframe {
@@ -418,28 +412,29 @@
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScJ8tkZau-NVdhbmd0cWFKY25VBm0Ajjxvqo-rLYAO_iGb2qg/viewform?embedded=true" class="modal-iframe-content"></iframe>
     </div>
   </div>
-  <!-- LINE-style Chatbot -->
-  <div class="chatbot" onclick="toggleChat()">💬</div>
-  <div class="chat-popup" id="chatPopup">
-    <div class="chat-header">
-      <span>MakanBot</span>
-      <span class="chat-close" onclick="toggleChat()">×</span>
+
+  <!-- ---------- RAG CHATBOT INTERFACE ---------- -->
+  <!-- Tombol bulat untuk membuka/menutup popup chat -->
+  <div class="chatbot-toggler" onclick="toggleRagChat()">
+    <span>🤖</span>
+  </div>
+
+  <!-- Popup chat yang berisi seluruh antarmuka chatbot -->
+  <div class="rag-chat-popup" id="ragChatPopup">
+    <!-- Header popup chat -->
+    <div class="rag-chat-header">
+      <span>LaporMangan AI Assistant</span>
+      <span class="rag-chat-close" onclick="toggleRagChat()">×</span>
     </div>
-    <div class="chat-messages" id="chatMessages">
-      <div class="message message-bot">
-        <span>Halo! Aku MakanBot 🍽️ Mau cari kuliner apa di Purwokerto hari ini?</span>
-        <div class="message-time">Baru saja</div>
-      </div>
-    </div>
-    <div class="chat-input-container">
-      <input type="text" class="chat-input" id="chatInput" placeholder="Ketik pesan..." onkeypress="if(event.key=='Enter') sendChat()">
-      <button class="chat-send" onclick="sendChat()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 2L11 13" stroke="white" stroke-width="2"/>
-          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2"/>
-        </svg>
-      </button>
-    </div>
+    
+    <!-- Kontainer untuk semua pesan (dari user dan bot) -->
+    <main id="rag-chat-messages"></main>
+    
+    <!-- Form untuk mengetik dan mengirim pesan -->
+    <form id="rag-chat-form">
+      <input id="rag-q" autocomplete="off" placeholder="Tanya seputar kuliner..." required />
+      <button>Kirim</button>
+    </form>
   </div>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
@@ -1366,71 +1361,142 @@
     function closeGoogleForm() {
       document.getElementById('googleFormModal').style.display = 'none';
     }
-    // Chatbot
-    function toggleChat() {
-      const chat = document.getElementById("chatPopup");
-      chat.style.display = chat.style.display === "flex" ? "none" : "flex";
-      if (chat.style.display === "flex") {
-        document.getElementById("chatInput").focus();
+
+    /*
+    ================================================================
+    ---------- BAGIAN LOGIKA UNTUK RAG (RETRIEVAL-AUGMENTED GENERATION) CHATBOT ----------
+    ================================================================
+    */
+
+    /**
+     * Bagian 1: Static Knowledge Base (KB)
+     * Ini adalah "otak" dari chatbot kita. Isinya adalah data-data yang akan digunakan
+     * oleh AI untuk menjawab pertanyaan. Setiap objek merepresentasikan satu "dokumen"
+     * informasi. Anda bisa menambahkan data kuliner dari `kulinerData` ke sini
+     * atau membuat data baru yang lebih deskriptif.
+     */
+    const KB = [
+      {id:"info-0", title:"Apa itu LaporMangan?", text:"LaporMangan adalah sebuah platform berbasis web yang menampilkan peta persebaran kuliner UMKM di Purwokerto. Tujuannya adalah untuk membantu masyarakat menemukan kuliner favorit mereka dengan mudah dan mendukung UMKM lokal."},
+      {id:"info-1", title:"Cara menggunakan peta", text:"Anda bisa mencari kuliner berdasarkan nama di kolom pencarian, atau memfilter berdasarkan kategori. Klik pada ikon di peta atau item di daftar untuk melihat detail lengkapnya."},
+      {id:"info-2", title:"Rekomendasi kuliner", text:"Tentu! Purwokerto terkenal dengan Soto Sokaraja yang khas dengan bumbu kacangnya, dan juga Tempe Mendoan yang digoreng setengah matang. Untuk minuman, ada Es Dawet Ayu yang segar."},
+      {id:"info-3", title:"Menambah informasi kuliner", text:"Anda dapat menambahkan informasi kuliner baru dengan menekan tombol '📋 Tambah Informasi'. Ini akan membuka Google Form di mana Anda bisa mengisi detail kuliner yang ingin Anda laporkan."},
+      ...kulinerData.map((item, index) => ({
+        id: `kuliner-${index}`,
+        title: item.nama,
+        text: `Nama kuliner: ${item.nama}. Kategori: ${item.kategori}. Alamat: ${item.alamat}. Jam buka: ${item.jam}. Kisaran harga: ${item.harga}. Deskripsi: ${item.deskripsi}. Tipe: ${item.keliling ? 'Pedagang Keliling' : 'Warung/Toko Tetap'}.`
+      }))
+    ];
+
+    /**
+     * Bagian 2: Fungsi Retrieval Sederhana
+     * Fungsi ini bertugas untuk "mengambil" (retrieve) dokumen dari Knowledge Base (KB)
+     * yang paling relevan dengan pertanyaan pengguna.
+     * Cara kerjanya sederhana: memecah pertanyaan menjadi kata-kata, lalu mencari
+     * dokumen di KB yang mengandung kata-kata tersebut.
+     * @param {string} question - Pertanyaan dari pengguna.
+     * @param {number} k - Jumlah dokumen teratas yang ingin diambil (default 3).
+     * @returns {Array<Object>} - Array berisi dokumen yang relevan.
+     */
+    function retrieve(question, k=3){
+      const terms = question.toLowerCase().split(/\s+/); // Pecah pertanyaan jadi kata-kata
+      return KB.filter(doc =>
+        // Cek apakah ada kata dari pertanyaan yang cocok dengan judul atau teks dokumen
+        terms.some(t => doc.text.toLowerCase().includes(t) ||
+                        doc.title.toLowerCase().includes(t))
+      ).slice(0,k); // Ambil 'k' dokumen teratas
+    }
+
+    /**
+     * Bagian 3: Pemanggilan API Gemini
+     * Fungsi ini yang akan berkomunikasi dengan model AI Google (Gemini).
+     * Ia mengirimkan prompt (yang sudah kita siapkan) ke API dan mengembalikan jawaban dari AI.
+     * PENTING: Ganti `YOUR_GEMINI_API_KEY` dengan kunci API Anda.
+     */
+    const ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+    let API_KEY = "YOUR_GEMINI_API_KEY"; // ‼️ Ganti dengan API Key Gemini Anda
+
+    async function askGemini(prompt){
+      // Jika API Key belum diisi, minta pengguna untuk memasukkannya
+      if (API_KEY === "YOUR_GEMINI_API_KEY") {
+        const userInputKey = prompt("Silakan masukkan Gemini API Key Anda:");
+        if (userInputKey) {
+          API_KEY = userInputKey;
+        } else {
+          return "Maaf, API Key diperlukan untuk menggunakan fitur ini.";
+        }
+      }
+
+      const res = await fetch(`${ENDPOINT}?key=${API_KEY}`,{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+          contents:[{parts:[{text:prompt}]}]
+        })
+      });
+
+      if (!res.ok) {
+        return "Maaf, terjadi kesalahan saat menghubungi AI. Coba lagi nanti.";
+      }
+
+      const json = await res.json();
+      // Ekstrak dan kembalikan teks jawaban dari respons JSON
+      return json.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak bisa memberikan jawaban saat ini.";
+    }
+
+    /**
+     * Bagian 4: Fungsi Bantuan untuk UI (User Interface) Chat
+     * Fungsi-fungsi ini membantu mengelola tampilan chat.
+     */
+    const ragChat = document.getElementById("rag-chat-messages");
+
+    // Fungsi untuk menambahkan pesan baru ke jendela chat
+    function addRagMsg(txt, cls){
+      const div=document.createElement("div");
+      div.className=`rag-msg ${cls}`;
+      div.textContent=txt;
+      ragChat.append(div);
+      ragChat.scrollTop=ragChat.scrollHeight; // Auto-scroll ke pesan terbaru
+    }
+
+    // Fungsi untuk membuat prompt yang akan dikirim ke Gemini
+    function makePrompt(question, docs){
+      // Gabungkan teks dari dokumen yang relevan sebagai konteks
+      const ctx = docs.map(d=>`• ${d.title}: ${d.text}`).join("\n");
+      // Buat prompt lengkap dengan instruksi, konteks, dan pertanyaan
+      return `Anda adalah "ManganBot", asisten AI yang ramah untuk aplikasi "LaporMangan". Gunakan konteks berikut untuk menjawab pertanyaan pengguna seputar kuliner di Purwokerto. Jawab dengan singkat, jelas, dan dalam Bahasa Indonesia.\n\nKonteks:\n${ctx}\n\nPertanyaan: ${question}\nJawaban:`;
+    }
+    
+    // Fungsi untuk membuka/menutup popup chat
+    function toggleRagChat() {
+      const chatPopup = document.getElementById("ragChatPopup");
+      const isHidden = !chatPopup.style.display || chatPopup.style.display === "none";
+      chatPopup.style.display = isHidden ? "flex" : "none";
+      if (isHidden) {
+        document.getElementById("rag-q").focus();
       }
     }
-    function sendChat() {
-      const input = document.getElementById("chatInput").value.trim();
-      const chatMessages = document.getElementById("chatMessages");
-      if (!input) return;
-      const now = new Date();
-      const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-      // User message
-      chatMessages.innerHTML += `
-        <div class="message message-user">
-          ${input}
-          <div class="message-time">${timeString}</div>
-        </div>
-      `;
-      document.getElementById("chatInput").value = "";
-      // Show typing
-      const typing = document.createElement('div');
-      typing.className = 'message message-bot typing-indicator';
-      typing.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
-      chatMessages.appendChild(typing);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-      // Generate response
-      setTimeout(() => {
-        chatMessages.removeChild(typing);
-        const reply = generateResponse(input);
-        chatMessages.innerHTML += `
-          <div class="message message-bot">
-            ${reply}
-            <div class="message-time">${timeString}</div>
-          </div>
-        `;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }, 1000);
-    }
-    function generateResponse(input) {
-      const text = input.toLowerCase();
-      if (text.includes('rekomendasi') || text.includes('sarankan')) {
-        const random = kulinerData[Math.floor(Math.random() * kulinerData.length)];
-        return `🍽️ Rekomendasi aku: <b>${random.nama}</b> (${random.kategori}) di ${random.alamat}. Harga ${random.harga}`;
-      } else if (text.includes('soto')) {
-        const soto = kulinerData.find(k => k.nama === "Soto Sokaraja");
-        if (soto) {
-          return `🍜 ${soto.nama} di ${soto.alamat}, buka ${soto.jam}, harga ${soto.harga}. ${soto.deskripsi}!`;
-        }
-      } else if (text.includes('mendoan')) {
-        const mendoan = kulinerData.find(k => k.nama === "Tempe Mendoan");
-        if (mendoan) {
-          return `🥢 ${mendoan.nama} di ${mendoan.alamat}, hanya ${mendoan.harga}. ${mendoan.deskripsi}!`;
-        }
-      } else if (text.includes('lapar')) {
-        return "🍛 Kak lapar? Coba Soto Sokaraja atau Tempe Mendoan. Keduanya mengenyangkan!";
-      } else if (text.includes('ha')) {
-        return "🥤 Kak haus? Di Purwokerto ada Es Dawet Ayu segar hanya Rp 5.000!";
-      } else {
-        return "🤗 Aku bisa bantu cari kuliner berdasarkan nama, kategori, atau mood Kak! Coba tanya 'rekomendasi dong'";
-      }
-      return "Maaf, aku tidak mengerti. Coba tanya 'rekomendasi kuliner' atau sebut nama makanan tertentu.";
-    }
+
+    /**
+     * Bagian 5: Event Handler untuk Form Chat
+     * Ini adalah inti dari interaksi pengguna. Ketika pengguna mengirim pesan...
+     */
+    document.getElementById("rag-chat-form").addEventListener("submit",async e=>{
+      e.preventDefault(); // Mencegah form dari reload halaman
+      const q = e.target['rag-q'].value.trim(); // Ambil teks pertanyaan
+      if(!q) return; // Jangan lakukan apa-apa jika input kosong
+
+      addRagMsg(q,"rag-user"); // Tampilkan pesan pengguna di chat
+      e.target['rag-q'].value=""; // Kosongkan input field
+
+      addRagMsg("Mengetik...", "rag-bot"); // Tampilkan indikator "mengetik"
+      
+      const docs = retrieve(q); // 1. Ambil dokumen relevan dari KB
+      const prompt = makePrompt(q,docs); // 2. Buat prompt untuk AI
+      const answer = await askGemini(prompt); // 3. Kirim prompt ke Gemini dan tunggu jawaban
+
+      // Ganti indikator "mengetik" dengan jawaban dari AI
+      ragChat.querySelector(".rag-bot:last-child").textContent=answer;
+    });
     // Rekomendasi Cuaca berbasis API
     async function fetchWeather() {
       try {
@@ -1525,41 +1591,21 @@
               recommendation = "Hari ini sangat panas, segeralah dengan minuman segar atau camilan dingin seperti Es Puter!";
             }
             
-            // Tampilkan rekomendasi di chatbot
-            const chatMessages = document.getElementById("chatMessages");
-            const now = new Date();
-            const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-            
-            chatMessages.innerHTML += `
-              <div class="message message-bot">
-                🌤️ Rekomendasi Cuaca: ${recommendation}
-                <div class="message-time">${timeString}</div>
-              </div>
-            `;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Tampilkan rekomendasi di chatbot AI
+            addRagMsg(`🌤️ Rekomendasi Cuaca: ${recommendation}`, "rag-bot");
             
             // Jika chatbot belum terbuka, buka dulu
-            const chat = document.getElementById("chatPopup");
-            if (chat.style.display !== "flex") {
-              toggleChat();
+            const chatPopup = document.getElementById("ragChatPopup");
+            if (!chatPopup.style.display || chatPopup.style.display === "none") {
+              toggleRagChat();
             }
           } else {
             // Jika data cuaca belum tersedia, beri pesan fallback
-            const chatMessages = document.getElementById("chatMessages");
-            const now = new Date();
-            const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+            addRagMsg("🌤️ Rekomendasi Cuaca: Cuaca hari ini sangat cocok untuk menikmati kuliner Purwokerto! Coba cari Soto Sokaraja atau Tempe Mendoan.", "rag-bot");
             
-            chatMessages.innerHTML += `
-              <div class="message message-bot">
-                🌤️ Rekomendasi Cuaca: Cuaca hari ini sangat cocok untuk menikmati kuliner Purwokerto! Coba cari Soto Sokaraja atau Tempe Mendoan.
-                <div class="message-time">${timeString}</div>
-              </div>
-            `;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            const chat = document.getElementById("chatPopup");
-            if (chat.style.display !== "flex") {
-              toggleChat();
+            const chatPopup = document.getElementById("ragChatPopup");
+            if (!chatPopup.style.display || chatPopup.style.display === "none") {
+              toggleRagChat();
             }
           }
         }, 500); // Tunggu sebentar setelah fetchWeather selesai
@@ -1584,10 +1630,10 @@
         const category = e.target.value;
         renderList(search, category);
       });
-      document.getElementById("chatInput").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") sendChat();
-      });
       
+      // Menambahkan pesan selamat datang di RAG Chatbot saat halaman dimuat
+      addRagMsg("Halo! Aku ManganBot 🤖 Ada yang bisa dibantu seputar kuliner Purwokerto?", "rag-bot");
+
       // Close modals when clicking outside
       window.addEventListener('click', (event) => {
         const googleModal = document.getElementById('googleFormModal');
