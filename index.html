@@ -1413,18 +1413,21 @@
      * PENTING: Ganti `YOUR_GEMINI_API_KEY` dengan kunci API Anda.
      */
     const ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
-    let API_KEY = "YOUR_GEMINI_API_KEY"; // ‼️ Ganti dengan API Key Gemini Anda
+    let API_KEY = "AIzaSyDJfUcm5OEoHK5FhVO_UMIYS8g52r4ar0A"; // ‼️ Kunci API disisipkan di sini. PERINGATAN: Kunci ini terlihat di sisi klien. Untuk produksi, gunakan backend proxy.
 
     async function askGemini(prompt){
-      // Jika API Key belum diisi, minta pengguna untuk memasukkannya
-      if (API_KEY === "YOUR_GEMINI_API_KEY" || !API_KEY) {
-        const userInputKey = prompt("Silakan masukkan Gemini API Key Anda untuk mengaktifkan AI Assistant:");
-        if (userInputKey) {
-          API_KEY = userInputKey;
-        } else {
-          return "Maaf, API Key diperlukan untuk menggunakan fitur AI. Anda bisa mendapatkannya dari Google AI Studio.";
-        }
-      }
+      // Peringatan keamanan: Kode ini sebelumnya meminta kunci API kepada pengguna.
+      // Sekarang kunci tersebut di-hardcode untuk kemudahan.
+      // JANGAN LAKUKAN INI DI LINGKUNGAN PRODUKSI.
+      // Kunci API yang diekspos di frontend dapat disalahgunakan.
+      // if (API_KEY === "YOUR_GEMINI_API_KEY" || !API_KEY) {
+      //   const userInputKey = prompt("Silakan masukkan Gemini API Key Anda untuk mengaktifkan AI Assistant:");
+      //   if (userInputKey) {
+      //     API_KEY = userInputKey;
+      //   } else {
+      //     return "Maaf, API Key diperlukan untuk menggunakan fitur AI. Anda bisa mendapatkannya dari Google AI Studio.";
+      //   }
+      // }
 
       try {
         const res = await fetch(`${ENDPOINT}?key=${API_KEY}`,{
