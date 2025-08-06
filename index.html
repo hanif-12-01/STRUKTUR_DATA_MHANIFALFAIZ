@@ -1417,30 +1417,47 @@
 
     async function askGemini(prompt){
       // Jika API Key belum diisi, minta pengguna untuk memasukkannya
-      if (API_KEY === "YOUR_GEMINI_API_KEY") {
-        const userInputKey = prompt("Silakan masukkan Gemini API Key Anda:");
+      if (API_KEY === "YOUR_GEMINI_API_KEY" || !API_KEY) {
+        const userInputKey = prompt("Silakan masukkan Gemini API Key Anda untuk mengaktifkan AI Assistant:");
         if (userInputKey) {
           API_KEY = userInputKey;
         } else {
-          return "Maaf, API Key diperlukan untuk menggunakan fitur ini.";
+          return "Maaf, API Key diperlukan untuk menggunakan fitur AI. Anda bisa mendapatkannya dari Google AI Studio.";
         }
       }
 
-      const res = await fetch(`${ENDPOINT}?key=${API_KEY}`,{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({
-          contents:[{parts:[{text:prompt}]}]
-        })
-      });
+      try {
+        const res = await fetch(`${ENDPOINT}?key=${API_KEY}`,{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body:JSON.stringify({
+            contents:[{parts:[{text:prompt}]}]
+          })
+        });
 
-      if (!res.ok) {
-        return "Maaf, terjadi kesalahan saat menghubungi AI. Coba lagi nanti.";
+        if (!res.ok) {
+          // Tangani respons error dari API (misal: API key salah)
+          const errorBody = await res.json();
+          console.error("API Error:", errorBody);
+          return `Maaf, terjadi kesalahan saat menghubungi AI. (${errorBody.error?.message || 'Status: ' + res.status})`;
+        }
+
+        const json = await res.json();
+        
+        // Cek jika tidak ada kandidat jawaban atau konten diblokir
+        if (!json.candidates || json.candidates.length === 0 || !json.candidates[0].content) {
+            console.warn("API Response Warning:", json);
+            return "Maaf, saya tidak bisa memberikan jawaban untuk pertanyaan tersebut saat ini. Mungkin karena alasan keamanan atau filter konten.";
+        }
+
+        // Ekstrak dan kembalikan teks jawaban dari respons JSON
+        return json.candidates[0].content.parts[0].text;
+
+      } catch (error) {
+        // Tangani error jaringan atau error lainnya
+        console.error("Fetch Error:", error);
+        return "Maaf, sepertinya ada masalah dengan koneksi. Coba periksa kembali API Key dan koneksi internet Anda.";
       }
-
-      const json = await res.json();
-      // Ekstrak dan kembalikan teks jawaban dari respons JSON
-      return json.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak bisa memberikan jawaban saat ini.";
     }
 
     /**
@@ -1480,22 +1497,29 @@
      * Bagian 5: Event Handler untuk Form Chat
      * Ini adalah inti dari interaksi pengguna. Ketika pengguna mengirim pesan...
      */
-    document.getElementById("rag-chat-form").addEventListener("submit",async e=>{
+    document.getElementById("rag-chat-form").addEventListener("submit", async e => {
       e.preventDefault(); // Mencegah form dari reload halaman
       const q = e.target['rag-q'].value.trim(); // Ambil teks pertanyaan
       if(!q) return; // Jangan lakukan apa-apa jika input kosong
 
-      addRagMsg(q,"rag-user"); // Tampilkan pesan pengguna di chat
-      e.target['rag-q'].value=""; // Kosongkan input field
-
-      addRagMsg("Mengetik...", "rag-bot"); // Tampilkan indikator "mengetik"
+      addRagMsg(q, "rag-user"); // Tampilkan pesan pengguna di chat
+      e.target['rag-q'].value = ""; // Kosongkan input field
       
-      const docs = retrieve(q); // 1. Ambil dokumen relevan dari KB
-      const prompt = makePrompt(q,docs); // 2. Buat prompt untuk AI
-      const answer = await askGemini(prompt); // 3. Kirim prompt ke Gemini dan tunggu jawaban
+      const typingIndicator = addRagMsg("Mengetik...", "rag-bot"); // Tampilkan indikator "mengetik"
 
-      // Ganti indikator "mengetik" dengan jawaban dari AI
-      ragChat.querySelector(".rag-bot:last-child").textContent=answer;
+      try {
+        const docs = retrieve(q); // 1. Ambil dokumen relevan dari KB
+        const prompt = makePrompt(q, docs); // 2. Buat prompt untuk AI
+        const answer = await askGemini(prompt); // 3. Kirim prompt ke Gemini dan tunggu jawaban
+
+        // Ganti indikator "mengetik" dengan jawaban dari AI
+        ragChat.querySelector(".rag-bot:last-child").textContent = answer;
+
+      } catch (error) {
+        // Jika terjadi error di salah satu langkah, tampilkan pesan error
+        console.error("Chat Handler Error:", error);
+        ragChat.querySelector(".rag-bot:last-child").textContent = "Waduh, ada yang salah nih. Coba lagi ya.";
+      }
     });
     // Rekomendasi Cuaca berbasis API
     async function fetchWeather() {
