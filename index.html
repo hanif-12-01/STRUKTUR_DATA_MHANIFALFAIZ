@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Lapor Mangan! - Purwokerto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>🍽 Lapor Mangan! - Purwokerto</h1>
+    </div>
+    <div class="weather-info" id="weatherInfo" onclick="toggleWeatherDetails()">
+      <i class="fas fa-cloud-sun weather-icon" id="weatherIcon"></i>
+      <span class="weather-temp" id="weatherTemp">--°C</span>
+    </div>
+    <button class="add-kuliner-btn" onclick="openAddKulinerModal()" title="Tambah Kuliner Baru">+</button>
+    <div class="weather-details" id="weatherDetails">
+      <div class="weather-details-header">
+        <h3>Cuaca Purwokerto</h3>
+        <small id="weatherDate">Hari ini</small>
+      </div>
+      <div class="weather-details-main">
+        <i class="fas fa-cloud-sun weather-details-icon" id="weatherDetailsIcon"></i>
+        <div>
+          <div class="weather-details-temp" id="weatherDetailsTemp">--°C</div>
+          <div class="weather-details-desc" id="weatherDetailsDesc">--</div>
+        </div>
+      </div>
+      <div class="weather-details-stats">
+        <div class="weather-stat">
+          <i class="fas fa-temperature-low"></i>
+          <span>Min: <span id="weatherMinTemp">--°C</span></span>
+        </div>
+        <div class="weather-stat">
+          <i class="fas fa-temperature-high"></i>
+          <span>Max: <span id="weatherMaxTemp">--°C</span></span>
+        </div>
+        <div class="weather-stat">
+          <i class="fas fa-tint"></i>
+          <span>Kelembapan: <span id="weatherHumidity">--%</span></span>
+        </div>
+        <div class="weather-stat">
+          <i class="fas fa-wind"></i>
+          <span>Angin: <span id="weatherWind">-- m/s</span></span>
+        </div>
+        <div class="weather-stat">
+          <i class="fas fa-sun"></i>
+          <span>Terbit: <span id="weatherSunrise">--:--</span></span>
+        </div>
+        <div class="weather-stat">
+          <i class="fas fa-moon"></i>
+          <span>Terbenam: <span id="weatherSunset">--:--</span></span>
+        </div>
+         <div class="weather-stat">
+          <i class="fas fa-cloud-rain"></i>
+          <span>Kondisi: <span id="weatherCondition">--</span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div id="map"></div>
+  <div class="container">
+    <div class="filter-bar">
+      <input id="search" placeholder="🔍 Cari nama kuliner..." />
+      <select id="filter">
+        <option value=""> Semua Kategori</option>
+      </select>
+      <select id="sort">
+        <option value="">Urutkan</option>
+        <option value="nama">Nama A-Z</option>
+        <option value="rating">Rating Tertinggi</option>
+        <option value="harga-asc">Harga Terendah</option>
+        <option value="harga-desc">Harga Tertinggi</option>
+      </select>
+      <button id="nearbyBtn" type="button"><i class="fas fa-location-arrow"></i> Terdekat</button>
+      <button id="randomBtn" type="button"><i class="fas fa-random"></i> Acak Pilihan</button>
+    </div>
+    <div class="secondary-filter-bar">
+        <label class="switch">
+            <input type="checkbox" id="openNowFilter">
+            <span class="slider round"></span>
+        </label>
+        <label for="openNowFilter">Hanya tampilkan yang buka sekarang</label>
+    </div>
+    <div id="list">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Memuat daftar kuliner...</p>
+        </div>
+    </div>
+  </div>
+  <div class="detail-popup" id="detailPopup">
+    <span class="close-btn" onclick="closeDetail()">×</span>
+    <div id="detailContent"></div>
+  </div>
+  <div id="googleFormModal" class="modal">
+    <div class="modal-iframe">
+      <span class="close-btn" onclick="closeGoogleForm()" style="position: absolute; right: 15px; top: 15px; z-index: 10001; background:white; padding: 5px 10px;">&times;</span>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScJ8tkZau-NVdhbmd0cWFKY25VBm0Ajjxvqo-rLYAO_iGb2qg/viewform?embedded=true" class="modal-iframe-content"></iframe>
+    </div>
+  </div>
+  <div class="chatbot" onclick="toggleChat()" title="Buka Chatbot MakanBot">💬</div>
+  <div class="chat-popup" id="chatPopup">
+    <div class="chat-header">
+      <span>🤖 MakanBot</span>
+      <span class="chat-close" onclick="toggleChat()">×</span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="message message-bot">
+        <span>Halo! Aku MakanBot 🍽 Mau cari kuliner apa di Purwokerto hari ini?</span>
+        <div class="message-time">Baru saja</div>
+      </div>
+    </div>
+    <div class="chat-input-container">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ketik pesan..." onkeypress="if(event.key=='Enter') sendChat()">
+      <button class="chat-send" onclick="sendChat()" title="Kirim Pesan">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 2L11 13" stroke="white" stroke-width="2"/>
+          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div id="addKulinerModal" class="add-kuliner-modal">
+    <div class="add-kuliner-modal-content">
+      <div class="add-kuliner-modal-header">
+        <h2>➕ Tambah Kuliner Baru</h2>
+        <span class="close-btn" onclick="closeAddKulinerModal()">&times;</span>
+      </div>
+      <div class="add-kuliner-modal-body">
+        <input type="text" id="add-nama" placeholder="Nama Kuliner *" required>
+        <select id="add-kategori" required>
+          <option value="">Pilih Kategori *</option>
+        </select>
+        <input type="text" id="add-alamat" placeholder="Alamat *" required>
+        <input type="text" id="add-jam" placeholder="Jam Operasional (contoh: 08:00 - 18:00) *" required>
+        <input type="text" id="add-harga" placeholder="Harga (contoh: Rp 5.000 - 15.000) *" required>
+        <textarea id="add-deskripsi" placeholder="Deskripsi *" required></textarea>
+        <input type="text" id="add-foto" placeholder="URL Foto (opsional)">
+        <select id="add-tipe">
+            <option value="false">Warung/Toko Tetap</option>
+            <option value="true">Pedagang Keliling</option>
+        </select>
+        <input type="number" id="add-lat" placeholder="Latitude (contoh: -7.4100) *" step="any" required>
+        <input type="number" id="add-lng" placeholder="Longitude (contoh: 109.2450) *" step="any" required>
+        <input type="text" id="add-rute" placeholder="Rute/Info Lokasi Tambahan (opsional)">
+        <input type="text" id="add-parkir" placeholder="Info Parkir (contoh: Ya, Tidak, Tersedia) *" required>
+      </div>
+      <div class="add-kuliner-modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeAddKulinerModal()"><i class="fas fa-times"></i> Batal</button>
+        <button type="button" class="btn-submit" onclick="submitNewKuliner()"><i class="fas fa-plus"></i> Tambah</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
