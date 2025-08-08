@@ -601,35 +601,46 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyCYJfw26FLV4doHPdXu9O5fyqoQXgcTveM';
         }
     }
 
-    function generateResponse(input) {
-        const text = input.toLowerCase();
-        if (text.includes('rekomendasi') || text.includes('sarankan') || text.includes('cuaca')) {
-            if (currentWeatherData) {
-                return getWeatherBasedRecommendation(currentWeatherData);
-            } else {
-                return "Maaf, data cuaca belum tersedia. Coba lagi nanti ya!";
-            }
-        } else if (text.includes('soto')) {
-            const soto = kulinerData.find(k => k.kategori === "Soto");
-            if (soto) {
-                return `🍜 ${soto.nama} di ${soto.alamat}, buka ${soto.jam}, harga ${soto.harga}. ${soto.deskripsi}!`;
-            }
-        } else if (text.includes('mendoan')) {
-            const mendoan = kulinerData.find(k => k.nama.includes("Mendoan"));
-            if (mendoan) {
-                return `🥢 ${mendoan.nama} di ${mendoan.alamat}, hanya ${mendoan.harga}. ${mendoan.deskripsi}!`;
-            }
-        } else if (text.includes('lapar')) {
-            return "🍛 Kak lapar? Coba Soto Sokaraja atau Tempe Mendoan. Keduanya mengenyangkan!";
-        } else if (text.includes('haus')) {
-            return "🥤 Kak haus? Di Purwokerto banyak minuman segar mulai dari Rp 5.000!";
-        } else if (text.includes('terima kasih') || text.includes('makasih')) {
-            return "😊 Sama-sama! Semoga harimu menyenangkan dan perut selalu kenyang!";
-        } else if (text.includes('halo') || text.includes('hai') || text.includes('hello')) {
-            return "👋 Hai juga! Aku MakanBot, siap membantumu menemukan kuliner terbaik di Purwokerto!";
+    function getDynamicResponse(input) {
+        const text = input.toLowerCase().trim();
+
+        // Check for weather recommendations
+        if (text.includes('cuaca') || text.includes('rekomendasi')) {
+            return getWeatherBasedRecommendation(currentWeatherData);
         }
-        
-        return "🤗 Aku bisa bantu cari kuliner berdasarkan nama, kategori, atau mood Kak! Coba tanya 'rekomendasi berdasarkan cuaca' atau sebut nama makanan tertentu.";
+
+        // Search in knowledge base
+        const allData = [...KNOWLEDGE_BASE.faqs, ...kulinerData.map(k => ({
+            question: `Info ${k.nama}`,
+            answer: `Tentu! ${k.nama} adalah ${k.kategori} yang berlokasi di ${k.alamat}. Buka dari jam ${k.jam} dengan kisaran harga ${k.harga}. ${k.deskripsi}`,
+            keywords: k.nama.toLowerCase().split(' ')
+        }))];
+
+        let bestMatch = null;
+        let maxScore = 0;
+
+        allData.forEach(item => {
+            const score = item.keywords.reduce((acc, keyword) => {
+                return text.includes(keyword) ? acc + 1 : acc;
+            }, 0);
+
+            if (score > maxScore) {
+                maxScore = score;
+                bestMatch = item;
+            }
+        });
+
+        if (bestMatch && maxScore > 0) {
+            return bestMatch.answer;
+        }
+
+        // Fallback responses
+        const fallbacks = [
+            "Maaf, aku belum mengerti. Bisa coba tanyakan hal lain tentang kuliner Purwokerto?",
+            "Hmm, sepertinya aku butuh belajar lagi. Mungkin kamu bisa tanya tentang soto atau mendoan?",
+            "Aku siap bantu cari info kuliner. Coba sebutkan nama makanan yang kamu cari."
+        ];
+        return fallbacks[Math.floor(Math.random() * fallbacks.length)];
     }
 
     function toggleWeatherDetails() {
@@ -688,56 +699,42 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyCYJfw26FLV4doHPdXu9O5fyqoQXgcTveM';
         if (!weatherData) {
             return "Maaf, data cuaca tidak tersedia saat ini.";
         }
-        
-        const isDay = new Date().getHours() >= 6 && new Date().getHours() < 18;
+
+        const hours = new Date().getHours();
+        const isDay = hours >= 6 && hours < 18;
         const temp = weatherData.main?.temp || 28;
         const condition = weatherData.weather?.[0]?.main?.toLowerCase() || 'clear';
-        
+
         let recommendation = "";
         let recommendedItems = [];
 
         if (isDay) {
             if (condition.includes('rain')) {
-                recommendation = "🌧 Hujan-hujan gini, enaknya makan yang hangat aja. Coba deh:";
-                recommendedItems = kulinerData.filter(item =>
-                    (item.kategori === "Soto" || item.kategori === "Makanan Berat") &&
-                    !item.keliling
-                );
-            } else if (temp > 28) {
-                recommendation = "🔥 Wah, panasnya! Mendingan minum yang segar dulu. Coba nih:";
-                recommendedItems = kulinerData.filter(item =>
-                    item.kategori === "Minuman" || item.nama.toLowerCase().includes("es")
-                );
+                recommendation = "🌧️ Hujan di siang hari? Waktunya menikmati yang hangat! Ini rekomendasinya:";
+                recommendedItems = kulinerData.filter(item => ["Soto", "Bakso", "Makanan Berat"].includes(item.kategori) && !item.keliling);
+            } else if (temp > 29) {
+                recommendation = "☀️ Terik sekali! Segarkan diri dengan yang dingin dan menyegarkan:";
+                recommendedItems = kulinerData.filter(item => item.kategori === "Minuman" || item.nama.toLowerCase().includes("es"));
             } else {
-                recommendation = "☀️ Cuaca siang ini enak banget! Mau coba yang hangat atau yang dingin? Ini rekomendasinya:";
-                recommendedItems = kulinerData.slice(0, 5);
+                recommendation = "🌞 Cuaca cerah! Ini beberapa pilihan kuliner yang cocok dinikmati siang ini:";
+                recommendedItems = kulinerData.filter(item => !item.keliling).slice(0, 10);
             }
-        } else {
-            recommendation = "🌙 Malam-malam enaknya makan yang hangat. Coba deh:";
-            recommendedItems = kulinerData.filter(item =>
-                (item.kategori === "Soto" || item.kategori === "Makanan Berat" || item.kategori === "Sate") &&
-                !item.keliling
-            );
+        } else { // Night
+            if (condition.includes('rain')) {
+                recommendation = "🌃 Hujan malam-malam, enaknya makan yang berkuah dan hangat. Coba ini:";
+                recommendedItems = kulinerData.filter(item => ["Soto", "Bakso", "Sate"].includes(item.kategori) && !item.keliling);
+            } else {
+                recommendation = "🌙 Malam yang indah untuk kulineran! Ini beberapa rekomendasi hangat untukmu:";
+                recommendedItems = kulinerData.filter(item => ["Sate", "Ayam", "Nasi Goreng", "Makanan Berat"].includes(item.kategori) && !item.keliling);
+            }
         }
 
         if (recommendedItems.length > 0) {
-            const itemCount = Math.min(2, recommendedItems.length);
-            const selectedItems = [];
-            const usedIndices = new Set();
-            while (selectedItems.length < itemCount && usedIndices.size < recommendedItems.length) {
-                const randomIndex = Math.floor(Math.random() * recommendedItems.length);
-                if (!usedIndices.has(randomIndex)) {
-                    selectedItems.push(recommendedItems[randomIndex]);
-                    usedIndices.add(randomIndex);
-                }
-            }
-            let itemText = "";
-            selectedItems.forEach(item => {
-                itemText += `<br>🍽 <b>${item.nama}</b> (${item.kategori}) di ${item.alamat}. Harga ${item.harga}`;
-            });
+            const selectedItems = recommendedItems.sort(() => 0.5 - Math.random()).slice(0, 2);
+            let itemText = selectedItems.map(item => `<br>🔥 <b>${item.nama}</b> (${item.kategori})`).join('');
             return `${recommendation}${itemText}`;
         } else {
-            return "🍽 Banyak pilihan kuliner enak di Purwokerto! Coba jelajahi peta kami.";
+            return "Maaf, tidak ada rekomendasi yang cocok saat ini. Coba jelajahi peta untuk melihat semua pilihan.";
         }
     }
 

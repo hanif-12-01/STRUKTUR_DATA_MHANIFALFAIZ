@@ -67,32 +67,15 @@ class StaticChatbot {
     }, this.kb.settings.responseDelay);
   }
 
-  // '_getResponse' adalah inti dari logika pencarian jawaban.
+  // '_getResponse' sekarang menggunakan fungsi getDynamicResponse dari script.js
   _getResponse(message) {
-    const matches = []; // Array untuk menyimpan semua FAQ yang cocok.
-    
-    // Melakukan iterasi pada setiap FAQ di dalam basis data.
-    this.kb.faqs.forEach(faq => {
-      let score = 0; // Skor kecocokan untuk FAQ saat ini.
-      // Melakukan iterasi pada setiap kata kunci dalam FAQ.
-      faq.keywords.forEach(k => {
-        // Jika pesan pengguna mengandung kata kunci, tingkatkan skor.
-        if (message.includes(k.toLowerCase())) score += 2;
-      });
-      // Jika skor lebih dari 0, berarti ada kecocokan.
-      if (score > 0) matches.push({faq, score});
-    });
-
-    // Jika ada setidaknya satu kecocokan.
-    if (matches.length) {
-      // Mengurutkan kecocokan berdasarkan skor (tertinggi ke terendah) dan kemudian berdasarkan prioritas.
-      matches.sort((a,b) => (b.score - a.score) || (a.faq.priority - b.faq.priority));
-      // Mengembalikan jawaban dari FAQ dengan skor tertinggi.
-      return matches[0].faq.answer;
+    // Memastikan fungsi getDynamicResponse tersedia secara global
+    if (typeof getDynamicResponse === 'function') {
+      return getDynamicResponse(message);
+    } else {
+      // Fallback jika fungsi tidak ditemukan
+      return "Maaf, sepertinya ada masalah teknis. Fungsi chatbot tidak dapat diakses.";
     }
-    
-    // Jika tidak ada kecocokan, kembalikan salah satu respons fallback secara acak.
-    return this._random(this.kb.fallbackResponses);
   }
 
   // '_renderUser' membuat dan menampilkan bubble chat untuk pesan pengguna.

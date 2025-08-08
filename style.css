@@ -80,6 +80,19 @@
       from { opacity: 0; transform: translateY(-15px) scale(0.95); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
+    .weather-rec-btn {
+      background: var(--yellow);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      border: none;
+    }
+    .weather-rec-btn:hover {
+      background: #e6a800;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
     #map {
       height: 60vh;
       width: 100%;
