@@ -4,20 +4,22 @@
 // Dibuat: 2025-08-07
 
 class StaticChatbot {
-  // 'constructor' adalah metode yang pertama kali dijalankan saat sebuah objek chatbot baru dibuat.
   constructor() {
-    // Menyimpan referensi ke basis data dari file 'knowledge-base.js'.
     this.kb = KNOWLEDGE_BASE;
-    
-    // Mengambil elemen-elemen HTML dari DOM (Document Object Model) yang diperlukan untuk chatbot.
-    this.container = document.getElementById("ragChatPopup"); // Kontainer utama popup chat.
-    this.msgArea  = document.getElementById("rag-chat-messages"); // Area untuk menampilkan pesan.
-    this.input    = document.getElementById("rag-q"); // Kotak input tempat pengguna mengetik.
-    this.sendBtn  = document.querySelector("#rag-chat-form button"); // Tombol untuk mengirim pesan.
-    this.toggle   = document.querySelector(".chatbot-toggler"); // Tombol untuk membuka/menutup chatbot.
-    
-    // Memanggil metode untuk mengikat (bind) semua event listener ke elemen-elemen HTML.
-    this._bindEvents();
+    // Defer element selection until the DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
+      this.container = document.getElementById("chatPopup");
+      this.msgArea = document.getElementById("chatMessages");
+      this.input = document.getElementById("chatInput");
+      this.sendBtn = document.querySelector(".chat-send");
+      this.toggle = document.querySelector(".chatbot");
+      
+      if (this.input && this.sendBtn && this.toggle) {
+        this._bindEvents();
+      } else {
+        console.error("Chatbot elements not found!");
+      }
+    });
   }
 
   // '_bindEvents' bertanggung jawab untuk mengatur semua event listener yang diperlukan.
@@ -38,12 +40,16 @@ class StaticChatbot {
     });
 
     // Menambahkan event listener untuk klik pada tombol toggle chatbot.
-    this.toggle.addEventListener("click", () => {
-      // Memeriksa apakah chatbot sedang tersembunyi.
-      const isHidden = !this.container.style.display || this.container.style.display === "none";
-      // Mengubah status tampilan chatbot (tampil jika tersembunyi, dan sebaliknya).
-      this.container.style.display = isHidden ? "flex" : "none";
-    });
+    this.toggle.addEventListener("click", () => this._toggleChat());
+    this.container.querySelector(".chat-close").addEventListener("click", () => this._toggleChat());
+  }
+
+  _toggleChat() {
+    const isVisible = this.container.style.display === "flex";
+    this.container.style.display = isVisible ? "none" : "flex";
+    if (!isVisible) {
+      this.input.focus();
+    }
   }
 
   // '_onSend' dipanggil ketika pengguna mengirim pesan.
@@ -81,7 +87,7 @@ class StaticChatbot {
   // '_renderUser' membuat dan menampilkan bubble chat untuk pesan pengguna.
   _renderUser(text) {
     const msg = document.createElement("div"); // Membuat elemen div baru.
-    msg.className = "rag-msg rag-user"; // Menetapkan kelas CSS untuk styling.
+    msg.className = "message message-user"; // Menetapkan kelas CSS untuk styling.
     msg.textContent = text; // Mengisi teks pesan.
     this.msgArea.appendChild(msg); // Menambahkan pesan ke jendela chat.
     this.msgArea.scrollTop = this.msgArea.scrollHeight; // Otomatis scroll ke bawah.
@@ -90,7 +96,7 @@ class StaticChatbot {
   // '_renderBot' membuat dan menampilkan bubble chat untuk pesan bot.
   _renderBot(text) {
     const msg = document.createElement("div"); // Membuat elemen div baru.
-    msg.className = "rag-msg rag-bot"; // Menetapkan kelas CSS untuk styling.
+    msg.className = "message message-bot"; // Menetapkan kelas CSS untuk styling.
     msg.innerHTML = text; // Mengisi teks pesan (menggunakan innerHTML untuk merender HTML jika ada).
     this.msgArea.appendChild(msg); // Menambahkan pesan ke jendela chat.
     this.msgArea.scrollTop = this.msgArea.scrollHeight; // Otomatis scroll ke bawah.
@@ -102,8 +108,5 @@ class StaticChatbot {
   }
 }
 
-// Menambahkan event listener yang akan menjalankan kode setelah seluruh konten halaman dimuat.
-document.addEventListener("DOMContentLoaded", () => {
-  // Membuat instance baru dari StaticChatbot, yang akan menginisialisasi dan menjalankan chatbot.
-  new StaticChatbot();
-});
+// Initialize the chatbot
+new StaticChatbot();

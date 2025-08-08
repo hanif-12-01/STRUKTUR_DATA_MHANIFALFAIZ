@@ -105,21 +105,25 @@
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScJ8tkZau-NVdhbmd0cWFKY25VBm0Ajjxvqo-rLYAO_iGb2qg/viewform?embedded=true" class="modal-iframe-content"></iframe>
     </div>
   </div>
-  <div class="chatbot" onclick="toggleChat()" title="Buka Chatbot MakanBot">💬</div>
+  <div class="chatbot" title="Buka Chatbot MakanBot">💬</div>
   <div class="chat-popup" id="chatPopup">
     <div class="chat-header">
       <span>🤖 MakanBot</span>
-      <span class="chat-close" onclick="toggleChat()">×</span>
+      <span class="chat-close">×</span>
     </div>
     <div class="chat-messages" id="chatMessages">
       <div class="message message-bot">
         <span>Halo! Aku MakanBot 🍽 Mau cari kuliner apa di Purwokerto hari ini?</span>
         <div class="message-time">Baru saja</div>
       </div>
+      <div class="message message-user">
+        <span>Rekomendasi sate ayam dong</span>
+        <div class="message-time">17:30</div>
+      </div>
     </div>
     <div class="chat-input-container">
-      <input type="text" class="chat-input" id="chatInput" placeholder="Ketik pesan..." onkeypress="if(event.key=='Enter') sendChat()">
-      <button class="chat-send" onclick="sendChat()" title="Kirim Pesan">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ketik pesan...">
+      <button class="chat-send" title="Kirim Pesan">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M22 2L11 13" stroke="white" stroke-width="2"/>
           <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2"/>

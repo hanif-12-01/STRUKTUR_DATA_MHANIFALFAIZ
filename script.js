@@ -1,4 +1,4 @@
-const GOOGLE_MAPS_API_KEY = 'AIzaSyCYJfw26FLV4doHPdXu9O5fyqoQXgcTveM';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyDW3PGqq5KbD_4v6KT2YrvP3cqboyZMq4E';
     const initialKulinerData = [
       {
         nama: "Soto Sokaraja",

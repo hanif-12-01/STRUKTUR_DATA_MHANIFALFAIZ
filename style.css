@@ -484,7 +484,7 @@
         to { opacity: 1; transform: translateY(0); }
     }
     .chat-header {
-      background: linear-gradient(135deg, #00B900, #009900);
+      background: #4F5D75;
       color: white;
       padding: 15px 20px;
       font-weight: 600;
@@ -506,9 +506,9 @@
       flex: 1;
       padding: 15px;
       overflow-y: auto;
-      background: #e5ddd5;
-      background-image: url('https://web.line.me/static/desktop/2.1.0/img/bg_chat.5f8e3b6.png');
-      background-size: cover;
+      background-color: #E5DDD5;
+      display: flex;
+      flex-direction: column;
       scroll-behavior: smooth;
     }
     .message {
@@ -523,15 +523,15 @@
     }
     .message-user {
       background: #DCF8C6;
-      margin-left: auto;
-      margin-right: 5px;
-      border-bottom-right-radius: 5px;
+      color: #000;
+      align-self: flex-end;
+      border-radius: 7.5px;
     }
     .message-bot {
-      background: white;
-      margin-right: auto;
-      margin-left: 5px;
-      border-bottom-left-radius: 5px;
+      background: #FFF;
+      color: #333;
+      align-self: flex-start;
+      border-radius: 7.5px;
     }
     .message-time {
       font-size: 10px;

@@ -18,7 +18,7 @@ const KNOWLEDGE_BASE = {
       category: "general",
       keywords: ["apa", "itu", "lapormangan", "lapor", "mangan", "aplikasi", "website"],
       question: "Apa itu LaporMangan?",
-      answer: "LaporMangan adalah platform untuk menemukan kuliner UMKM di Purwokerto. Kami membantu Anda menjelajahi dan mendukung usaha kuliner lokal! 探検 (tanken) - penjelajahan!",
+      answer: "LaporMangan adalah platform untuk menemukan kuliner UMKM di Purwokerto. Kami membantu Anda menjelajahi dan mendukung usaha kuliner lokal!",
       priority: 1
     },
     {
@@ -26,7 +26,7 @@ const KNOWLEDGE_BASE = {
       category: "general",
       keywords: ["cara", "menggunakan", "peta", "navigasi", "mencari"],
       question: "Bagaimana cara menggunakan peta?",
-      answer: "Gunakan kolom pencarian untuk nama kuliner, atau filter berdasarkan kategori. Klik ikon di peta atau item di daftar untuk detail. 簡単 (kantan) - mudah!",
+      answer: "Gunakan kolom pencarian untuk nama kuliner, atau filter berdasarkan kategori. Klik ikon di peta atau item di daftar untuk detail. Mudah, kan!",
       priority: 1
     },
     {
@@ -34,7 +34,7 @@ const KNOWLEDGE_BASE = {
       category: "general",
       keywords: ["tambah", "kuliner", "baru", "daftarkan", "lapor"],
       question: "Bagaimana cara menambah informasi kuliner baru?",
-      answer: "Klik tombol 'Tambah Informasi' untuk membuka form. Isi detailnya dan kami akan meninjaunya. ありがとう (arigatou) - terima kasih atas kontribusinya!",
+      answer: "Klik tombol 'Tambah Informasi' untuk membuka form. Isi detailnya dan kami akan meninjaunya. Terima kasih atas kontribusinya!",
       priority: 1
     },
     // Greetings & Small Talk
@@ -43,7 +43,7 @@ const KNOWLEDGE_BASE = {
       category: "greetings",
       keywords: ["halo", "hai", "selamat pagi", "siang", "sore", "malam"],
       question: "Sapaan",
-      answer: "こんにちは (Konnichiwa)! Selamat datang di LaporMangan. Ada yang bisa saya bantu? 😊",
+      answer: "Halo! Selamat datang di LaporMangan. Ada yang bisa saya bantu? 😊",
       priority: 2
     },
     {
@@ -51,7 +51,7 @@ const KNOWLEDGE_BASE = {
       category: "greetings",
       keywords: ["terima kasih", "makasih", "thanks"],
       question: "Ucapan Terima Kasih",
-      answer: "どういたしまして (Dou itashimashite)! Senang bisa membantu. Ada lagi? 😊",
+      answer: "Sama-sama! Senang bisa membantu. Ada lagi? 😊",
       priority: 2
     },
     {
@@ -59,7 +59,7 @@ const KNOWLEDGE_BASE = {
       category: "greetings",
       keywords: ["kabar", "apa kabar"],
       question: "Menanyakan Kabar",
-      answer: "元気です (Genki desu)! Aku selalu bersemangat untuk membantumu menemukan makanan enak. Kamu sendiri bagaimana?",
+      answer: "Kabar baik! Aku selalu bersemangat untuk membantumu menemukan makanan enak. Kamu sendiri bagaimana?",
       priority: 2
     },
     // Kuliner Specific
@@ -86,10 +86,34 @@ const KNOWLEDGE_BASE = {
       question: "Cari kuliner legendaris",
       answer: "Purwokerto punya banyak kuliner legendaris! Soto Sokaraja dan Sate Bebek Tambak adalah beberapa yang paling terkenal. Coba cek di peta kami!",
       priority: 1
+    },
+    {
+      id: "kuliner_mood_1",
+      category: "kuliner",
+      keywords: ["makan", "lapar", "mau makan"],
+      question: "Pengguna lapar",
+      answer: "Lapar ya? Tenang, aku bantu carikan makanan enak. Mau coba apa? Mungkin soto, sate, atau nasi goreng?",
+      priority: 2
+    },
+    {
+      id: "kuliner_mood_2",
+      category: "kuliner",
+      keywords: ["haus", "minum", "segar"],
+      question: "Pengguna haus",
+      answer: "Haus? Ada banyak minuman segar di Purwokerto! Coba cari 'Es Cendol Dawet' atau 'Dawet Ayu' di peta.",
+      priority: 2
+    },
+    {
+      id: "kuliner_rec_4",
+      category: "kuliner",
+      keywords: ["jajanan", "camilan", "terdekat"],
+      question: "Rekomendasi jajanan terdekat",
+      answer: "Untuk rekomendasi terdekat, coba gunakan tombol 'Terdekat' di atas peta. Nanti aku urutkan semua kuliner berdasarkan lokasimu. Selamat mencoba!",
+      priority: 1
     }
   ],
   fallbackResponses: [
-    "すみません (Sumimasen), saya tidak mengerti. Bisa coba tanyakan tentang kuliner atau fitur di aplikasi ini?",
+    "Maaf, saya tidak mengerti. Bisa coba tanyakan tentang kuliner atau fitur di aplikasi ini?",
     "Hmm, sepertinya itu di luar pengetahuanku. Coba tanya tentang 'soto', 'mendoan', atau 'rekomendasi'.",
     "Aku adalah MakanBot! Siap membantumu menemukan kuliner lezat di Purwokerto. Ada yang bisa kubantu?",
     "Aku masih belajar, tapi aku jago soal makanan! Coba tanya 'di mana sate enak?' atau 'rekomendasi minuman segar'."
