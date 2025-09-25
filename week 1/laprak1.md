@@ -24,7 +24,7 @@ int main() {
     return 0;
 }
 ```
-penjelasan singkat guided 1
+Program tersebut menjalankan sebuah inputan integer atau bilangan bulat dan ouputnya adalah bilangan yang telah kita inputkan tadi
 
 ### 2. 
 
@@ -48,7 +48,7 @@ int main() {
     return 0;
 }
 ```
-penjelasan singkat guided 2
+Program tersebut menjalankan sebuah perhitungan sederhana yang meliputi penjumlahan,pengurangan,perkalian,pembagian dan hasil dari perhitungan tersebut didapatkan dari dua angka yang kita inputkan.
 
 ### 3. 
 
@@ -98,7 +98,7 @@ int main() {
     return 0;
 }
 ```
-penjelasan singkat guided 3
+Program tersebut berjalan melalui rangkaian pemeriksaan dimulai dari perbandingan lalu recheck apakah angka tersebut sama atau tidak, setelah melalui perbandingan dan check ulang, kita akan mengeksekusi program tersebut dengan penjumlahan atau pengurangan
 
 ### 4.
 ```C++
@@ -131,7 +131,7 @@ using namespace std;
     
  }
 ```
-penjelasan singkat guided 4
+Demonstrasi Tiga Jenis Perulangan (for, while, dan do-while)
 
 ### 5. 
 ```C++
@@ -157,6 +157,7 @@ int main(){
     int j = 0;
     while(j < MAX){
         cout << "nama siswa : " << siswa[j].nama << ", nilai : " << siswa[j].nilai << endl;
+        j++;
     }
     return 0;
 }
@@ -167,7 +168,44 @@ penjelasan singkat guided 5
 ### 1. (isi dengan soal unguided 1)
 
 ```C++
-source code unguided 1
+#include <iostream>
+using namespace std;
+void Kalkulator() {
+    int a, b;
+    char op;
+    cout << "Masukkan angka pertama: ";
+    cin >> a;
+    cout << "Masukkan operator (+, -, *, /): ";
+    cin >> op;
+    cout << "Masukkan angka kedua: ";
+    cin >> b;
+    switch (op) {  
+        case '+':
+            cout << "Hasil: " << a + b << endl;
+            break;
+        case '-':
+            cout << "Hasil: " << a - b << endl;
+            break;
+        case '*':
+            cout << "Hasil: " << a * b << endl;
+            break;
+        case '/':
+            if (b != 0) {
+                cout << "Hasil: " << a / b << endl;
+            } else {
+                cout << "Error: pembagian dengan 0 tidak terdefinisi" << endl;
+            }
+            break;
+        default:
+            cout << "Operator tidak valid!" << endl;
+            break;
+        }
+}
+int main() {
+    Kalkulator();
+    return 0;
+}
+
 ```
 ### Output Unguided 1 :
 
@@ -185,7 +223,47 @@ penjelasan unguided 1
 ### 2. (isi dengan soal unguided 2)
 
 ```C++
-source code unguided 2
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+void angkaKeTeks() {
+    int input;
+    cout << "masukkan angka 1-100: ";
+    cin >> input;
+
+    if (input < 1 || input > 100) {
+        cout << "mohon masukkan angka 1-100" << endl;
+    } else {
+        vector<string> satuan = {"nol", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"};
+        string hasil;
+
+        if (input < 12) {
+            hasil = satuan[input];
+        } else if (input < 20) {
+            hasil = satuan[input % 10] + " belas";
+        } else if (input < 100) {
+            int puluhan = input / 10;
+            int sisa = input % 10;
+            if (sisa == 0) {
+                hasil = satuan[puluhan] + " puluh";
+            } else {
+                hasil = satuan[puluhan] + " puluh " + satuan[sisa];
+            }
+        } else {
+            hasil = "seratus";
+        }
+        cout << hasil << endl;
+    }
+}
+
+int main() {
+    angkaKeTeks();
+    return 0;
+}
+
 ```
 ### Output Unguided 2 :
 
@@ -203,7 +281,60 @@ penjelasan unguided 2
 ### 3. (isi dengan soal unguided 3)
 
 ```C++
-source code unguided 3
+#include <iostream>
+using namespace std;
+int main() {
+    int number;
+    cout << "Masukkan angka: ";
+    cin >> number;
+    int N = number;
+
+    int i = N;
+
+    // Perulangan utama
+    while (i >= 1) {
+
+        // Loop untuk mencetak spasi di awal 
+        int s = 1;
+        while (s <= N - i) {
+            cout << " ";
+            s++;
+        }
+        
+
+        // Sisi Kiri
+        int j = i;
+        while (j >= 1) {
+            std::cout << j;
+            j--;
+        }
+
+        // Tengah
+        cout << "*";
+
+        // Sisi Kanan
+        int k = 1;
+        while (k <= i) {
+            std::cout << k;
+            k++;
+        }
+
+        cout << std::endl;
+        i--;
+    }
+
+    int s = 1;
+    while (s <= N) {
+        std::cout << " ";
+        s++;
+    }
+    
+    
+    // Bintang terakhir
+    cout << "*" << std::endl;
+
+    return 0;
+}
 ```
 ### Output Unguided 3 :
 
@@ -227,4 +358,4 @@ penjelasan unguided 3
 <br>[3]Dewi, L.J.E. (2020). Media Pembelajaran Bahasa Pemrograman C++. Jurnal Pendidikan Teknologi dan Kejuruan. https://ejournal.undiksha.ac.id/index.php/JPTK/article/download/31/25/94
 <br>[4]Domainesia. (2024). Apa Itu Code Blocks? Kenali Pengertian dan Fungsinya. https://www.domainesia.com/berita/apa-itu-code-blocks/
 <br>[5](2019). PENGENALAN CODE_BLOCKS. Academia.edu. https://www.academia.edu/44359359/PENGENALAN_CODE_BLOCKS
-[6]Qobus Muhammad Fayazz Zhafar Effendi, et al. (2024). Penerapan Pemrograman C++ dalam Pengembangan Alat. Jurnal Majemuk, 3(1). https://jurnalilmiah.org/journal/index.php/majemuk/article/view/665
+<br>[6]Qobus Muhammad Fayazz Zhafar Effendi, et al. (2024). Penerapan Pemrograman C++ dalam Pengembangan Alat. Jurnal Majemuk, 3(1). https://jurnalilmiah.org/journal/index.php/majemuk/article/view/665
