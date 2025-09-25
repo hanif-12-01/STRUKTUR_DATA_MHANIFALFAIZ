@@ -165,8 +165,7 @@ int main(){
 penjelasan singkat guided 5
 ## Unguided 
 
-### 1. (isi dengan soal unguided 1)
-
+### 1. 
 ```C++
 #include <iostream>
 using namespace std;
@@ -220,8 +219,7 @@ contoh :
 
 penjelasan unguided 1 
 
-### 2. (isi dengan soal unguided 2)
-
+### 2. 
 ```C++
 #include <iostream>
 #include <string>
@@ -278,8 +276,7 @@ contoh :
 
 penjelasan unguided 2
 
-### 3. (isi dengan soal unguided 3)
-
+### 3. 
 ```C++
 #include <iostream>
 using namespace std;
