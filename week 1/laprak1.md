@@ -10,7 +10,7 @@ Dalam praktik pengembangan, penggunaan Integrated Development Environment (IDE) 
 
 ## Guided 
 
-### 1. ...
+### 1. 
 
 ```C++
 #include<iostream>
@@ -26,7 +26,7 @@ int main() {
 ```
 penjelasan singkat guided 1
 
-### 2. ...
+### 2. 
 
 ```C++
 #include<iostream>
@@ -50,7 +50,7 @@ int main() {
 ```
 penjelasan singkat guided 2
 
-### 3. ...
+### 3. 
 
 ```C++
 #include<iostream>
@@ -100,8 +100,7 @@ int main() {
 ```
 penjelasan singkat guided 3
 
-### 4. ...
-
+### 4.
 ```C++
 #include <iostream>
 using namespace std;
@@ -134,8 +133,7 @@ using namespace std;
 ```
 penjelasan singkat guided 4
 
-### 5. ...
-
+### 5. 
 ```C++
 #include<iostream>
 using namespace std;
@@ -224,6 +222,9 @@ penjelasan unguided 3
 ...
 
 ## Referensi
-[1] Triase. (2020). Diktat Edisi Revisi : STRUKTUR DATA. Medan: UNIVERSTAS ISLAM NEGERI SUMATERA UTARA MEDAN. 
-<br>[2] Indahyati, Uce., Rahmawati Yunianita. (2020). "BUKU AJAR ALGORITMA DAN PEMROGRAMAN DALAM BAHASA C++". Sidoarjo: Umsida Press. Diakses pada 10 Maret 2024 melalui https://doi.org/10.21070/2020/978-623-6833-67-4.
-<br>...
+[1] Stroustrup, B. (2019). Artikel Bahasa Pemrograman C++. Academia.edu. https://www.academia.edu/41613762/Artikel_bahasa_pemrograman_C_
+<br>[2] (2019). TEORI DASAR BAHASA PEMPROGRAMAN C++. Academia.edu. https://www.academia.edu/41589648/TEORI_DASAR_BAHASA_PEMPROGRAMAN_C_
+<br>[3]Dewi, L.J.E. (2020). Media Pembelajaran Bahasa Pemrograman C++. Jurnal Pendidikan Teknologi dan Kejuruan. https://ejournal.undiksha.ac.id/index.php/JPTK/article/download/31/25/94
+<br>[4]Domainesia. (2024). Apa Itu Code Blocks? Kenali Pengertian dan Fungsinya. https://www.domainesia.com/berita/apa-itu-code-blocks/
+<br>[5](2019). PENGENALAN CODE_BLOCKS. Academia.edu. https://www.academia.edu/44359359/PENGENALAN_CODE_BLOCKS
+[6]Qobus Muhammad Fayazz Zhafar Effendi, et al. (2024). Penerapan Pemrograman C++ dalam Pengembangan Alat. Jurnal Majemuk, 3(1). https://jurnalilmiah.org/journal/index.php/majemuk/article/view/665
