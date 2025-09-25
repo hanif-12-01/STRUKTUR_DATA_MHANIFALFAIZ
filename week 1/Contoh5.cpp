@@ -20,6 +20,7 @@ int main(){
     int j = 0;
     while(j < MAX){
         cout << "nama siswa : " << siswa[j].nama << ", nilai : " << siswa[j].nilai << endl;
+        j++;
     }
     return 0;
 }
