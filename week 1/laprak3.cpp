@@ -11,7 +11,7 @@ int main() {
     // Perulangan utama
     while (i >= 1) {
 
-        // --- BARU: Loop untuk mencetak spasi di awal ---
+        // Loop untuk mencetak spasi di awal 
         int s = 1;
         while (s <= N - i) {
             cout << " ";
