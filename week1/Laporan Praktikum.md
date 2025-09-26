@@ -213,7 +213,7 @@ int main() {
 ```
 ### Output Unguided :
 
-##### Output 1
+##### Output 
 ![Output 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Ouput-laprak1.png)
 
 program kalkulator sederhana yang berjalan di terminal
@@ -265,8 +265,9 @@ int main() {
 ```
 ### Output Unguided :
 
-##### Output 2
-![Output 2]()https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Ouput-laprak2.png)
+##### Output 
+![Output 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Ouput-laprak2.png)
+
 Program C++ ini berfungsi untuk mengubah angka menjadi bentuk teks (terbilang)
 
 ### 3. 
@@ -329,8 +330,8 @@ int main() {
 ```
 ### Output Unguided :
 
-##### Output 1
-https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/main/WEEK 1/Output-laprak3.png)
+##### Output 
+![Output 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Output-laprak3.png)
 
 
 program C++ ini berfungsi untuk mencetak pola angka dan bintang berbentuk seperti piramida terbalik di terminal
