@@ -214,7 +214,7 @@ int main() {
 ### Output Unguided :
 
 ##### Output 1
-https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/week1/Ouput-laprak1.png
+https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Ouput-laprak1.png
 
 program kalkulator sederhana yang berjalan di terminal
 
