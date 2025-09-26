@@ -100,7 +100,7 @@ int main() {
 ```
 program C++ yang menunjukkan cara kerja pengambilan keputusan dalam kode
 
-### 4. ...
+### 4. 
 
 ```C++
 #include <iostream>
@@ -266,8 +266,7 @@ int main() {
 ### Output Unguided :
 
 ##### Output 2
-https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/week1/Ouput-laprak2.png
-
+![Output 2]()https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Ouput-laprak2.png)
 Program C++ ini berfungsi untuk mengubah angka menjadi bentuk teks (terbilang)
 
 ### 3. 
