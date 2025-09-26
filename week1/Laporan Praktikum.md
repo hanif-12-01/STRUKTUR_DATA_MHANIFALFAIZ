@@ -169,7 +169,7 @@ Program C++ yang dirancang untuk menyimpan dan menampilkan data rapor sederhana 
 
 ## Unguided 
 
-### 1. (isi dengan soal unguided 1)
+### 1. 
 
 ```C++
 #include <iostream>
@@ -214,7 +214,7 @@ int main() {
 ### Output Unguided :
 
 ##### Output 1
-https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/main/WEEK 1/Output-laprak1.png)
+https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/week1/Ouput-laprak1.png
 
 program kalkulator sederhana yang berjalan di terminal
 
