@@ -265,8 +265,8 @@ int main() {
 ```
 ### Output Unguided :
 
-##### Output 1
-https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/main/week1/Output-laprak2.png)
+##### Output 2
+https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/week1/Ouput-laprak2.png
 
 Program C++ ini berfungsi untuk mengubah angka menjadi bentuk teks (terbilang)
 
