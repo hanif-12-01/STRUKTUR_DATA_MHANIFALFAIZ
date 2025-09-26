@@ -24,7 +24,7 @@ int main() {
     return 0;
 }
 ```
-program C++ sederhana yang meminta pengguna untuk memasukkan sebuah angka. Setelah angka dimasukkan, program akan menampilkan kembali angka tersebut ke layar
+Program C++ sederhana yang meminta pengguna untuk memasukkan sebuah angka. Setelah angka dimasukkan, program akan menampilkan kembali angka tersebut ke layar
 
 ### 2. 
 
@@ -48,7 +48,7 @@ int main() {
     return 0;
 }
 ```
-kalkulator sederhana yang melakukan operasi aritmatika dasar
+Kalkulator sederhana yang melakukan operasi aritmatika dasar
 
 ### 3. 
 
@@ -98,7 +98,7 @@ int main() {
     return 0;
 }
 ```
-program C++ yang menunjukkan cara kerja pengambilan keputusan dalam kode
+Program C++ yang menunjukkan cara kerja pengambilan keputusan dalam kode
 
 ### 4. 
 
@@ -132,7 +132,7 @@ using namespace std;
     
  }
 ```
-sebuah program C++ yang mendemonstrasikan tiga jenis perulangan (loop) dasar: for, while, dan do-while
+Sebuah program C++ yang mendemonstrasikan tiga jenis perulangan (loop) dasar: for, while, dan do-while
 
 ### 5. 
 
@@ -216,7 +216,7 @@ int main() {
 ##### Output 
 ![Output 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Ouput-laprak1.png)
 
-program kalkulator sederhana yang berjalan di terminal
+Program kalkulator sederhana yang berjalan di terminal
 
 ### 2. 
 
@@ -333,10 +333,40 @@ int main() {
 ##### Output 
 ![Output 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Output-laprak3.png)
 
-program C++ ini berfungsi untuk mencetak pola angka dan bintang berbentuk seperti piramida terbalik di terminal
+Program C++ ini berfungsi untuk mencetak pola angka dan bintang berbentuk seperti piramida terbalik di terminal
 
 ## Kesimpulan
-...
+Berdasarkan pembelajaran dari modul ini, telah dipahami dasar-dasar penggunaan Code::Blocks IDE sebagai environment untuk pengembangan program serta konsep-konsep fundamental dalam bahasa pemrograman C++.
+
+Secara spesifik, pembelajaran ini telah memberikan kemampuan untuk:
+
+Mengelola proyek C++ di dalam Code::Blocks, mulai dari pembuatan, 
+
+compile, hingga run program.
+
+
+Memahami dan mengimplementasikan struktur dasar program C++, termasuk penggunaan variabel, tipe data, dan konstanta.
+
+
+
+Menggunakan operator-operator esensial seperti aritmetika, logika, dan penugasan untuk manipulasi data.
+
+
+
+
+Menerapkan logika pengambilan keputusan dalam program menggunakan pernyataan kondisional 
+
+if-else dan switch.
+
+Membangun alur program yang efisien dengan berbagai jenis perulangan, yaitu 
+
+for, while, dan do-while.
+
+Mengelompokkan data yang saling terkait ke dalam satu kesatuan menggunakan 
+
+struct.
+
+Pembelajaran ini memberikan fondasi yang kuat untuk dapat membangun dan mengembangkan aplikasi sederhana menggunakan bahasa C++
 
 ## Referensi
 [1] Stroustrup, B. (2019). Artikel Bahasa Pemrograman C++. Academia.edu. https://www.academia.edu/41613762/Artikel_bahasa_pemrograman_C_
