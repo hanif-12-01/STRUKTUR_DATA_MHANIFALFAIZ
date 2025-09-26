@@ -340,12 +340,12 @@ Berdasarkan pembelajaran dari modul ini, telah dipahami dasar-dasar penggunaan C
 
 Secara spesifik, pembelajaran ini telah memberikan kemampuan untuk:
 
--Mengelola proyek C++ di dalam Code::Blocks, mulai dari pembuatan, compile, hingga run program.
--Memahami dan mengimplementasikan struktur dasar program C++, termasuk penggunaan variabel, tipe data, dan konstanta.
--Menggunakan operator-operator esensial seperti aritmetika, logika, dan penugasan untuk manipulasi data.
--Menerapkan logika pengambilan keputusan dalam program menggunakan pernyataan kondisional if-else dan switch.
--Membangun alur program yang efisien dengan berbagai jenis perulangan, yaitu for, while, dan do-while.
--Mengelompokkan data yang saling terkait ke dalam satu kesatuan menggunakan struct.
+* **Manajemen Proyek**: Memahami cara mengelola proyek C++ di dalam Code::Blocks, mulai dari pembuatan, *compile*, hingga *run* program.
+* **Dasar-Dasar C++**: Mengimplementasikan struktur dasar program C++, termasuk penggunaan variabel, tipe data, dan konstanta.
+* **Operator**: Menggunakan operator-operator esensial seperti aritmetika, logika, dan penugasan untuk manipulasi data.
+* **Struktur Kondisional**: Menerapkan logika pengambilan keputusan dalam program menggunakan pernyataan `if-else` dan `switch`.
+* **Perulangan (Looping)**: Membangun alur program yang efisien dengan berbagai jenis perulangan, yaitu `for`, `while`, dan `do-while`.
+* **Struktur Data**: Mengelompokkan data yang saling terkait ke dalam satu kesatuan menggunakan `struct`.
 
 
 ## Referensi
