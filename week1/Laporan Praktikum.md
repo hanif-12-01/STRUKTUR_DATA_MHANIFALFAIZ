@@ -333,7 +333,6 @@ int main() {
 ##### Output 
 ![Output 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Output-laprak3.png)
 
-
 program C++ ini berfungsi untuk mencetak pola angka dan bintang berbentuk seperti piramida terbalik di terminal
 
 ## Kesimpulan
