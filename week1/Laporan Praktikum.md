@@ -202,7 +202,7 @@ int main(){
 ### Output Unguided :
 
 ##### Output 
-![Output 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/week1/Output-laprak1.png)
+![Output Program 1](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/week1/Output-Program1.png)
 
 program C++ ini adalah sebuah kalkulator sederhana yang melakukan empat operasi matematika dasar (tambah, kurang, kali, bagi) terhadap dua angka yang dimasukkan oleh pengguna
 
