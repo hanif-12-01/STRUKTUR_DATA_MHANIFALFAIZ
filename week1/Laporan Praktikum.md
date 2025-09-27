@@ -319,7 +319,7 @@ int main() {
 ### Output Unguided :
 
 ##### Output 
-![Output 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/raw/master/week1/Output-laprak3.png)
+![Output Program 3](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/week1/Output-Program3.png)
 
 Program C++ ini berfungsi untuk mencetak pola angka dan bintang berbentuk seperti piramida terbalik di terminal
 
