@@ -2,7 +2,10 @@
 <p align="center">M.Hanif Al Faiz - 103112400042</p>
 
 ## Dasar Teori
-...
+Pemrograman C++ merupakan fondasi penting dalam ilmu komputer yang melatih kemampuan berpikir logis dan terstruktur [7]. Konsep-konsep dasarnya, seperti array, pointer, dan fungsi, adalah blok bangunan utama untuk mengembangkan perangkat lunak yang efisien dan kompleks.
+Array adalah struktur data fundamental yang digunakan untuk menyimpan kumpulan data dengan tipe sejenis secara berurutan dalam memori [5]. Struktur ini sering divisualisasikan sebagai tabel atau matriks, di mana setiap elemen data dapat diakses secara unik melalui sebuah indeks [5]. Penggunaan array sangat penting dalam berbagai implementasi, mulai dari pengelolaan data sederhana hingga algoritma yang lebih kompleks. Teknologi visualisasi seperti Augmented Reality bahkan telah dikembangkan untuk membantu memahami bagaimana struktur array dan elemen-elemennya tersusun di dalam memori [5].
+Salah satu konsep yang paling kuat namun sering dianggap sulit dalam C++ adalah pointer [2]. Pointer secara esensial adalah variabel yang tidak menyimpan nilai data secara langsung, melainkan menyimpan alamat memori dari variabel lain [2]. Kemampuan untuk bekerja langsung dengan alamat memori ini sangat penting untuk manajemen memori yang efisien, terutama dalam alokasi memori dinamis dan pembuatan struktur data yang kompleks seperti linked list dan tree [2]. Memahami bagaimana pointer menunjuk, mengakses, dan memanipulasi data di memori adalah kunci untuk membuka potensi penuh dari bahasa C++. Karena kompleksitasnya, berbagai alat bantu visualisasi telah diciptakan untuk mendemonstrasikan bagaimana pointer berinteraksi dengan alokasi memori secara dinamis, sehingga mempermudah proses pembelajaran [2].
+Fungsi adalah blok kode mandiri yang dirancang untuk melakukan tugas spesifik dan dapat digunakan kembali di berbagai bagian program [7]. Penggunaan fungsi memungkinkan programmer untuk memecah masalah besar menjadi bagian-bagian yang lebih kecil dan lebih mudah dikelola, sebuah pendekatan yang dikenal sebagai pemrograman modular [7]. Setiap fungsi dapat menerima masukan (parameter) dan mengembalikan sebuah nilai keluaran. Dengan membungkus logika tertentu di dalam fungsi, kode menjadi lebih terstruktur, mudah dibaca, dan efisien karena mengurangi pengulangan kode [7].
 
 ## Guided 1
 
@@ -320,16 +323,19 @@ Program C++ ini berfungsi untuk
 ...
 
 ## Referensi
-[1] Dewi, L. J. E. (2010). Media pembelajaran bahasa pemrograman C++. Jurnal Pendidikan Teknologi dan Kejuruan (Undiksha), 7(1), 63–72.
-Halaman artikel: https://ejournal.undiksha.ac.id/index.php/JPTK/article/view/31
-PDF: https://ejournal.undiksha.ac.id/index.php/JPTK/article/download/31/25/94
-<br>[2]Prasetyoadi, E. B., Rokhmawati, R. I., & Wicaksono, S. A. (2019). Pengembangan e-modul pembelajaran “Pemrograman Dasar” dengan metode R&D (Studi SMKN 4 Malang). Jurnal Pengembangan Teknologi Informasi dan Ilmu Komputer (J-PTIIK), 3(10), 10118–10129.
-Halaman artikel: https://j-ptiik.ub.ac.id/index.php/j-ptiik/article/view/6646
-PDF: https://j-ptiik.ub.ac.id/index.php/j-ptiik/article/download/6646/3193/46603
-<br>[3] Asprila, D. A., Wijoyo, S. H., & Az-Zahra, H. M. (2021). Evaluasi usability pada aplikasi Learn C++ (usability testing). Jurnal Pengembangan Teknologi Informasi dan Ilmu Komputer (J-PTIIK), 5(6), 2677–2686.
-Halaman artikel: https://j-ptiik.ub.ac.id/index.php/j-ptiik/article/view/9392
-PDF: https://j-ptiik.ub.ac.id/index.php/j-ptiik/article/download/9392/4217/66090
-<br>[4] Sano, A. N. A. (2020). PENGENALAN CODE::BLOCKS. Academia.edu.
-Halaman: https://www.academia.edu/44359359/PENGENALAN_CODE_BLOCKS
-<br>[5] Effendi, Q. M. F. Z., dkk. (2024). Penerapan Pemrograman C++ dalam Pengembangan Alat. Jurnal Majemuk, 3(1).
-Halaman artikel: https://jurnalilmiah.org/journal/index.php/majemuk/article/view/665
+[1]Asprila, D. A., Wijoyo, S. H., & Az-Zahra, H. M. (2021). Evaluasi usability pada aplikasi Learn C++ (usability testing). Jurnal Pengembangan Teknologi Informasi dan Ilmu Komputer (J-PTIIK), 5(6), 2677–2686.
+Tautan Artikel
+<br>[2]Cickovski, M. B. (2011). Visualization of dynamic data structures, pointers and recursion for C++ language. 2011 34th International Convention on Information and Communication Technology, Engineering and Microelectronics (MIPRO).
+Tautan Artikel (IEEE Xplore)
+<br>[3]Dewi, L. J. E. (2010). Media pembelajaran bahasa pemrograman C++. Jurnal Pendidikan Teknologi dan Kejuruan (Undiksha), 7(1), 63–72.
+Tautan Artikel
+<br>[4]Effendi, Q. M. F. Z., dkk. (2024). Penerapan Pemrograman C++ dalam Pengembangan Alat. Jurnal Majemuk, 3(1).
+Tautan Artikel
+<br>[5]Ginardi, V. C., Heripracoyo, D. E. P. W., & Sucahyo, A. (2017). Implementasi Augmented Reality Dalam Pembelajaran Struktur Data Menggunakan Metode Marker Based Tracking. Jurnal Teknik Informatika dan Sistem Informasi (JATISI), 4(1).
+Tautan Artikel
+<br>[6]Prasetyoadi, E. B., Rokhmawati, R. I., & Wicaksono, S. A. (2019). Pengembangan e-modul pembelajaran “Pemrograman Dasar” dengan metode R&D (Studi SMKN 4 Malang). Jurnal Pengembangan Teknologi Informasi dan Ilmu Komputer (J-PTIIK), 3(10), 10118–10129.
+Tautan Artikel
+<br>[7]Putra, F. Y. G., Silalahi, N. H. A., dkk. (2022). PELATIHAN DASAR-DASAR PEMROGRAMAN C++ UNTUK MENINGKATKAN KETERAMPILAN GURU-GURU KOMPUTER DI KABUPATEN KUANTAN SINGINGI. JURPIKAT (Jurnal Pengabdian Kepada Masyarakat), 3(1), 107-115.
+Tautan Artikel
+<br>[8]Sano, A. N. A. (2020). PENGENALAN CODE::BLOCKS. Academia.edu.
+Tautan
