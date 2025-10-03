@@ -145,7 +145,7 @@ Sebuah program C++ yang
 
 ### 1. 
 
-```C++#include <iostream>
+```C++
 using namespace std;
 
 void jumlahMatriks(int matriksA[][3], int matriksB[][3], int hasil[][3]);
