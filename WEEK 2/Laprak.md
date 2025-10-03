@@ -322,7 +322,19 @@ int main() {
 Program ini menghitung luas dan keliling persegi panjang dengan menggunakan pointer untuk menunjukkan bagaimana sebuah fungsi dapat mengubah nilai variabel di luar lingkupnya.
 
 ## Kesimpulan
-...
+Berdasarkan praktikum yang telah dilaksanakan, dapat ditarik kesimpulan bahwa pemahaman mengenai array, pointer, dan fungsi merupakan kompetensi fundamental dalam pemrograman C++. Praktikum ini telah berhasil mendemonstrasikan penerapan konsep-konsep tersebut secara efektif.
+
+
+
+Implementasi array, baik satu maupun dua dimensi, terbukti esensial untuk pengelolaan data yang terstruktur. Hal ini secara konkret ditunjukkan melalui kemampuannya merepresentasikan matriks dan memfasilitasi operasi matematis yang kompleks, seperti penjumlahan dan perkalian.
+
+Konsep pointer memberikan kapabilitas untuk manipulasi memori secara langsung, yang membuka jalan bagi pemrograman yang lebih efisien. Telah dibuktikan bahwa pointer tidak hanya memiliki keterkaitan erat dengan cara kerja array, tetapi juga memegang peranan vital dalam mekanisme call by pointer. Mekanisme ini memungkinkan sebuah fungsi untuk memodifikasi variabel di luar lingkup lokalnya, sehingga meningkatkan fleksibilitas dan fungsionalitas program.
+
+Penggunaan fungsi secara signifikan meningkatkan modularitas, keterbacaan, dan reusabilitas kode. Melalui implementasi kalkulator matriks, terlihat jelas bahwa pemisahan logika program ke dalam fungsi-fungsi spesifik menjadikan kode lebih terstruktur, mudah untuk ditelusuri (debug), dan dikelola.
+
+Secara keseluruhan, penguasaan terhadap array sebagai struktur data, pointer sebagai instrumen manajemen memori, dan fungsi sebagai pilar pemrograman terstruktur merupakan fondasi yang krusial untuk membangun aplikasi C++ yang lebih skalabel, efisien, dan kompleks.
+
+
 
 ## Referensi
 [1]Asprila, D. A., Wijoyo, S. H., & Az-Zahra, H. M. (2021). Evaluasi usability pada aplikasi Learn C++ (usability testing). Jurnal Pengembangan Teknologi Informasi dan Ilmu Komputer (J-PTIIK), 5(6), 2677–2686.
