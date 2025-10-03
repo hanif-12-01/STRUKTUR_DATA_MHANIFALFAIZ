@@ -28,7 +28,9 @@ int main(){
     return 0;
 }
 ```
-Program C++ sederhana yang 
+Meminta Input Pengguna: Program pertama-tama membuat sebuah array integer kosong yang bisa menampung 5 angka. Kemudian, program menggunakan for loop untuk meminta pengguna memasukkan 5 angka satu per satu.
+
+Menampilkan Output: Setelah kelima angka tersimpan dalam array, program menggunakan while loop untuk menampilkan kembali kelima angka yang telah dimasukkan oleh pengguna ke layar.
 
 ### 2. Array2 dimensi 
 
@@ -84,7 +86,7 @@ int main(){
     return 0;
 }
 ```
-Penjelasan
+Program ini melakukan operasi penjumlahan dan perkalian pada dua buah matriks 2x2 (arrA dan arrB) yang nilainya sudah ditentukan.
 
 ### 3. Arrnpointer
 
@@ -108,7 +110,7 @@ int main(){
     return 0;
 }
 ```
-Program C++ yang 
+Program C++ ini menunjukkan dua cara berbeda untuk mengakses dan menampilkan elemen-elemen dalam sebuah array, yaitu menggunakan pointer dan menggunakan indeks
 
 ### 4. Fungsi prosedur
 
@@ -142,7 +144,7 @@ using namespace std;
     
  }
 ```
-Sebuah program C++ yang 
+Kode ini mendemonstrasikan tiga jenis perulangan (for, while, dan do-while) yang perilakunya dikontrol oleh satu angka masukan dari pengguna.
 
 ## Unguided 
 
@@ -264,7 +266,7 @@ void tampilMatriks(int matriks[][3]) {
 ##### Output 
 ![Keluaran1](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%202/Keluaran1.png)
 
-program C++ ini adalah 
+Program ini menggunakan dua matriks (matriksA dan matriksB) yang nilainya sudah ditentukan. Kemudian, program menampilkan menu interaktif yang memungkinkan pengguna untuk memilih salah satu dari tiga operasi: penjumlahan, pengurangan, atau perkalian. 
 
 ### 2. 
 
@@ -317,7 +319,7 @@ int main() {
 ##### Output 
 ![Keluaran2](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%202/Keluaran2.png)
 
-Program C++ ini berfungsi untuk
+Program ini menghitung luas dan keliling persegi panjang dengan menggunakan pointer untuk menunjukkan bagaimana sebuah fungsi dapat mengubah nilai variabel di luar lingkupnya.
 
 ## Kesimpulan
 ...
