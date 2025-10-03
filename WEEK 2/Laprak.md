@@ -258,8 +258,8 @@ void tampilMatriks(int matriks[][3]) {
 ```
 ### Output Unguided 1 :
 
-##### Output 1
-![Output Program 1](https://github.com/mhmmdffzz/103112400064_Muhammad-Fauzan/blob/main/Pertemuan1_Modul1/LAPRAK/Muhammad_Fauzan-Output-Unguided1.png)
+##### Output 
+![Keluaran1](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%202/Keluaran1.png)
 
 program C++ ini adalah 
 
