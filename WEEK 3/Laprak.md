@@ -162,9 +162,9 @@ int main() {
     return 0;
 }
 ```
-### Output Unguided 1 :
+### Output Unguided 1 & 2 :
 
-![Screenshot Output Unguided 1](output1.jpg)
+![Screenshot Output Unguided 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%203/Output1%20.jpg)
 
 #### Penjelasan:
 Program ini merupakan implementasi ADT (Abstract Data Type) untuk sistem pengelolaan data mahasiswa dengan array. Berikut adalah penjelasan detail dari program:
@@ -192,7 +192,7 @@ Program ini merupakan implementasi ADT (Abstract Data Type) untuk sistem pengelo
 
 Program ini mendemonstrasikan konsep ADT dengan baik melalui enkapsulasi data mahasiswa dalam struct dan penggunaan fungsi untuk operasi perhitungan. 
 
-### 2. 
+### 3. 
 
 ```C++
 #include <iostream>
@@ -279,9 +279,9 @@ void tukarNilaiViaPointer(int *ptrA, int *ptrB) {
     *ptrB = temp;
 }
 ```
-### Output Unguided 2 :
+### Output Unguided 3 :
 
-![Screenshot Output Unguided 2](output2.jpg)
+![Screenshot Output Unguided 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%203/Output2.jpg)
 
 
 #### Penjelasan:
