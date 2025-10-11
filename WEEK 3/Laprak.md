@@ -3,34 +3,28 @@
 
 ## Dasar Teori
 
-### I. KONSEP MODUL DAN BAHAN AJAR
+### Abstract Data Type (ADT)
 
-#### A. Definisi dan Fungsi Modul
-Modul merupakan salah satu bahan ajar instruksional yang dapat dibuat untuk mendorong kemandirian belajar dan mengurangi kebosanan siswa [8]. Modul adalah kumpulan materi instruksional terprogram yang terintegrasi, metodis, dan mendalam [2].
+Abstract Data Type (ADT) adalah tipe data dan sekumpulan PRIMITIF (operasi dasar) terhadap tipe tersebut [10]. ADT yang lengkap harus menyertakan definisi invarian dari TIPE dan aksioma yang berlaku [10]. ADT merupakan definisi STATIK [10].
 
-Modul memiliki tujuan tertentu [2]. Modul adalah bahan ajar yang disusun secara lengkap dan metodis, memberikan pilihan sumber belajar yang direncanakan, dan dibuat untuk membantu siswa menguasai tujuan pembelajaran yang spesifik [2]. Dalam konteks pembelajaran, modul berfungsi sebagai alat untuk memfasilitasi kegiatan belajar mandiri, yang dapat digunakan kapan saja dan di mana saja untuk meningkatkan kompetensi [2].
+#### Operasi Primitif ADT
 
-Kelebihan pembelajaran menggunakan modul meliputi [5]:
-1. Dapat memberikan umpan balik, sehingga pelajar mengetahui kekurangannya dan dapat segera melakukan perbaikan [5].
-2. Menetapkan tujuan pembelajaran yang jelas, membuat kinerja siswa terarah [5].
-3. Bersifat fleksibel, karena materi dapat dipelajari dengan cara dan kecepatan yang berbeda [5].
-4. Memberikan kesempatan yang cukup bagi siswa untuk menemukan kelemahan sendiri melalui evaluasi (remedi) [5].
+Operasi Primitif ADT meliputi [10]:
 
-#### B. Karakteristik Modul yang Efektif
-Buku ajar (modul) dapat dikatakan baik jika memiliki karakteristik tertentu [6]:
-1. **Self-Instructional**: Pengguna dapat belajar secara mandiri tanpa bergantung pada sumber luar [6].
-2. **Self-Contained**: Modul mencakup kompetensi dan sub kompetensi dalam satu kesatuan yang mudah dipelajari [6].
-3. **Adaptif**: Modul dapat berubah sesuai dengan kemajuan teknologi agar dapat digunakan dalam jangka waktu lama [6].
-4. **User Friendly**: Bahasa yang digunakan harus mudah dimengerti oleh pengguna [6].
+1. **Konstruktor/Kreator**: Pembentuk nilai tipe (biasanya diawali Make) [10].
+2. **Selector**: Mengakses tipe komponen (biasanya diawali Get) [10].
+3. **Prosedur pengubah nilai komponen**: Melakukan modifikasi terhadap nilai komponen [10].
+4. **Tipe validator**: Mengecek apakah dapat membentuk tipe sesuai batasan [10].
+5. **Destruktor/Dealokator**: Menghancurkan nilai objek/variabel [10].
+6. **Operasi lain**: Seperti baca/tulis, relasional, aritmatika, dan konversi [10].
 
-#### C. Pengembangan E-Modul (Modul Digital)
-Pengembangan e-modul menjadi solusi yang tepat dalam pembelajaran kimia untuk menjembatani tantangan dalam memahami konsep abstrak [1]. E-modul merupakan bahan ajar dalam bentuk digital yang dapat memuat unit-unit konsep materi dengan kelebihan mudah diakses di mana pun [3]. E-modul dapat mencantumkan video, gambar, dan audio yang dapat meningkatkan kemampuan siswa untuk memahami pelajaran [3]. Dalam konteks teknologi, e-modul dapat dibuat menggunakan aplikasi seperti Flip PDF Professional [3].
+#### Implementasi ADT
 
-Dalam penelitian, e-modul yang dikembangkan terbukti memiliki kelayakan yang tinggi:
-- Tingkat kevalidan media e-modul rata-rata sebesar 90,21% dengan kategori Sangat Valid [4].
-- Respon siswa terhadap e-modul mencapai rata-rata 95,18% dengan kategori Sangat Setuju (Sangat Valid), menunjukkan e-modul diterima dengan baik oleh siswa [4].
+ADT biasanya diimplementasikan menjadi dua modul utama [10]:
+- **Modul Driver**: Berisi program utama yang menggunakan ADT [10].
+- **Modul Interface Program**: Berisi definisi dan implementasi operasi-operasi ADT [10].
 
-Penggunaan modul digital dalam pembelajaran mandiri ditemukan lebih efektif terhadap hasil belajar siswa dibandingkan modul cetak [7]. Modul digital dapat meningkatkan minat baca siswa karena tampilannya lebih menarik dan dilengkapi fitur seperti video dan animasi [7].
+Dengan menggunakan ADT, programmer dapat memisahkan antara spesifikasi (apa yang dilakukan) dengan implementasi (bagaimana melakukannya), sehingga meningkatkan modularitas dan kemudahan pemeliharaan kode program [11].
 
 
 ## Guided 
