@@ -1,4 +1,4 @@
-# <h1 align="center">Laporan Praktikum Modul 4 - Pengenalan Bahasa C++ (Bagian Keempat)</h1>
+# <h1 align="center">Laporan Praktikum Modul 4 - SINGLY LINKED LIST (Bagian Keempat)</h1>
 <p align="center">M. Hanif Al Faiz - 103112400042</p>
 
 ## Dasar Teori
