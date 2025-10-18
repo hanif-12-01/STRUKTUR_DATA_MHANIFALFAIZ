@@ -562,7 +562,7 @@ void insertFirst(List &L, address P) {
 ### Output Unguided 1 :
 
 ##### Output 
-![Output Program 2](https://github.com/mhmmdffzz/103112400064_Muhammad-Fauzan/blob/main/Pertemuan1_Modul1/LAPRAK/Muhammad_Fauzan-Output-Unguided2.png)
+![Output Program 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%204/w5p1.png)
 
 
 #### Penjelasan Program Unguided 1:
@@ -797,7 +797,7 @@ void deleteList(List &L);
 ### Output Unguided 2 :
 
 ##### Output 
-![Output Program 2](https://github.com/mhmmdffzz/103112400064_Muhammad-Fauzan/blob/main/Pertemuan1_Modul1/LAPRAK/Muhammad_Fauzan-Output-Unguided2.png)
+![Output Program 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%204/w5p2.png)
 
 #### Penjelasan Program Unguided 2:
 
