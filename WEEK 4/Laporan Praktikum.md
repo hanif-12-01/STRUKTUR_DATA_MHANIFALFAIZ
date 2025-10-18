@@ -459,8 +459,8 @@ Program ini mendemonstrasikan operasi lengkap pada Single Linked List termasuk i
 
 ### 1. Membuat ADT Singly Linked List 
 
+#### main.cpp
 ```C++
-main.cpp
 #include "singlylist.h"
 #include <ctime>
 
@@ -495,8 +495,10 @@ int main() {
     
     return 0;
 }
+```
 
-singlylist.h
+#### singlylist.h
+```C++
 #ifndef SINGLYLIST_H
 #define SINGLYLIST_H
 
@@ -522,8 +524,10 @@ void printInfo(List L);
 void insertFirst(List &L, address P);
 
 #endif
+```
 
-singliylist.cpp
+#### singlylist.cpp
+```C++
 #include "singlylist.h"
 
 void CreateList(List &L) {
@@ -555,8 +559,6 @@ void insertFirst(List &L, address P) {
     P->next = L.First;
     L.First = P;
 }
-
-
 ```
 
 ### Output Unguided 1 :
@@ -627,8 +629,8 @@ Output: 2 0 8 12 9 (urutan terbalik)
 
 ### 2. Operasi Delete pada Singly Linked List
 
+#### main.cpp
 ```C++
-main.cpp
 #include "singlylist.h"
 
 int main() {
@@ -676,8 +678,44 @@ int main() {
     
     return 0;
 }
+```
 
-singlylist.cpp
+#### singlylist.h
+```C++
+#ifndef SINGLYLIST_H
+#define SINGLYLIST_H
+
+#include <iostream>
+using namespace std;
+
+typedef int infotype;
+typedef struct ElmList *address;
+
+struct ElmList {
+    infotype info;
+    address next;
+};
+
+struct List {
+    address First;
+};
+
+void CreateList(List &L);
+address alokasi(infotype x);
+void dealokasi(address &P);
+void insertFirst(List &L, address P);
+void deleteFirst(List &L, address &P);
+void deleteLast(List &L, address &P);
+void deleteAfter(List &L, address Prec, address &P);
+void printInfo(List L);
+int nbList(List L);
+void deleteList(List &L);
+
+#endif
+```
+
+#### singlylist.cpp
+```C++
 #include "singlylist.h"
 
 void CreateList(List &L) {
@@ -759,39 +797,6 @@ void deleteList(List &L) {
         dealokasi(P);
     }
 }
-
-singlylist.h
-#ifndef SINGLYLIST_H
-#define SINGLYLIST_H
-
-#include <iostream>
-using namespace std;
-
-typedef int infotype;
-typedef struct ElmList *address;
-
-struct ElmList {
-    infotype info;
-    address next;
-};
-
-struct List {
-    address First;
-};
-
-void CreateList(List &L);
-address alokasi(infotype x);
-void dealokasi(address &P);
-void insertFirst(List &L, address P);
-void deleteFirst(List &L, address &P);
-void deleteLast(List &L, address &P);
-void deleteAfter(List &L, address Prec, address &P);
-void printInfo(List L);
-int nbList(List L);
-void deleteList(List &L);
-
-#endif
-
 ```
 
 ### Output Unguided 2 :
