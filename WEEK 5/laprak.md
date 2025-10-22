@@ -525,7 +525,7 @@ void printInfo(List L) {
 ### Output Unguided 1:
 
 #### Output
-![Output Program 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/unguided1_output.png)
+![Output Program 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/latsol1.png)
 
 **Deskripsi Output:**
 Program meminta user untuk memasukkan jumlah elemen yang diinginkan. Setelah user menginput jumlah elemen (misalnya 5), program meminta nilai untuk setiap elemen secara berurutan. Setelah semua elemen dimasukkan menggunakan operasi `insertFirst()`, list ditampilkan dengan urutan terbalik dari input (LIFO - Last In First Out). Program juga menampilkan waktu eksekusi untuk mengukur performa operasi yang dilakukan.
@@ -730,7 +730,7 @@ address findElm(List L, infotype x) {
 ### Output Unguided 2:
 
 #### Output
-![Output Program 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/unguided2_output.png)
+![Output Program 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/latsol2.png)
 
 **Deskripsi Output:**
 Program meminta user untuk memasukkan jumlah elemen dan nilai setiap elemen. Setelah list terbentuk, program menampilkan isi list. Kemudian user diminta memasukkan nilai yang ingin dicari. Fungsi `findElm()` akan melakukan pencarian linear pada list. Jika elemen ditemukan, program menampilkan pesan "Elemen dengan info [nilai] ditemukan dalam list". Jika tidak ditemukan, program menampilkan "tidak ditemukan". Program juga menampilkan waktu eksekusi operasi.
@@ -921,7 +921,7 @@ int sumInfo(List L) {
 ### Output Unguided 3:
 
 #### Output
-![Output Program 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/unguided3_output.png)
+![Output Program 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/latsol3.png)
 
 **Deskripsi Output:**
 Program meminta user untuk memasukkan 5 elemen dengan nilai: 9, 12, 8, 0, 2. Setelah semua elemen dimasukkan menggunakan `insertFirst()`, list ditampilkan dengan urutan terbalik: `2 0 8 12 9`. Kemudian fungsi `sumInfo()` menghitung total dari kelima elemen tersebut (2 + 0 + 8 + 12 + 9 = 31) dan menampilkan hasilnya beserta waktu eksekusi program.
