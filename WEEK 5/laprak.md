@@ -510,6 +510,14 @@ void printInfo(List L) {
 }
 ```
 
+### Output Unguided 1:
+
+#### Output
+![Output Program 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/unguided1_output.png)
+
+**Deskripsi Output:**
+Program meminta user untuk memasukkan jumlah elemen yang diinginkan. Setelah user menginput jumlah elemen (misalnya 5), program meminta nilai untuk setiap elemen secara berurutan. Setelah semua elemen dimasukkan menggunakan operasi `insertFirst()`, list ditampilkan dengan urutan terbalik dari input (LIFO - Last In First Out). Program juga menampilkan waktu eksekusi untuk mengukur performa operasi yang dilakukan.
+
 #### Penjelasan Program Unguided 1:
 
 Program ini mengimplementasikan **Abstract Data Type (ADT) Singly Linked List** dengan tipe data integer yang dapat menerima input bebas dari user.
@@ -707,10 +715,13 @@ address findElm(List L, infotype x) {
 }
 ```
 
-### Output Unguided 2 :
+### Output Unguided 2:
 
-##### Output 
-![Output Program 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%204/w5p2.png)
+#### Output
+![Output Program 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/unguided2_output.png)
+
+**Deskripsi Output:**
+Program meminta user untuk memasukkan jumlah elemen dan nilai setiap elemen. Setelah list terbentuk, program menampilkan isi list. Kemudian user diminta memasukkan nilai yang ingin dicari. Fungsi `findElm()` akan melakukan pencarian linear pada list. Jika elemen ditemukan, program menampilkan pesan "Elemen dengan info [nilai] ditemukan dalam list". Jika tidak ditemukan, program menampilkan "tidak ditemukan". Program juga menampilkan waktu eksekusi operasi.
 
 #### Penjelasan Program Unguided 2:
 
@@ -765,26 +776,6 @@ Output: Elemen dengan info 8 ditemukan dalam list
 - Best case: O(1) - elemen dicari ada di posisi pertama
 - Average case: O(n/2) - elemen ada di tengah
 - Worst case: O(n) - elemen ada di akhir atau tidak ada
-- **Sequential Deletion**: Program mendemonstrasikan urutan penghapusan sesuai soal
-
-**Kompleksitas:**
-- **deleteFirst()**: O(1) - konstan, langsung menghapus node pertama
-- **deleteLast()**: O(n) - linear, perlu traversal untuk mencari node sebelum node terakhir
-- **deleteAfter()**: O(1) - konstan, langsung menghapus setelah predecessor
-- **nbList()**: O(n) - linear, traverse seluruh list untuk menghitung
-- **deleteList()**: O(n) - linear, menghapus satu per satu semua node
-
-**Output Program:**
-```
-9 12 8 0 2          (List awal)
-12 8 0 2            (Setelah deleteFirst - hapus 9)
-12 8 0              (Setelah deleteLast - hapus 2)
-12 0                (Setelah deleteAfter - hapus 8)
-Jumlah node : 2     (Masih tersisa 2 node)
-
-- List Berhasil Terhapus -
-Jumlah node : 0     (List kosong setelah deleteList)
-```
 
 ### 3. Operasi Penjumlahan Elemen pada Singly Linked List
 
@@ -914,6 +905,14 @@ int sumInfo(List L) {
     return total;
 }
 ```
+
+### Output Unguided 3:
+
+#### Output
+![Output Program 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/unguided3_output.png)
+
+**Deskripsi Output:**
+Program meminta user untuk memasukkan 5 elemen dengan nilai: 9, 12, 8, 0, 2. Setelah semua elemen dimasukkan menggunakan `insertFirst()`, list ditampilkan dengan urutan terbalik: `2 0 8 12 9`. Kemudian fungsi `sumInfo()` menghitung total dari kelima elemen tersebut (2 + 0 + 8 + 12 + 9 = 31) dan menampilkan hasilnya beserta waktu eksekusi program.
 
 #### Penjelasan Program Unguided 3:
 
