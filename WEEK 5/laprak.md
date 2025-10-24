@@ -625,39 +625,10 @@ Program ini mengimplementasikan algoritma **Binary Search pada Linked List** unt
 - **Space Complexity**: O(1) - hanya menggunakan variabel tambahan
 
 #### Output:
-```
-BINARY SEARCH PADA LINKED LIST
-Masukkan jumlah elemen (minimal 5): 5
-Masukkan 5 elemen (harus terurut/ascending):
-Elemen ke-1: 10
-Elemen ke-2: 20
-Elemen ke-3: 30
-Elemen ke-4: 40
-Elemen ke-5: 50
-Linked List yang dibuat: 10 -> 20 -> 30 -> 40 -> 50 -> NULL
-Mencari nilai: 30
-
-Proses Pencarian:
-Iterasi 1: Mid = 30 (indeks tengah) - DITEMUKAN!
-
-Hasil: Nilai 30 DITEMUKAN pada linked list!
-Alamat node: 000001BE69BC32D0
-Data node: 30
-Node berikutnya: 000001BE69BC3390
-
-Mencari nilai: 60
-
-Proses Pencarian:
-Iterasi 1: Mid = 30 (indeks tengah) -> Cari di bagian kanan
-Iterasi 2: Mid = 40 (indeks tengah) -> Cari di bagian kanan
-Iterasi 3: Mid = 50 (indeks tengah) -> Cari di bagian kanan
-Tidak ada elemen tersisa
-
-Hasil: Nilai 60 TIDAK DITEMUKAN dalam linked list!
-```
+![Output Program 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/op1.png)
 
 **Deskripsi Output:**
-Program meminta user memasukkan jumlah elemen (minimal 5), kemudian nilai-nilai yang harus terurut secara ascending. Linked list ditampilkan dalam format `10 -> 20 -> 30 -> 40 -> 50 -> NULL`. Pada pencarian pertama nilai 30, binary search langsung menemukan di iterasi 1 karena 30 adalah nilai tengah. Pada pencarian kedua nilai 60, program melakukan 3 iterasi pencarian ke bagian kanan list dan menyimpulkan nilai tidak ditemukan. Hasil pencarian menampilkan alamat node, data node, dan alamat node berikutnya jika elemen ditemukan.
+Program meminta user memasukkan jumlah elemen (minimal 5), kemudian nilai-nilai yang harus terurut secara ascending. Linked list ditampilkan dalam format `10 -> 20 -> 30 -> 40 -> 50 -> NULL`. Saat pencarian dilakukan, program menampilkan setiap iterasi binary search dengan nilai tengah (mid) dan keputusan pencarian (kiri/kanan). Hasil pencarian menampilkan status ditemukan/tidak ditemukan beserta alamat node, data node, dan alamat node berikutnya jika elemen ditemukan.
 
 ---
 
@@ -840,40 +811,10 @@ Program ini mengimplementasikan algoritma **Linear Search pada Linked List** unt
 - **Space Complexity**: O(1) - hanya menggunakan variabel tambahan
 
 #### Output:
-```
-LINEAR SEARCH PADA LINKED LIST
-Masukkan jumlah elemen (minimal 3): 4
-Masukkan 4 elemen:
-Elemen ke-1: 15
-Elemen ke-2: 25
-Elemen ke-3: 35
-Elemen ke-4: 45
-Linked List yang dibuat: 15 -> 25 -> 35 -> 45 -> NULL
-Mencari nilai: 25
-
-Proses Pencarian:
-Memeriksa node 1: 15 (tidak sama)
-Memeriksa node 2: 25 (SAMA) - DITEMUKAN!
-
-Hasil: Nilai 25 DITEMUKAN pada linked list!
-Alamat node: 000001AA21C319C0
-Data node: 25
-Node berikutnya: 000001AA21C31940
-
-Mencari nilai: 50
-
-Proses Pencarian:
-Memeriksa node 1: 15 (tidak sama)
-Memeriksa node 2: 25 (tidak sama)
-Memeriksa node 3: 35 (tidak sama)
-Memeriksa node 4: 45 (tidak sama)
-Tidak ada node lagi yang tersisa
-
-Hasil: Nilai 50 TIDAK DITEMUKAN dalam linked list!
-```
+![Output Program 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%205/op2.png)
 
 **Deskripsi Output:**
-Program meminta user memasukkan jumlah elemen (minimal 3) dan nilai setiap elemen tanpa perlu terurut. Linked list ditampilkan dalam format `15 -> 25 -> 35 -> 45 -> NULL`. Pada pencarian pertama nilai 25, linear search memeriksa node 1 (tidak sama), kemudian node 2 ditemukan sama. Pada pencarian kedua nilai 50, program memeriksa semua 4 node secara berurutan dan menyimpulkan nilai tidak ditemukan. Hasil pencarian menampilkan alamat node, data node, dan alamat node berikutnya jika elemen ditemukan.
+Program meminta user memasukkan jumlah elemen (minimal 3) dan nilai setiap elemen tanpa perlu terurut. Linked list ditampilkan dalam format `10 -> 20 -> 30 -> NULL`. Saat pencarian dilakukan, program menampilkan proses pemeriksaan setiap node secara berurutan dengan status "tidak sama" atau "SAMA - DITEMUKAN!". Hasil pencarian menampilkan status ditemukan/tidak ditemukan beserta alamat node, data node, dan alamat node berikutnya jika elemen ditemukan.
 
 ---
 
