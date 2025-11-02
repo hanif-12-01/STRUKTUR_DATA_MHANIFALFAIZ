@@ -954,7 +954,7 @@ Program ini mengimplementasikan Abstract Data Type (ADT) Doubly Linked List untu
 - deleteByNopol: O(n)
 - printInfo: O(n)
 
-![Output Program 1](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%205/op1.png)
+![Output Program 1](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%206/op1.png)
 
 ---
 
@@ -1170,7 +1170,7 @@ Fungsi findElm sangat berguna untuk:
 - Validasi keberadaan data sebelum operasi lain (update, delete)
 - Mendapatkan alamat node untuk operasi lanjutan
 
-![Output Program 1](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%205/op1.png)
+![Output Program 2](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%206/op2.png)
 
 ---
 
@@ -1480,7 +1480,7 @@ Program ini mendemonstrasikan:
 - Manajemen memori dengan dealokasi
 - Keunggulan pointer bidirectional pada doubly linked list
 
-![Output Program 1](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%205/op1.png)
+![Output Program 3](https://raw.githubusercontent.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/master/WEEK%206/op3.png)
 
 ---
 
