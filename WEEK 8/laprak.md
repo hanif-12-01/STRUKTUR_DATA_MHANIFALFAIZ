@@ -1,4 +1,4 @@
-﻿# <h1 align="center">Laporan Praktikum Modul 8 - Queue</h1>
+# <h1 align="center">Laporan Praktikum Modul 8 - Queue</h1>
 <p align="center">M. Hanif Al Faiz - 103112400042</p>
 
 ## Dasar Teori
@@ -718,7 +718,7 @@ int main() {
 ```
 
 ##### Output Alternatif 1:
-![Output Alternatif 1](link_output_alternatif_1)
+![Output Alternatif 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%208/alternatif1.png)
 
 ##### Penjelasan Alternatif 1:
 
@@ -851,7 +851,7 @@ int main() {
 ```
 
 ##### Output Alternatif 2:
-![Output Alternatif 2](link_output_alternatif_2)
+![Output Alternatif 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%208/alternatif2.png)
 
 ##### Penjelasan Alternatif 2:
 
@@ -982,7 +982,7 @@ int main() {
 ```
 
 ##### Output Alternatif 3:
-![Output Alternatif 3](link_output_alternatif_3)
+![Output Alternatif 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%208/alternatif3.png)
 
 ##### Penjelasan Alternatif 3:
 
@@ -1021,42 +1021,6 @@ int main() {
 - **Alternatif 1**: Cocok untuk pembelajaran konsep dasar queue (head dan tail bergerak linear)
 - **Alternatif 2**: Cocok untuk pembelajaran konsep queue (head dan tail bergerak dengan reset)
 - **Alternatif 3** (Circular Queue): **Yang terbaik** untuk aplikasi real-world karena efisien dalam waktu dan ruang
-
-#### Perbedaan Nyata Ketiga Alternatif
-
-Dari output di atas, terlihat bahwa ketiga alternatif menghasilkan urutan data yang sama. Namun, **perbedaan sesungguhnya terletak pada pergerakan head (H) dan tail (T)**:
-
-**Pergerakan Head dan Tail:**
-- Semua alternatif menunjukkan H dan T yang bergerak dari 0 ke posisi lebih besar
-- Pada operasi yang sama, hasilnya identik: `H=0 T=0` → `H=3 T=4`
-
-**Perbedaan Muncul Saat:**
-
-1. **Alternatif 1 (Linear)**: 
-   - Jika queue dikosongkan total (misal H=5, T=5), **tidak bisa** enqueue lagi karena T sudah mencapai MAX
-   - Ruang array di indeks 0-4 terbuang sia-sia
-   - Contoh: Setelah 5x enqueue dan 5x dequeue → H=5, T=5 → enqueue GAGAL meski array kosong
-
-2. **Alternatif 2 (Dengan Reset)**:
-   - Saat queue kosong (H==T), keduanya **direset ke 0**
-   - Bisa menggunakan array dari awal lagi
-   - Contoh: Setelah 5x enqueue dan 5x dequeue → H=0, T=0 (reset) → enqueue BERHASIL
-
-3. **Alternatif 3 (Circular)**:
-   - Indeks berputar menggunakan modulo: `(T+1)%5` dan `(H+1)%5`
-   - **Tidak pernah** ada ruang terbuang, bahkan di tengah operasi
-   - Contoh: H=2, T=4 → enqueue → T=0 (memutar!) → masih bisa pakai indeks 0,1
-
-**Visualisasi Perbedaan:**
-```
-Kondisi: Enqueue 5x, Dequeue 5x, Coba Enqueue 1x
-
-Alternatif 1: H=5 T=5 → Enqueue GAGAL ❌ (T==MAX padahal kosong)
-Alternatif 2: H=0 T=0 → Enqueue BERHASIL ✅ (Reset ke 0)  
-Alternatif 3: H=0 T=1 → Enqueue BERHASIL ✅ (Circular, tidak perlu reset)
-```
-
-Jadi **perbedaan utama** adalah pada **efisiensi penggunaan ruang array** ketika head dan tail sudah bergerak jauh dari posisi awal.
 
 ## Kesimpulan
 
