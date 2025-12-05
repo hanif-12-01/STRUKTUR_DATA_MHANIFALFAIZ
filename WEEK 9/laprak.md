@@ -1,5 +1,5 @@
-﻿# <h1 align="center">Laporan Praktikum Modul 10 - Tree</h1>
-<p align="center">M. Hanif Al Faiz - 103112400042</p>
+# <h1 align="center">Laporan Praktikum Modul 10 - Tree</h1>
+<p align="center">Muhammad Gamel Al Ghifari - 103112400028</p>
 
 ## Dasar Teori
 
@@ -159,8 +159,6 @@ Tree memiliki berbagai aplikasi dalam ilmu komputer [1][3][5]:
 
 ### 1. GUIDED I - Rekursif Pangkat 2
 
-Program ini mendemonstrasikan penggunaan rekursi untuk menghitung pangkat 2.
-
 #### rekursif_pangkat2.cpp
 ```cpp
 #include<iostream>
@@ -210,8 +208,6 @@ pangkat_2(3) = 2 * pangkat_2(2)
 ```
 
 ### 2. GUIDED II - Binary Search Tree Insert & Traversal
-
-Program ini mengimplementasikan BST dengan operasi insert, traversal, dan utility functions.
 
 #### BST1.h
 ```cpp
@@ -395,8 +391,6 @@ Program ini mengimplementasikan Binary Search Tree dengan fitur lengkap:
 - **treeDepth()**: Menghitung kedalaman tree
 
 ### 3. GUIDED III - BST dengan Search, Delete, dan MostLeft/MostRight
-
-Program ini mengimplementasikan BST dengan operasi lengkap termasuk search, delete, mostLeft, dan mostRight.
 
 #### BST2.h
 ```cpp
@@ -761,29 +755,30 @@ Program ini menambahkan fitur-fitur baru pada BST:
 #define BSTREE_H
 
 typedef int infotype;
-struct Node;
-typedef Node* address;
-#define Nil NULL
 
 struct Node {
     infotype info;
-    address left;
-    address right;
+    Node* left;
+    Node* right;
 };
+
+typedef Node* address;
+
+#define Nil NULL
 
 address alokasi(infotype x);
 void insertNode(address &root, infotype x);
 address findNode(infotype x, address root);
-void printInorder(address root);
-void InOrder(address root);
+void printInOrder(address root);
 
 #endif
 ```
 
 #### bstree.cpp
 ```cpp
-#include <iostream>
 #include "bstree.h"
+#include <iostream>
+
 using namespace std;
 
 address alokasi(infotype x) {
@@ -816,16 +811,12 @@ address findNode(infotype x, address root) {
     }
 }
 
-void printInorder(address root) {
+void printInOrder(address root) {
     if (root != Nil) {
-        printInorder(root->left);
+        printInOrder(root->left);
         cout << root->info << " - ";
-        printInorder(root->right);
+        printInOrder(root->right);
     }
-}
-
-void InOrder(address root) {
-    printInorder(root);
 }
 ```
 
@@ -833,6 +824,7 @@ void InOrder(address root) {
 ```cpp
 #include <iostream>
 #include "bstree.h"
+
 using namespace std;
 
 int main() {
@@ -849,7 +841,7 @@ int main() {
     insertNode(root, 6);
     insertNode(root, 7);
     
-    InOrder(root);
+    printInOrder(root);
     
     return 0;
 }
@@ -877,30 +869,33 @@ Buatlah fungsi untuk menghitung jumlah node, total info, dan kedalaman BST.
 #define BSTREE_H
 
 typedef int infotype;
-struct Node;
-typedef Node* address;
-#define Nil NULL
 
 struct Node {
     infotype info;
-    address left;
-    address right;
+    Node* left;
+    Node* right;
 };
+
+typedef Node* address;
+
+#define Nil NULL
 
 address alokasi(infotype x);
 void insertNode(address &root, infotype x);
-void InOrder(address root);
+address findNode(infotype x, address root);
+void printInOrder(address root);
 int hitungNode(address root);
 int hitungTotal(address root);
-int hitungKedalaman(address root, int level);
+int hitungKedalaman(address root, int start);
 
 #endif
 ```
 
 #### bstree.cpp
 ```cpp
-#include <iostream>
 #include "bstree.h"
+#include <iostream>
+
 using namespace std;
 
 address alokasi(infotype x) {
@@ -921,39 +916,54 @@ void insertNode(address &root, infotype x) {
     }
 }
 
-void InOrder(address root) {
+address findNode(infotype x, address root) {
+    if (root == Nil) {
+        return Nil;
+    } else if (x == root->info) {
+        return root;
+    } else if (x < root->info) {
+        return findNode(x, root->left);
+    } else {
+        return findNode(x, root->right);
+    }
+}
+
+void printInOrder(address root) {
     if (root != Nil) {
-        InOrder(root->left);
+        printInOrder(root->left);
         cout << root->info << " - ";
-        InOrder(root->right);
+        printInOrder(root->right);
     }
 }
 
 int hitungNode(address root) {
     if (root == Nil) {
         return 0;
+    } else {
+        return hitungNode(root->left) + hitungNode(root->right) + 1;
     }
-    return 1 + hitungNode(root->left) + hitungNode(root->right);
 }
 
 int hitungTotal(address root) {
     if (root == Nil) {
         return 0;
+    } else {
+        return root->info + hitungTotal(root->left) + hitungTotal(root->right);
     }
-    return root->info + hitungTotal(root->left) + hitungTotal(root->right);
 }
 
-int hitungKedalaman(address root, int level) {
+int hitungKedalaman(address root, int start) {
     if (root == Nil) {
-        return level;
-    }
-    int kedalamanKiri = hitungKedalaman(root->left, level + 1);
-    int kedalamanKanan = hitungKedalaman(root->right, level + 1);
-    
-    if (kedalamanKiri > kedalamanKanan) {
-        return kedalamanKiri;
+        return start;
     } else {
-        return kedalamanKanan;
+        int kedalamanKiri = hitungKedalaman(root->left, start + 1);
+        int kedalamanKanan = hitungKedalaman(root->right, start + 1);
+        
+        if (kedalamanKiri > kedalamanKanan) {
+            return kedalamanKiri;
+        } else {
+            return kedalamanKanan;
+        }
     }
 }
 ```
@@ -962,6 +972,7 @@ int hitungKedalaman(address root, int level) {
 ```cpp
 #include <iostream>
 #include "bstree.h"
+
 using namespace std;
 
 int main() {
@@ -978,7 +989,7 @@ int main() {
     insertNode(root, 6);
     insertNode(root, 7);
     
-    InOrder(root);
+    printInOrder(root);
     cout << "\n";
     
     cout << "kedalaman : " << hitungKedalaman(root, 0) << endl;
@@ -1012,29 +1023,31 @@ Print tree secara pre-order dan post-order.
 #define BSTREE_H
 
 typedef int infotype;
-struct Node;
-typedef Node* address;
-#define Nil NULL
 
 struct Node {
     infotype info;
-    address left;
-    address right;
+    Node* left;
+    Node* right;
 };
+
+typedef Node* address;
+
+#define Nil NULL
 
 address alokasi(infotype x);
 void insertNode(address &root, infotype x);
-void InOrder(address root);
-void PreOrder(address root);
-void PostOrder(address root);
+void printInOrder(address root);
+void printPreOrder(address root);
+void printPostOrder(address root);
 
 #endif
 ```
 
 #### bstree.cpp
 ```cpp
-#include <iostream>
 #include "bstree.h"
+#include <iostream>
+
 using namespace std;
 
 address alokasi(infotype x) {
@@ -1055,26 +1068,26 @@ void insertNode(address &root, infotype x) {
     }
 }
 
-void InOrder(address root) {
+void printInOrder(address root) {
     if (root != Nil) {
-        InOrder(root->left);
+        printInOrder(root->left);
         cout << root->info << " - ";
-        InOrder(root->right);
+        printInOrder(root->right);
     }
 }
 
-void PreOrder(address root) {
+void printPreOrder(address root) {
     if (root != Nil) {
         cout << root->info << " - ";
-        PreOrder(root->left);
-        PreOrder(root->right);
+        printPreOrder(root->left);
+        printPreOrder(root->right);
     }
 }
 
-void PostOrder(address root) {
+void printPostOrder(address root) {
     if (root != Nil) {
-        PostOrder(root->left);
-        PostOrder(root->right);
+        printPostOrder(root->left);
+        printPostOrder(root->right);
         cout << root->info << " - ";
     }
 }
@@ -1084,9 +1097,13 @@ void PostOrder(address root) {
 ```cpp
 #include <iostream>
 #include "bstree.h"
+
 using namespace std;
 
 int main() {
+    cout << "=== Binary Search Tree Traversal ===" << endl;
+    cout << endl;
+    
     address root = Nil;
     
     insertNode(root, 6);
@@ -1097,12 +1114,16 @@ int main() {
     insertNode(root, 1);
     insertNode(root, 3);
     
-    cout << "Pre-Order: ";
-    PreOrder(root);
-    cout << endl;
+    cout << "InOrder Traversal (Left - Root - Right):" << endl;
+    printInOrder(root);
+    cout << endl << endl;
     
-    cout << "Post-Order: ";
-    PostOrder(root);
+    cout << "PreOrder Traversal (Root - Left - Right):" << endl;
+    printPreOrder(root);
+    cout << endl << endl;
+    
+    cout << "PostOrder Traversal (Left - Right - Root):" << endl;
+    printPostOrder(root);
     cout << endl;
     
     return 0;
