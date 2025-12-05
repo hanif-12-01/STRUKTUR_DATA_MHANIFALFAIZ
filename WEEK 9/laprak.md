@@ -856,7 +856,7 @@ int main() {
 ```
 
 #### Output:
-![Output Unguided 1](https://github.com/mhanifal/struktur-data/blob/main/WEEK%209/Unguided%201/output.png?raw=true)
+![Output Unguided 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%209/Op1.png?raw=true)
 
 ```
 Hello World!
@@ -995,7 +995,7 @@ int main() {
 ```
 
 #### Output:
-![Output Unguided 2](https://github.com/mhanifal/struktur-data/blob/main/WEEK%209/Unguided%202/output.png?raw=true)
+![Output Unguided 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%209/Op2.png?raw=true)
 
 ```
 Hello World!
@@ -1121,7 +1121,7 @@ int main() {
 ```
 
 #### Output:
-![Output Unguided 3](https://github.com/mhanifal/struktur-data/blob/main/WEEK%209/Unguided%203/output.png?raw=true)
+![Output Unguided 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%209/Op3.png?raw=true)
 
 ```
 Pre-Order: 6 - 4 - 2 - 1 - 3 - 5 - 7 - 
