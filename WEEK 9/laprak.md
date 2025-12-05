@@ -1,5 +1,5 @@
 # <h1 align="center">Laporan Praktikum Modul 10 - Tree</h1>
-<p align="center">Muhammad Gamel Al Ghifari - 103112400028</p>
+<p align="center">M. Hanif Al Faiz - 103112400042</p>
 
 ## Dasar Teori
 
@@ -159,6 +159,8 @@ Tree memiliki berbagai aplikasi dalam ilmu komputer [1][3][5]:
 
 ### 1. GUIDED I - Rekursif Pangkat 2
 
+Program ini mendemonstrasikan penggunaan rekursi untuk menghitung pangkat 2.
+
 #### rekursif_pangkat2.cpp
 ```cpp
 #include<iostream>
@@ -208,6 +210,8 @@ pangkat_2(3) = 2 * pangkat_2(2)
 ```
 
 ### 2. GUIDED II - Binary Search Tree Insert & Traversal
+
+Program ini mengimplementasikan BST dengan operasi insert, traversal, dan utility functions.
 
 #### BST1.h
 ```cpp
@@ -391,6 +395,8 @@ Program ini mengimplementasikan Binary Search Tree dengan fitur lengkap:
 - **treeDepth()**: Menghitung kedalaman tree
 
 ### 3. GUIDED III - BST dengan Search, Delete, dan MostLeft/MostRight
+
+Program ini mengimplementasikan BST dengan operasi lengkap termasuk search, delete, mostLeft, dan mostRight.
 
 #### BST2.h
 ```cpp
@@ -755,30 +761,29 @@ Program ini menambahkan fitur-fitur baru pada BST:
 #define BSTREE_H
 
 typedef int infotype;
+struct Node;
+typedef Node* address;
+#define Nil NULL
 
 struct Node {
     infotype info;
-    Node* left;
-    Node* right;
+    address left;
+    address right;
 };
-
-typedef Node* address;
-
-#define Nil NULL
 
 address alokasi(infotype x);
 void insertNode(address &root, infotype x);
 address findNode(infotype x, address root);
-void printInOrder(address root);
+void printInorder(address root);
+void InOrder(address root);
 
 #endif
 ```
 
 #### bstree.cpp
 ```cpp
-#include "bstree.h"
 #include <iostream>
-
+#include "bstree.h"
 using namespace std;
 
 address alokasi(infotype x) {
@@ -811,12 +816,16 @@ address findNode(infotype x, address root) {
     }
 }
 
-void printInOrder(address root) {
+void printInorder(address root) {
     if (root != Nil) {
-        printInOrder(root->left);
+        printInorder(root->left);
         cout << root->info << " - ";
-        printInOrder(root->right);
+        printInorder(root->right);
     }
+}
+
+void InOrder(address root) {
+    printInorder(root);
 }
 ```
 
@@ -824,7 +833,6 @@ void printInOrder(address root) {
 ```cpp
 #include <iostream>
 #include "bstree.h"
-
 using namespace std;
 
 int main() {
@@ -841,14 +849,19 @@ int main() {
     insertNode(root, 6);
     insertNode(root, 7);
     
-    printInOrder(root);
+    InOrder(root);
     
     return 0;
 }
 ```
 
 #### Output:
+![Output Unguided 1](https://github.com/mhanifal/struktur-data/blob/main/WEEK%209/Unguided%201/output.png?raw=true)
 
+```
+Hello World!
+1 - 2 - 3 - 4 - 5 - 6 - 7 -
+```
 
 #### Penjelasan:
 Program ini mengimplementasikan ADT Binary Search Tree dengan operasi dasar:
@@ -869,33 +882,30 @@ Buatlah fungsi untuk menghitung jumlah node, total info, dan kedalaman BST.
 #define BSTREE_H
 
 typedef int infotype;
+struct Node;
+typedef Node* address;
+#define Nil NULL
 
 struct Node {
     infotype info;
-    Node* left;
-    Node* right;
+    address left;
+    address right;
 };
-
-typedef Node* address;
-
-#define Nil NULL
 
 address alokasi(infotype x);
 void insertNode(address &root, infotype x);
-address findNode(infotype x, address root);
-void printInOrder(address root);
+void InOrder(address root);
 int hitungNode(address root);
 int hitungTotal(address root);
-int hitungKedalaman(address root, int start);
+int hitungKedalaman(address root, int level);
 
 #endif
 ```
 
 #### bstree.cpp
 ```cpp
-#include "bstree.h"
 #include <iostream>
-
+#include "bstree.h"
 using namespace std;
 
 address alokasi(infotype x) {
@@ -916,54 +926,39 @@ void insertNode(address &root, infotype x) {
     }
 }
 
-address findNode(infotype x, address root) {
-    if (root == Nil) {
-        return Nil;
-    } else if (x == root->info) {
-        return root;
-    } else if (x < root->info) {
-        return findNode(x, root->left);
-    } else {
-        return findNode(x, root->right);
-    }
-}
-
-void printInOrder(address root) {
+void InOrder(address root) {
     if (root != Nil) {
-        printInOrder(root->left);
+        InOrder(root->left);
         cout << root->info << " - ";
-        printInOrder(root->right);
+        InOrder(root->right);
     }
 }
 
 int hitungNode(address root) {
     if (root == Nil) {
         return 0;
-    } else {
-        return hitungNode(root->left) + hitungNode(root->right) + 1;
     }
+    return 1 + hitungNode(root->left) + hitungNode(root->right);
 }
 
 int hitungTotal(address root) {
     if (root == Nil) {
         return 0;
-    } else {
-        return root->info + hitungTotal(root->left) + hitungTotal(root->right);
     }
+    return root->info + hitungTotal(root->left) + hitungTotal(root->right);
 }
 
-int hitungKedalaman(address root, int start) {
+int hitungKedalaman(address root, int level) {
     if (root == Nil) {
-        return start;
+        return level;
+    }
+    int kedalamanKiri = hitungKedalaman(root->left, level + 1);
+    int kedalamanKanan = hitungKedalaman(root->right, level + 1);
+    
+    if (kedalamanKiri > kedalamanKanan) {
+        return kedalamanKiri;
     } else {
-        int kedalamanKiri = hitungKedalaman(root->left, start + 1);
-        int kedalamanKanan = hitungKedalaman(root->right, start + 1);
-        
-        if (kedalamanKiri > kedalamanKanan) {
-            return kedalamanKiri;
-        } else {
-            return kedalamanKanan;
-        }
+        return kedalamanKanan;
     }
 }
 ```
@@ -972,7 +967,6 @@ int hitungKedalaman(address root, int start) {
 ```cpp
 #include <iostream>
 #include "bstree.h"
-
 using namespace std;
 
 int main() {
@@ -989,7 +983,7 @@ int main() {
     insertNode(root, 6);
     insertNode(root, 7);
     
-    printInOrder(root);
+    InOrder(root);
     cout << "\n";
     
     cout << "kedalaman : " << hitungKedalaman(root, 0) << endl;
@@ -1001,8 +995,14 @@ int main() {
 ```
 
 #### Output:
-```
+![Output Unguided 2](https://github.com/mhanifal/struktur-data/blob/main/WEEK%209/Unguided%202/output.png?raw=true)
 
+```
+Hello World!
+1 - 2 - 3 - 4 - 5 - 6 - 7 - 
+kedalaman : 5
+jumlah node : 7
+total : 28
 ```
 
 #### Penjelasan:
@@ -1023,31 +1023,29 @@ Print tree secara pre-order dan post-order.
 #define BSTREE_H
 
 typedef int infotype;
+struct Node;
+typedef Node* address;
+#define Nil NULL
 
 struct Node {
     infotype info;
-    Node* left;
-    Node* right;
+    address left;
+    address right;
 };
-
-typedef Node* address;
-
-#define Nil NULL
 
 address alokasi(infotype x);
 void insertNode(address &root, infotype x);
-void printInOrder(address root);
-void printPreOrder(address root);
-void printPostOrder(address root);
+void InOrder(address root);
+void PreOrder(address root);
+void PostOrder(address root);
 
 #endif
 ```
 
 #### bstree.cpp
 ```cpp
-#include "bstree.h"
 #include <iostream>
-
+#include "bstree.h"
 using namespace std;
 
 address alokasi(infotype x) {
@@ -1068,26 +1066,26 @@ void insertNode(address &root, infotype x) {
     }
 }
 
-void printInOrder(address root) {
+void InOrder(address root) {
     if (root != Nil) {
-        printInOrder(root->left);
+        InOrder(root->left);
         cout << root->info << " - ";
-        printInOrder(root->right);
+        InOrder(root->right);
     }
 }
 
-void printPreOrder(address root) {
+void PreOrder(address root) {
     if (root != Nil) {
         cout << root->info << " - ";
-        printPreOrder(root->left);
-        printPreOrder(root->right);
+        PreOrder(root->left);
+        PreOrder(root->right);
     }
 }
 
-void printPostOrder(address root) {
+void PostOrder(address root) {
     if (root != Nil) {
-        printPostOrder(root->left);
-        printPostOrder(root->right);
+        PostOrder(root->left);
+        PostOrder(root->right);
         cout << root->info << " - ";
     }
 }
@@ -1097,13 +1095,9 @@ void printPostOrder(address root) {
 ```cpp
 #include <iostream>
 #include "bstree.h"
-
 using namespace std;
 
 int main() {
-    cout << "=== Binary Search Tree Traversal ===" << endl;
-    cout << endl;
-    
     address root = Nil;
     
     insertNode(root, 6);
@@ -1114,16 +1108,12 @@ int main() {
     insertNode(root, 1);
     insertNode(root, 3);
     
-    cout << "InOrder Traversal (Left - Root - Right):" << endl;
-    printInOrder(root);
-    cout << endl << endl;
+    cout << "Pre-Order: ";
+    PreOrder(root);
+    cout << endl;
     
-    cout << "PreOrder Traversal (Root - Left - Right):" << endl;
-    printPreOrder(root);
-    cout << endl << endl;
-    
-    cout << "PostOrder Traversal (Left - Right - Root):" << endl;
-    printPostOrder(root);
+    cout << "Post-Order: ";
+    PostOrder(root);
     cout << endl;
     
     return 0;
@@ -1131,8 +1121,11 @@ int main() {
 ```
 
 #### Output:
-```
+![Output Unguided 3](https://github.com/mhanifal/struktur-data/blob/main/WEEK%209/Unguided%203/output.png?raw=true)
 
+```
+Pre-Order: 6 - 4 - 2 - 1 - 3 - 5 - 7 - 
+Post-Order: 1 - 3 - 2 - 5 - 4 - 7 - 6 -
 ```
 
 #### Penjelasan:
