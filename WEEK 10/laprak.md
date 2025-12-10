@@ -454,9 +454,6 @@ int main(){
     return 0;
 }
 ```
-
-```
-
 #### Penjelasan:
 Program ini mengimplementasikan Multi Linked List untuk sistem menu restoran:
 - **createListInduk() & createListAnak()**: Menginisialisasi list dengan first dan last = NULL
@@ -914,3 +911,4 @@ Dari praktikum **Multi Linked List** yang telah dilakukan, dapat disimpulkan:
 [3] Weiss, M. A. (2014). *Data Structures and Algorithm Analysis in C++* (4th ed.). Pearson. ISBN: 978-0132847377
 
 [4] Drozdek, A. (2012). *Data Structures and Algorithms in C++* (4th ed.). Cengage Learning. ISBN: 978-1133608424
+
