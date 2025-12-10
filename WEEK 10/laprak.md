@@ -1,4 +1,4 @@
-﻿# <h1 align="center">Laporan Praktikum Modul 13 - Multi Linked List</h1>
+# <h1 align="center">Laporan Praktikum Modul 13 - Multi Linked List</h1>
 <p align="center">M. Hanif Al Faiz - 103112400042</p>
 
 ## Dasar Teori
@@ -898,7 +898,9 @@ int main() {
 ```
 
 #### Output:
-![Output Unguided 1](LINK_GAMBAR_GITHUB_UNGUIDED1)
+![Output Unguided 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2010/Op1.png)
+![Output Unguided 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2010/Op2.png)
+![Output Unguided 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2010/Op3.png)
 
 #### Penjelasan:
 Program ini mengimplementasikan ADT Multi Linked List untuk sistem klasifikasi hewan:
