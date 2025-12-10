@@ -134,51 +134,57 @@ Program ini mengimplementasikan Multi Linked List untuk sistem kategori makanan 
 #include <iostream>
 using namespace std;
 
-typedef struct nodeParent *NodeParent;
-typedef struct nodeChild *NodeChild;
+typedef struct nodeParent *NodeParent; //alias pointer ke struct nodeParent
+typedef struct nodeChild *NodeChild;   //alias pointer ke struct nodeChild
 
-struct  nodeChild{
+struct  nodeChild{ //node child
     string idMakanan;
     string namaMakanan;
     NodeChild next;
     NodeChild prev;
 };
 
-struct listAnak{
+struct listAnak{ //list child
     NodeChild first;    
     NodeChild last;
 };
 
-struct nodeParent{
+struct nodeParent{ //node parent
  string idKategoriMakanan;
  string namaKategoriMakanan;
  NodeParent next;
  NodeParent prev;
- listAnak L_Anak;
+ listAnak L_Anak; //list child
 };
 
-struct listInduk{
+struct listInduk{ //list parent
     NodeParent first;
     NodeParent last;
 };
 
+//create list 
 void createListInduk(listInduk &LInduk);
 void createListAnak(listAnak &Lanak);
 
+//alokasi &d elokasi parent
 NodeParent alokasiNodeParent(string idkategoriMakanan, string namaKategoriMakanan);
 void dealokasiNodeParent(NodeParent &NodeInduk);
 
+//alokasi & delokasi child
 NodeChild alokasiNodeChild(string idmakanan, string namamakanan);
 void dealokasiNodeChild(NodeChild &NodeAnak);
 
+//operasi pada parent
 void insertLastParent(listInduk &LInduk, NodeParent nodeBaruParent);
 void hapusListAnak(listAnak &LAnak);
 void deleteAfterParent(listInduk &LInduk, NodeParent nodePrev);
 
+//operasi pada child
 void insertLastChild(listAnak &LAnak, NodeChild nodeBaruChild);
 void deleteAfterChild(listAnak &LAnak, NodeChild nodePrev); 
 void findChildByID(listInduk &LInduk, string IDCari);
 
+//operasi print
 void printStrukturMLL(listInduk &LInduk);
 
 #endif
@@ -191,6 +197,7 @@ void printStrukturMLL(listInduk &LInduk);
 
 using namespace std;
 
+//create list
 void createListInduk(listInduk &LInduk){
     LInduk.first = LInduk.last = NULL;
 }
@@ -199,6 +206,7 @@ void createListAnak(listAnak &LAnak){
     LAnak.first = LAnak.last = NULL;
 }
 
+//alokasi & dealokasi parent
 NodeParent alokasiNodeParent(string idKategoriMakanan, string namaKategoriMakanan){
     NodeParent nodeBaruParent = new nodeParent;
     nodeBaruParent->idKategoriMakanan = idKategoriMakanan;
@@ -217,6 +225,7 @@ void dealokasiNodeParent(NodeParent &nodeInduk){
     }
 }
 
+//alokasi & delaokasi child
 NodeChild alokasiNodeChild(string idMakanan, string namaMakanan){
     NodeChild nodeBaruChild = new nodeChild;
     nodeBaruChild->idMakanan = idMakanan;
@@ -234,6 +243,7 @@ void dealokasiNodeChild(NodeChild &nodeAnak){
     }
 }
 
+//operasi pada parent
 void insertLastParent(listInduk &LInduk, NodeParent nodeBaruParent){
     if(LInduk.first == NULL) {
         LInduk.first = LInduk.last = nodeBaruParent;
@@ -279,6 +289,7 @@ void deleteAfterParent(listInduk &LInduk, NodeParent nodePrev){
     }
 }
 
+//operasi pada child
 void insertLastChild(listAnak &LAnak, NodeChild nodeBaruChild){
     if(LAnak.first == NULL) {
         LAnak.first = LAnak.last = nodeBaruChild;
@@ -353,6 +364,7 @@ void findChildByID(listInduk &LInduk, string IDCari){
     }
 }
 
+//operasi print
 void printStrukturMLL(listInduk &LInduk){
     if(LInduk.first == NULL) {
         cout << "List induk kosong!" << endl;
@@ -364,6 +376,7 @@ void printStrukturMLL(listInduk &LInduk){
             cout << "ID Kategori Makanan : " << nodeBantuParent->idKategoriMakanan << endl;
             cout << "Nama Kategori Makanan : " << nodeBantuParent->namaKategoriMakanan << endl;
 
+            //print list anak dari node parentnya
             NodeChild nodeBantuChild = nodeBantuParent->L_Anak.first;
             if(nodeBantuChild == NULL) {
                 cout << "  (tidak ada child)" << endl;
@@ -392,9 +405,11 @@ void printStrukturMLL(listInduk &LInduk){
 using namespace std;
 
 int main(){
+    //1.instalasi List
     listInduk LInduk;
     createListInduk(LInduk);
 
+    //2.membuat Data Parent (kategori makanan)
     NodeParent k01 = alokasiNodeParent("K01", "Makanan Berat");
     insertLastParent(LInduk, k01);
     NodeParent k02 = alokasiNodeParent("K02", "Minuman");
@@ -403,34 +418,45 @@ int main(){
     insertLastParent(LInduk, k03);
     cout<<endl;
 
+    //3.masukkan Data Child (menu makanan) ke kategori tertentu
+    //-->isi kategori makanan berat (k01)
     NodeChild M01 = alokasiNodeChild("M01", "Nasi Goreng");
     insertLastChild(k01->L_Anak, M01);
     NodeChild M02 = alokasiNodeChild("M02", "Ayam Bakar Madu");
     insertLastChild(k01->L_Anak, M02);  
+    //--> isi kategori minuman (k02)
     NodeChild D02 = alokasiNodeChild("D02", "Jus Alpukat");
     insertLastChild(k02->L_Anak, D02);
     NodeChild D03 = alokasiNodeChild("D03", "Jus Alpukat");
     insertLastChild(k02->L_Anak, D03);
+    //--> isi kategori dessert (k03)
     NodeChild S01 = alokasiNodeChild("DS01", "Puding Coklat");
     insertLastChild(k03->L_Anak, S01);
     cout << endl;  
 
+    //4.print mll setelah insert-insert
     printStrukturMLL(LInduk);
     cout << endl;
 
+    //5.searching node child
     findChildByID(LInduk, "D01");
     cout << endl;
-    deleteAfterChild(k01->L_Anak, M01);
+    //6.delete node child
+    deleteAfterChild(k01->L_Anak, M01);//menghapus node child ayam bakar madu
     cout<< endl;
-    deleteAfterParent(LInduk, k02);
+    //7.delete node parent
+    deleteAfterParent(LInduk, k02); //menghapus node parent minuman
     cout << endl;
+    //8.print mll setelah delete
     printStrukturMLL(LInduk);
     cout << endl;
     
     return 0;
 }
 ```
+
 ```
+
 #### Penjelasan:
 Program ini mengimplementasikan Multi Linked List untuk sistem menu restoran:
 - **createListInduk() & createListAnak()**: Menginisialisasi list dengan first dan last = NULL
@@ -499,22 +525,31 @@ struct listParent {
 
 bool isEmptyParent(listParent LParent);
 bool isEmptyChild(listChild LChild);
+
 void createListParent(listParent &LParent);
 void createListChild(listChild &LChild);
+
 NodeParent allocNodeParent(string idGol, string namaGol);
 NodeChild allocNodeChild(string idHwn, string namaHwn, string habitat, bool ekor, float bobot);
+
 void deallocNodeParent(NodeParent &NParent);
 void deallocNodeChild(NodeChild &NChild);
+
 void insertFirstParent(listParent &LParent, NodeParent newNParent);
 void insertLastParent(listParent &LParent, NodeParent newNParent);
+
 void deleteFirstParent(listParent &LParent);
 void deleteAfterParent(listParent &LParent, NodeParent NPrev);
+
 void insertFirstChild(listChild &LChild, NodeChild newNChild);
 void insertLastChild(listChild &LChild, NodeChild newNChild);
+
 void deleteFirstChild(listChild &LChild);
 void deleteAfterChild(listChild &LChild, NodeChild NPrev);
+
 void printMLLStructure(listParent &LParent);
 void deleteListChild(listChild &LChild);
+
 void searchHewanByEkor(listParent &LParent, bool ekor);
 
 #endif
@@ -697,6 +732,7 @@ void printMLLStructure(listParent &LParent) {
     int indexParent = 1;
     
     while (pBantu != NULL) {
+        cout << endl;
         cout << "=== Parent " << indexParent << " ===" << endl;
         cout << "ID Golongan : " << pBantu->isidata.idGolongan << endl;
         cout << "Nama Golongan : " << pBantu->isidata.namaGolongan << endl;
@@ -711,7 +747,7 @@ void printMLLStructure(listParent &LParent) {
                 cout << "    ID Hewan : " << cBantu->isidata.idHewan << endl;
                 cout << "    Nama Hewan : " << cBantu->isidata.namaHewan << endl;
                 cout << "    Habitat : " << cBantu->isidata.habitat << endl;
-                cout << "    Ekor : " << (cBantu->isidata.ekor ? "1" : "0") << endl;
+                cout << "    Ekor : " << (cBantu->isidata.ekor ? 1 : 0) << endl;
                 cout << "    Bobot : " << cBantu->isidata.bobot << endl;
                 cBantu = cBantu->next;
                 indexChild++;
@@ -747,7 +783,7 @@ void searchHewanByEkor(listParent &LParent, bool ekor) {
                 cout << "Posisi dalam list anak : posisi ke-" << indexChild << endl;
                 cout << "Nama Hewan : " << cBantu->isidata.namaHewan << endl;
                 cout << "Habitat : " << cBantu->isidata.habitat << endl;
-                cout << "Ekor : " << (cBantu->isidata.ekor ? "1" : "0") << endl;
+                cout << "Ekor : " << (cBantu->isidata.ekor ? 1 : 0) << endl;
                 cout << "Bobot : " << cBantu->isidata.bobot << endl;
                 cout << "------------------------------" << endl;
                 cout << "--- Data Parent ---" << endl;
@@ -780,52 +816,45 @@ int main() {
     
     NodeParent G001 = allocNodeParent("G001", "Aves");
     insertLastParent(LParent, G001);
+    
     NodeParent G002 = allocNodeParent("G002", "Mamalia");
     insertLastParent(LParent, G002);
+    
     NodeParent G003 = allocNodeParent("G003", "Pisces");
     insertLastParent(LParent, G003);
+    
     NodeParent G004 = allocNodeParent("G004", "Amfibi");
     insertLastParent(LParent, G004);
+    
     NodeParent G005 = allocNodeParent("G005", "Reptil");
     insertLastParent(LParent, G005);
     
     NodeChild AV001 = allocNodeChild("AV001", "Cendrawasih", "Hutan", true, 0.3);
     insertLastChild(G001->L_child, AV001);
+    
     NodeChild AV002 = allocNodeChild("AV002", "Bebek", "Air", true, 2);
     insertLastChild(G001->L_child, AV002);
     
     NodeChild M001 = allocNodeChild("M001", "Harimau", "Hutan", true, 200);
     insertLastChild(G002->L_child, M001);
+    
     NodeChild M003 = allocNodeChild("M003", "Gorila", "Hutan", false, 160);
     insertLastChild(G002->L_child, M003);
+    
     NodeChild M002 = allocNodeChild("M002", "Kucing", "Darat", true, 4);
     insertLastChild(G002->L_child, M002);
     
     NodeChild AM001 = allocNodeChild("AM001", "Kodok", "Sawah", false, 0.2);
     insertLastChild(G004->L_child, AM001);
     
-    cout << "========================================" << endl;
-    cout << "STRUKTUR MULTI LINKED LIST SETELAH INSERT" << endl;
-    cout << "========================================" << endl;
     printMLLStructure(LParent);
     cout << endl;
     
-    cout << "========================================" << endl;
-    cout << "SEARCHING HEWAN DENGAN EKOR = FALSE" << endl;
-    cout << "========================================" << endl;
     searchHewanByEkor(LParent, false);
     cout << endl;
     
-    cout << "========================================" << endl;
-    cout << "MENGHAPUS NODE G004 (Amfibi)" << endl;
-    cout << "========================================" << endl;
     deleteAfterParent(LParent, G003);
-    cout << "Node G004 (Amfibi) beserta childnya berhasil dihapus!" << endl;
-    cout << endl;
     
-    cout << "========================================" << endl;
-    cout << "STRUKTUR MULTI LINKED LIST SETELAH DELETE" << endl;
-    cout << "========================================" << endl;
     printMLLStructure(LParent);
     
     return 0;
@@ -833,9 +862,7 @@ int main() {
 ```
 
 #### Output:
-![Output Unguided 1](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2010/Op1.png)
-![Output Unguided 2](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2010/Op2.png)
-![Output Unguided 3](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2010/Op3.png)
+![Output Unguided 1](LINK_GAMBAR_GITHUB_UNGUIDED1)
 
 #### Penjelasan:
 Program ini mengimplementasikan ADT Multi Linked List untuk sistem klasifikasi hewan:
@@ -887,4 +914,3 @@ Dari praktikum **Multi Linked List** yang telah dilakukan, dapat disimpulkan:
 [3] Weiss, M. A. (2014). *Data Structures and Algorithm Analysis in C++* (4th ed.). Pearson. ISBN: 978-0132847377
 
 [4] Drozdek, A. (2012). *Data Structures and Algorithms in C++* (4th ed.). Cengage Learning. ISBN: 978-1133608424
-
