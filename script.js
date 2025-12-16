@@ -1,4 +1,721 @@
+// Error handling wrapper untuk localStorage
+function safeGetItem(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; }
+}
+function safeSetItem(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { showToast('Gagal menyimpan data: ' + e.message, 'error'); }
+}
+
+// Validasi input form utama (contoh: submitNewKuliner)
+function validateKulinerForm(formData) {
+    if (!formData.nama || !formData.kategori || !formData.alamat || !formData.lat || !formData.lng) {
+        showToast('Harap isi semua field yang wajib (bertanda *)', 'error');
+        return false;
+    }
+    if (isNaN(formData.lat) || isNaN(formData.lng)) {
+        showToast('Koordinat tidak valid.', 'error');
+        return false;
+    }
+    return true;
+}
+// Accessibility: Tambah ARIA label pada elemen dinamis
+function addAriaLabels() {
+    // Tombol favorit
+    document.querySelectorAll('button[onclick*="toggleFavorite"]').forEach(btn => {
+        btn.setAttribute('aria-label', 'Tambah atau hapus dari favorit');
+    });
+    // Tombol klaim bisnis
+    document.querySelectorAll('button[onclick*="claimBusiness"]').forEach(btn => {
+        btn.setAttribute('aria-label', 'Klaim bisnis ini');
+    });
+    // Tombol approve/reject
+    document.querySelectorAll('button[onclick*="approveSubmission"]').forEach(btn => {
+        btn.setAttribute('aria-label', 'Setujui kontribusi');
+    });
+    document.querySelectorAll('button[onclick*="openRejectModal"]').forEach(btn => {
+        btn.setAttribute('aria-label', 'Tolak kontribusi');
+    });
+    // Modal close
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.setAttribute('aria-label', 'Tutup dialog');
+    });
+    // Chatbot
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) chatInput.setAttribute('aria-label', 'Ketik pesan chat');
+}
+
+// Panggil setelah render dinamis
+setTimeout(addAriaLabels, 1000);
+// Universal Toast Notification
+function showToast(msg, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return alert(msg);
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `<span>${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.add('show'); }, 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(()=>toast.remove(), 300); }, 3000);
+}
+
+// Empty state helper
+function showEmptyState(selector, message) {
+    const el = document.querySelector(selector);
+    if (el) el.innerHTML = `<div class='empty-state'>${message}</div>`;
+}
+
+// Loading state helper
+function showLoadingState(selector, message = 'Memuat...') {
+    const el = document.querySelector(selector);
+    if (el) el.innerHTML = `<div class='loading'><div class='spinner'></div><p>${message}</p></div>`;
+}
+// Admin CMS Panel (Berita & Promo)
+function renderAdminCMS() {
+    const adminContent = document.getElementById('adminContent');
+    if (!adminContent) return;
+    let tab = window.cmsTab || 'news';
+    let html = `<div class='admin-tabs'>
+        <button class='tab-btn${tab==='news'?' active':''}' onclick="switchCMSTab('news')">Berita</button>
+        <button class='tab-btn${tab==='promo'?' active':''}' onclick="switchCMSTab('promo')">Promo</button>
+    </div>`;
+    if (tab === 'news') {
+        const news = getNewsData();
+        html += `<div class='cms-list'>`;
+        html += `<button class='btn btn-primary' onclick='showNewsForm()'>Tambah Berita</button>`;
+        if (news.length === 0) html += `<div class='empty-state'>Belum ada berita.</div>`;
+        else html += news.map(n => `<div class='news-card'><h4>${n.title}</h4><div class='news-meta'>${n.category} | ${n.status}</div><button onclick='editNews(${n.newsId})'>Edit</button><button onclick='deleteNews(${n.newsId})'>Arsipkan</button>${n.status==='draft'?`<button onclick='publishNews(${n.newsId})'>Publish</button>`:''}${n.status==='published'?`<button onclick='unpublishNews(${n.newsId})'>Unpublish</button>`:''}</div>`).join('');
+        html += `</div>`;
+    } else if (tab === 'promo') {
+        const promos = getPromoData();
+        html += `<div class='cms-list'>`;
+        html += `<button class='btn btn-primary' onclick='showPromoForm()'>Tambah Promo</button>`;
+        if (promos.length === 0) html += `<div class='empty-state'>Belum ada promo.</div>`;
+        else html += promos.map(p => `<div class='promo-card'><h4>${p.title}</h4><div class='promo-meta'>${p.discount} | ${p.status}</div><button onclick='editPromo(${p.promoId})'>Edit</button><button onclick='deletePromo(${p.promoId})'>Hapus</button>${p.status==='paused'?`<button onclick='activatePromo(${p.promoId})'>Aktifkan</button>`:''}${p.status==='active'?`<button onclick='pausePromo(${p.promoId})'>Pause</button>`:''}</div>`).join('');
+        html += `</div>`;
+    }
+    adminContent.innerHTML = html;
+}
+
+function switchCMSTab(tabName) {
+    window.cmsTab = tabName;
+    renderAdminCMS();
+}
+
+function showNewsForm(newsId) {
+    // Simple form for demo (replace with WYSIWYG for production)
+    let n = newsId ? getNewsData().find(x=>x.newsId===newsId) : {};
+    let html = `<div class='modal show' id='newsFormModal' style='display:block;'>
+        <div class='modal-content'>
+            <h2>${newsId?'Edit':'Tambah'} Berita</h2>
+            <form id='newsForm'>
+                <input type='text' id='newsTitle' placeholder='Judul' value='${n?.title||''}' required><br>
+                <input type='text' id='newsCategory' placeholder='Kategori' value='${n?.category||''}' required><br>
+                <input type='url' id='newsImage' placeholder='URL Gambar' value='${n?.featuredImage||''}'><br>
+                <textarea id='newsContent' placeholder='Konten'>${n?.content||''}</textarea><br>
+                <button type='submit' class='btn btn-primary'>${newsId?'Update':'Tambah'}</button>
+                <button type='button' class='btn btn-secondary' onclick='closeNewsForm()'>Batal</button>
+            </form>
+        </div>
+    </div>`;
+    let modalDiv = document.createElement('div');
+    modalDiv.innerHTML = html;
+    document.body.appendChild(modalDiv);
+    window.closeNewsForm = function() { modalDiv.remove(); };
+    document.getElementById('newsForm').onsubmit = function(e) {
+        e.preventDefault();
+        const data = {
+            title: document.getElementById('newsTitle').value,
+            category: document.getElementById('newsCategory').value,
+            featuredImage: document.getElementById('newsImage').value,
+            content: document.getElementById('newsContent').value,
+            author: window.currentUser?.name || window.currentUser?.email || 'admin',
+            publishedAt: Date.now(),
+            status: 'draft',
+            tags: []
+        };
+        if (newsId) updateNews(newsId, data); else createNews(data);
+        closeNewsForm();
+    };
+}
+
+function editNews(newsId) { showNewsForm(newsId); }
+
+function showPromoForm(promoId) {
+    let p = promoId ? getPromoData().find(x=>x.promoId===promoId) : {};
+    let html = `<div class='modal show' id='promoFormModal' style='display:block;'>
+        <div class='modal-content'>
+            <h2>${promoId?'Edit':'Tambah'} Promo</h2>
+            <form id='promoForm'>
+                <input type='text' id='promoTitle' placeholder='Judul' value='${p?.title||''}' required><br>
+                <input type='text' id='promoDiscount' placeholder='Diskon' value='${p?.discount||''}' required><br>
+                <input type='text' id='promoCode' placeholder='Kode Promo' value='${p?.promoCode||''}'><br>
+                <input type='date' id='promoFrom' value='${p?.validFrom?new Date(p.validFrom).toISOString().slice(0,10):''}'><br>
+                <input type='date' id='promoUntil' value='${p?.validUntil?new Date(p.validUntil).toISOString().slice(0,10):''}'><br>
+                <textarea id='promoDesc' placeholder='Deskripsi'>${p?.description||''}</textarea><br>
+                <button type='submit' class='btn btn-primary'>${promoId?'Update':'Tambah'}</button>
+                <button type='button' class='btn btn-secondary' onclick='closePromoForm()'>Batal</button>
+            </form>
+        </div>
+    </div>`;
+    let modalDiv = document.createElement('div');
+    modalDiv.innerHTML = html;
+    document.body.appendChild(modalDiv);
+    window.closePromoForm = function() { modalDiv.remove(); };
+    document.getElementById('promoForm').onsubmit = function(e) {
+        e.preventDefault();
+        const data = {
+            title: document.getElementById('promoTitle').value,
+            discount: document.getElementById('promoDiscount').value,
+            promoCode: document.getElementById('promoCode').value,
+            validFrom: document.getElementById('promoFrom').value ? new Date(document.getElementById('promoFrom').value).getTime() : Date.now(),
+            validUntil: document.getElementById('promoUntil').value ? new Date(document.getElementById('promoUntil').value).getTime() : Date.now(),
+            description: document.getElementById('promoDesc').value,
+            status: 'active',
+            linkedBusiness: null,
+            terms: ''
+        };
+        if (promoId) updatePromo(promoId, data); else createPromo(data);
+        closePromoForm();
+    };
+}
+
+function editPromo(promoId) { showPromoForm(promoId); }
+// FR-22/23/24: CMS Berita & Promo
+// --- News ---
+function getNewsData() { try { return JSON.parse(localStorage.getItem('newsData')) || []; } catch { return []; } }
+function setNewsData(news) { localStorage.setItem('newsData', JSON.stringify(news)); }
+function createNews(newsData) {
+    let news = getNewsData();
+    newsData.newsId = Date.now();
+    news.push(newsData);
+    setNewsData(news);
+    showToast('Berita berhasil ditambahkan!', 'success');
+    renderAdminCMS && renderAdminCMS();
+}
+function updateNews(newsId, updatedData) {
+    let news = getNewsData();
+    const idx = news.findIndex(n => n.newsId === newsId);
+    if (idx === -1) return showToast('Berita tidak ditemukan.', 'error');
+    news[idx] = { ...news[idx], ...updatedData };
+    setNewsData(news);
+    showToast('Berita berhasil diupdate!', 'success');
+    renderAdminCMS && renderAdminCMS();
+}
+function deleteNews(newsId) {
+    let news = getNewsData();
+    const idx = news.findIndex(n => n.newsId === newsId);
+    if (idx === -1) return showToast('Berita tidak ditemukan.', 'error');
+    news[idx].status = 'archived';
+    setNewsData(news);
+    showToast('Berita diarsipkan.', 'info');
+    renderAdminCMS && renderAdminCMS();
+}
+function publishNews(newsId) { updateNews(newsId, { status: 'published' }); }
+function unpublishNews(newsId) { updateNews(newsId, { status: 'draft' }); }
+function renderNewsList() {
+    const news = getNewsData().filter(n => n.status === 'published');
+    let html = '';
+    if (news.length === 0) html = '<div class="empty-state">Belum ada berita.</div>';
+    else html = news.map(n => `<div class='news-card'><img src='${n.featuredImage||''}' alt=''><h4>${n.title}</h4><div class='news-meta'>${n.category} | ${new Date(n.publishedAt).toLocaleDateString('id-ID')}</div><div class='news-content'>${n.content}</div></div>`).join('');
+    const newsList = document.getElementById('newsList');
+    if (newsList) newsList.innerHTML = html;
+}
+
+// --- Promo ---
+function getPromoData() { try { return JSON.parse(localStorage.getItem('promoData')) || []; } catch { return []; } }
+function setPromoData(promos) { localStorage.setItem('promoData', JSON.stringify(promos)); }
+function createPromo(promoData) {
+    let promos = getPromoData();
+    promoData.promoId = Date.now();
+    promos.push(promoData);
+    setPromoData(promos);
+    showToast('Promo berhasil ditambahkan!', 'success');
+    renderAdminCMS && renderAdminCMS();
+}
+function updatePromo(promoId, updatedData) {
+    let promos = getPromoData();
+    const idx = promos.findIndex(p => p.promoId === promoId);
+    if (idx === -1) return showToast('Promo tidak ditemukan.', 'error');
+    promos[idx] = { ...promos[idx], ...updatedData };
+    setPromoData(promos);
+    showToast('Promo berhasil diupdate!', 'success');
+    renderAdminCMS && renderAdminCMS();
+}
+function deletePromo(promoId) {
+    let promos = getPromoData();
+    const idx = promos.findIndex(p => p.promoId === promoId);
+    if (idx === -1) return showToast('Promo tidak ditemukan.', 'error');
+    promos[idx].status = 'expired';
+    setPromoData(promos);
+    showToast('Promo dihapus.', 'info');
+    renderAdminCMS && renderAdminCMS();
+}
+function activatePromo(promoId) { updatePromo(promoId, { status: 'active' }); }
+function pausePromo(promoId) { updatePromo(promoId, { status: 'paused' }); }
+function renderActivePromos() {
+    const promos = getPromoData().filter(p => p.status === 'active');
+    let html = '';
+    if (promos.length === 0) html = '<div class="empty-state">Belum ada promo aktif.</div>';
+    else html = promos.map(p => `<div class='promo-card'><h4>${p.title}</h4><div class='promo-meta'>${p.discount} | Berlaku s/d ${new Date(p.validUntil).toLocaleDateString('id-ID')}</div><div class='promo-desc'>${p.description}</div><div class='promo-code'>${p.promoCode ? `<button onclick="navigator.clipboard.writeText('${p.promoCode}');showToast('Kode promo disalin!','success')">${p.promoCode}</button>` : ''}</div></div>`).join('');
+    const newsList = document.getElementById('newsList');
+    if (newsList) newsList.innerHTML += html;
+}
+// FR-20: Business Claim Portal
+function getBusinessClaims() {
+    try { return JSON.parse(localStorage.getItem('pendingClaims')) || []; } catch { return []; }
+}
+function setBusinessClaims(claims) {
+    localStorage.setItem('pendingClaims', JSON.stringify(claims));
+}
+function getClaimHistory() {
+    try { return JSON.parse(localStorage.getItem('claimHistory')) || []; } catch { return []; }
+}
+function setClaimHistory(history) {
+    localStorage.setItem('claimHistory', JSON.stringify(history));
+}
+
+function claimBusiness(businessId) {
+    if (!window.currentUser) { showToast('Anda harus login untuk klaim bisnis.', 'info'); return; }
+    const kuliner = kulinerData.find(k => k.id === businessId);
+    if (!kuliner) return showToast('Bisnis tidak ditemukan.', 'error');
+    // Modal form klaim
+    let html = `<div class='modal show' id='claimModal' style='display:block;'>
+        <div class='modal-content'>
+            <h2>Klaim Bisnis: ${kuliner.nama}</h2>
+            <form id='claimForm'>
+                <div class='form-group'><label>Nama Pemilik</label><input type='text' id='ownerName' required></div>
+                <div class='form-group'><label>No. HP</label><input type='tel' id='ownerPhone' required></div>
+                <div class='form-group'><label>Pesan Kepemilikan</label><textarea id='claimMsg' required></textarea></div>
+                <div class='form-group'><label>Upload Dokumen (opsional)</label><input type='file' id='claimDocs'></div>
+                <div class='form-actions'>
+                    <button type='button' class='btn btn-secondary' onclick='closeClaimModal()'>Batal</button>
+                    <button type='submit' class='btn btn-primary'>Ajukan Klaim</button>
+                </div>
+            </form>
+        </div>
+    </div>`;
+    let modalDiv = document.createElement('div');
+    modalDiv.innerHTML = html;
+    document.body.appendChild(modalDiv);
+    window.closeClaimModal = function() { modalDiv.remove(); };
+    document.getElementById('claimForm').onsubmit = function(e) {
+        e.preventDefault();
+        const claimData = {
+            claimId: Date.now(),
+            businessId: kuliner.id,
+            businessName: kuliner.nama,
+            claimedBy: window.currentUser.email,
+            ownerName: document.getElementById('ownerName').value,
+            ownerPhone: document.getElementById('ownerPhone').value,
+            message: document.getElementById('claimMsg').value,
+            verificationDocs: '', // File upload handling (optional)
+            claimedAt: Date.now(),
+            status: 'pending'
+        };
+        submitBusinessClaim(claimData);
+        closeClaimModal();
+    };
+}
+
+function submitBusinessClaim(claimData) {
+    if (!claimData.ownerName || !claimData.ownerPhone || !claimData.message) {
+        showToast('Semua field wajib diisi.', 'error'); return;
+    }
+    let claims = getBusinessClaims();
+    // Satu bisnis hanya bisa di-claim satu owner
+    if (claims.some(c => c.businessId === claimData.businessId && c.status === 'pending')) {
+        showToast('Bisnis ini sudah dalam proses klaim.', 'info'); return;
+    }
+    claims.push(claimData);
+    setBusinessClaims(claims);
+    showToast('Klaim bisnis berhasil diajukan! Admin akan memproses klaim Anda.', 'success');
+}
+
+function approveBusinessClaim(claimId) {
+    let claims = getBusinessClaims();
+    let history = getClaimHistory();
+    const idx = claims.findIndex(c => c.claimId === claimId);
+    if (idx === -1) return showToast('Klaim tidak ditemukan.', 'error');
+    const claim = { ...claims[idx], status: 'approved', approvedAt: Date.now() };
+    // Link owner ke bisnis
+    const kulinerIdx = kulinerData.findIndex(k => k.id === claim.businessId);
+    if (kulinerIdx !== -1) {
+        kulinerData[kulinerIdx].ownedBy = claim.claimedBy;
+        kulinerData[kulinerIdx].ownerName = claim.ownerName;
+        kulinerData[kulinerIdx].ownerPhone = claim.ownerPhone;
+        saveDataToLocalStorage();
+    }
+    history.push(claim);
+    claims.splice(idx, 1);
+    setBusinessClaims(claims);
+    setClaimHistory(history);
+    showToast('Klaim bisnis disetujui.', 'success');
+    renderAdminPanel && renderAdminPanel();
+}
+
+function rejectBusinessClaim(claimId, reason) {
+    let claims = getBusinessClaims();
+    let history = getClaimHistory();
+    const idx = claims.findIndex(c => c.claimId === claimId);
+    if (idx === -1) return showToast('Klaim tidak ditemukan.', 'error');
+    const claim = { ...claims[idx], status: 'rejected', rejectionReason: reason, rejectedAt: Date.now() };
+    history.push(claim);
+    claims.splice(idx, 1);
+    setBusinessClaims(claims);
+    setClaimHistory(history);
+    showToast('Klaim bisnis ditolak.', 'info');
+    renderAdminPanel && renderAdminPanel();
+}
+
+function ownerPanel() {
+    if (!window.currentUser) return;
+    const myBusinesses = kulinerData.filter(k => k.ownedBy === window.currentUser.email);
+    let html = `<h3>Bisnis Saya</h3>`;
+    if (myBusinesses.length === 0) {
+        html += `<div class='empty-state'>Anda belum memiliki bisnis yang diklaim.</div>`;
+    } else {
+        html += myBusinesses.map(k => `
+            <div class='owner-card'>
+                <h4>${k.nama}</h4>
+                <p>${k.alamat}</p>
+                <button class='btn btn-info' onclick='editMyBusiness(${k.id})'>Edit Info</button>
+            </div>
+        `).join('');
+    }
+    const listDiv = document.getElementById('list');
+    if (listDiv) listDiv.innerHTML = html;
+}
+
+function editMyBusiness(businessId) {
+    const k = kulinerData.find(x => x.id === businessId);
+    if (!k) return showToast('Bisnis tidak ditemukan.', 'error');
+    let html = `<div class='modal show' id='editBusinessModal' style='display:block;'>
+        <div class='modal-content'>
+            <h2>Edit Bisnis: ${k.nama}</h2>
+            <form id='editBusinessForm'>
+                <div class='form-group'><label>Jam Operasional</label><input type='text' id='editJam' value='${k.jam||''}'></div>
+                <div class='form-group'><label>Kontak</label><input type='text' id='editKontak' value='${k.kontak||''}'></div>
+                <div class='form-group'><label>Deskripsi</label><textarea id='editDeskripsi'>${k.deskripsi||''}</textarea></div>
+                <div class='form-group'><label>Foto</label><input type='url' id='editFoto' value='${k.foto||''}'></div>
+                <div class='form-actions'>
+                    <button type='button' class='btn btn-secondary' onclick='closeEditBusinessModal()'>Batal</button>
+                    <button type='submit' class='btn btn-primary'>Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>`;
+    let modalDiv = document.createElement('div');
+    modalDiv.innerHTML = html;
+    document.body.appendChild(modalDiv);
+    window.closeEditBusinessModal = function() { modalDiv.remove(); };
+    document.getElementById('editBusinessForm').onsubmit = function(e) {
+        e.preventDefault();
+        k.jam = document.getElementById('editJam').value;
+        k.kontak = document.getElementById('editKontak').value;
+        k.deskripsi = document.getElementById('editDeskripsi').value;
+        k.foto = document.getElementById('editFoto').value;
+        saveDataToLocalStorage();
+        closeEditBusinessModal();
+        showToast('Informasi bisnis berhasil diperbarui!', 'success');
+    };
+}
+// FR-07: Google OAuth (Firebase Auth)
+async function signInWithGoogle() {
+    try {
+        const provider = new window.GoogleAuthProvider();
+        const result = await window.signInWithPopup(window.firebaseAuth, provider);
+        const user = result.user;
+        window.currentUser = {
+            email: user.email,
+            name: user.displayName,
+            photo: user.photoURL,
+            uid: user.uid
+        };
+        localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
+        updateAuthUI();
+        closeAuthModal && closeAuthModal();
+        showToast('Berhasil login sebagai ' + user.displayName, 'success');
+    } catch (error) {
+        showToast('Gagal login: ' + (error.message || 'Unknown error'), 'error');
+    }
+}
+
+async function signOut() {
+    try {
+        await window.fbSignOut(window.firebaseAuth);
+        window.currentUser = null;
+        localStorage.removeItem('currentUser');
+        updateAuthUI();
+        showToast('Berhasil logout.', 'info');
+    } catch (error) {
+        showToast('Gagal logout: ' + (error.message || 'Unknown error'), 'error');
+    }
+}
+
+function updateAuthUI() {
+    const userProfile = document.getElementById('userProfile');
+    const loginBtn = document.getElementById('loginBtn');
+    const userAvatar = document.getElementById('userAvatar');
+    const userName = document.getElementById('userName');
+    if (window.currentUser) {
+        if (userProfile) userProfile.style.display = '';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userAvatar) userAvatar.src = window.currentUser.photo || '';
+        if (userName) userName.textContent = window.currentUser.name || window.currentUser.email;
+        // Dropdown
+        const dropdownAvatar = document.getElementById('dropdownAvatar');
+        const dropdownName = document.getElementById('dropdownName');
+        const dropdownEmail = document.getElementById('dropdownEmail');
+        if (dropdownAvatar) dropdownAvatar.src = window.currentUser.photo || '';
+        if (dropdownName) dropdownName.textContent = window.currentUser.name || '';
+        if (dropdownEmail) dropdownEmail.textContent = window.currentUser.email || '';
+    } else {
+        if (userProfile) userProfile.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = '';
+    }
+}
+
+function checkAuth() {
+    if (!window.currentUser) {
+        // Optionally redirect or show login modal
+        toggleAuthModal && toggleAuthModal();
+    }
+}
+
+// Listen to Firebase Auth state
+if (window.onAuthStateChanged && window.firebaseAuth) {
+    window.onAuthStateChanged(window.firebaseAuth, (user) => {
+        if (user) {
+            window.currentUser = {
+                email: user.email,
+                name: user.displayName,
+                photo: user.photoURL,
+                uid: user.uid
+            };
+            localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
+        } else {
+            window.currentUser = null;
+            localStorage.removeItem('currentUser');
+        }
+        updateAuthUI && updateAuthUI();
+    });
+} else {
+    // Fallback: load from localStorage
+    try {
+        window.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    } catch (e) { window.currentUser = null; }
+    updateAuthUI && updateAuthUI();
+}
+// FR-18: Admin Moderation System - Approve Submission
+function approveSubmission(id) {
+    let pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+    let history = JSON.parse(localStorage.getItem('submissionHistory') || '[]');
+    const idx = pending.findIndex(item => item.id === id);
+    if (idx === -1) return showToast('Submission tidak ditemukan.', 'error');
+    const approved = { ...pending[idx], status: 'approved', approvedAt: Date.now() };
+    kulinerData.push(approved);
+    saveDataToLocalStorage();
+    history.push(approved);
+    pending.splice(idx, 1);
+    localStorage.setItem('pendingSubmissions', JSON.stringify(pending));
+    localStorage.setItem('submissionHistory', JSON.stringify(history));
+    renderMap && renderMap();
+    renderAdminPanel && renderAdminPanel();
+    showToast('✅ Kontribusi berhasil disetujui!', 'success');
+}
+
+function rejectSubmission(id, reason) {
+    let pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+    let history = JSON.parse(localStorage.getItem('submissionHistory') || '[]');
+    const idx = pending.findIndex(item => item.id === id);
+    if (idx === -1) return showToast('Submission tidak ditemukan.', 'error');
+    const rejected = { ...pending[idx], status: 'rejected', rejectionReason: reason, rejectedAt: Date.now() };
+    history.push(rejected);
+    pending.splice(idx, 1);
+    localStorage.setItem('pendingSubmissions', JSON.stringify(pending));
+    localStorage.setItem('submissionHistory', JSON.stringify(history));
+    renderAdminPanel && renderAdminPanel();
+    showToast('❌ Kontribusi ditolak: ' + reason, 'info');
+}
+
+function renderAdminPanel() {
+    // Tab navigation: Pending | History | Manage
+    const adminContent = document.getElementById('adminContent');
+    if (!adminContent) return;
+    let pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+    let history = JSON.parse(localStorage.getItem('submissionHistory') || '[]');
+    let tab = window.adminTab || 'pending';
+    let html = `<div class="admin-tabs">
+        <button class="tab-btn${tab==='pending'?' active':''}" onclick="switchAdminTab('pending')">Pending <span class='badge badge-pending'>${pending.length}</span></button>
+        <button class="tab-btn${tab==='history'?' active':''}" onclick="switchAdminTab('history')">History</button>
+        <button class="tab-btn${tab==='stats'?' active':''}" onclick="switchAdminTab('stats')">Stats</button>
+    </div>`;
+    if (tab === 'pending') {
+        html += `<div class="admin-stats"><div class="stat-card"><i class='fas fa-clock'></i><div class='stat-info'><h3>${pending.length}</h3><p>Pending</p></div></div></div>`;
+        if (pending.length === 0) {
+            html += `<div class='empty-state'>Tidak ada submission pending.</div>`;
+        } else {
+            html += pending.map(item => `
+                <div class='submission-card'>
+                    <div class='submission-header'>
+                        <div class='submission-title'><h4>${item.nama}</h4><span class='badge badge-pending'>Pending</span></div>
+                        <div class='submission-time'>${timeAgo(item.submittedAt)}</div>
+                    </div>
+                    <div class='submission-detail'><label>Kategori:</label> <span>${item.kategori}</span></div>
+                    <div class='submission-detail'><label>Alamat:</label> <span>${item.alamat}</span></div>
+                    <div class='submission-detail'><label>Submitter:</label> <span>${item.submittedBy}</span></div>
+                    <div class='submission-actions'>
+                        <button onclick="approveSubmission(${item.id})" class='btn btn-success'>Approve</button>
+                        <button onclick="openRejectModal(${item.id})" class='btn btn-danger'>Reject</button>
+                        <button onclick="previewSubmission(${item.id})" class='btn btn-info'>Preview</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    } else if (tab === 'history') {
+        html += `<div class="admin-stats">
+            <div class="stat-card"><i class='fas fa-check'></i><div class='stat-info'><h3>${history.filter(h=>h.status==='approved').length}</h3><p>Approved</p></div></div>
+            <div class="stat-card"><i class='fas fa-times'></i><div class='stat-info'><h3>${history.filter(h=>h.status==='rejected').length}</h3><p>Rejected</p></div></div>
+        </div>`;
+        if (history.length === 0) {
+            html += `<div class='empty-state'>Belum ada riwayat moderasi.</div>`;
+        } else {
+            html += history.map(item => `
+                <div class='history-card ${item.status}'>
+                    <div class='submission-header'>
+                        <div class='submission-title'><h4>${item.nama}</h4><span class='badge badge-${item.status}'>${item.status.charAt(0).toUpperCase()+item.status.slice(1)}</span></div>
+                        <div class='submission-time'>${timeAgo(item.submittedAt)}</div>
+                    </div>
+                    <div class='submission-detail'><label>Kategori:</label> <span>${item.kategori}</span></div>
+                    <div class='submission-detail'><label>Alamat:</label> <span>${item.alamat}</span></div>
+                    <div class='submission-detail'><label>Submitter:</label> <span>${item.submittedBy}</span></div>
+                    ${item.status==='rejected'?`<div class='rejection-reason'>Alasan: ${item.rejectionReason||'-'}</div>`:''}
+                </div>
+            `).join('');
+        }
+    } else if (tab === 'stats') {
+        html += `<div class="admin-stats">
+            <div class="stat-card"><i class='fas fa-clock'></i><div class='stat-info'><h3>${pending.length}</h3><p>Pending</p></div></div>
+            <div class="stat-card"><i class='fas fa-check'></i><div class='stat-info'><h3>${history.filter(h=>h.status==='approved').length}</h3><p>Approved</p></div></div>
+            <div class="stat-card"><i class='fas fa-times'></i><div class='stat-info'><h3>${history.filter(h=>h.status==='rejected').length}</h3><p>Rejected</p></div></div>
+        </div>`;
+    }
+    adminContent.innerHTML = html;
+}
+
+function switchAdminTab(tabName) {
+    window.adminTab = tabName;
+    renderAdminPanel();
+}
+
+function openRejectModal(id) {
+    const reason = prompt('Masukkan alasan penolakan:');
+    if (reason && reason.trim()) {
+        rejectSubmission(id, reason.trim());
+    }
+}
+
+function previewSubmission(id) {
+    let pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+    const item = pending.find(i => i.id === id);
+    if (!item) return showToast('Submission tidak ditemukan.', 'error');
+    // Modal preview sederhana
+    let html = `<div class='modal show' id='previewModal' style='display:block;'>
+        <div class='modal-content'>
+            <h2>${item.nama}</h2>
+            <p><b>Kategori:</b> ${item.kategori}</p>
+            <p><b>Alamat:</b> ${item.alamat}</p>
+            <p><b>Deskripsi:</b> ${item.deskripsi}</p>
+            <p><b>Submitter:</b> ${item.submittedBy}</p>
+            <p><b>Status:</b> <span class='badge badge-pending'>Pending</span></p>
+            <div style='margin:1rem 0;'><img src='${item.foto}' alt='foto' style='max-width:100%;border-radius:8px;'/></div>
+            <button onclick="approveSubmission(${item.id})" class='btn btn-success'>Approve</button>
+            <button onclick="openRejectModal(${item.id})" class='btn btn-danger'>Reject</button>
+            <button onclick="closePreviewModal()" class='btn btn-secondary'>Tutup</button>
+        </div>
+    </div>`;
+    let modalDiv = document.createElement('div');
+    modalDiv.innerHTML = html;
+    document.body.appendChild(modalDiv);
+    window.closePreviewModal = function() {
+        modalDiv.remove();
+    };
+}
+
+function timeAgo(timestamp) {
+    const now = Date.now();
+    const diff = Math.floor((now - timestamp) / 1000);
+    if (diff < 60) return diff + ' detik lalu';
+    if (diff < 3600) return Math.floor(diff/60) + ' menit lalu';
+    if (diff < 86400) return Math.floor(diff/3600) + ' jam lalu';
+    return new Date(timestamp).toLocaleDateString('id-ID');
+}
+
+function showMyContributions(filter = 'all') {
+    if (!window.currentUser || !window.currentUser.email) {
+        showToast('Anda harus login untuk melihat kontribusi.', 'info');
+        return;
+    }
+    let pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+    let history = JSON.parse(localStorage.getItem('submissionHistory') || '[]');
+    let all = [...pending, ...history].filter(item => item.submittedBy === window.currentUser.email);
+    if (filter !== 'all') all = all.filter(item => item.status === filter);
+    let html = `<h3>Kontribusi Saya</h3>
+        <div class='contrib-filters'>
+            <button onclick="showMyContributions('all')">Semua</button>
+            <button onclick="showMyContributions('pending')">Pending</button>
+            <button onclick="showMyContributions('approved')">Approved</button>
+            <button onclick="showMyContributions('rejected')">Rejected</button>
+        </div>`;
+    if (all.length === 0) {
+        html += `<div class='empty-state'>Belum ada kontribusi.</div>`;
+    } else {
+        html += all.map(item => `
+            <div class='history-card ${item.status}'>
+                <div class='submission-header'>
+                    <div class='submission-title'><h4>${item.nama}</h4><span class='badge badge-${item.status}'>${item.status.charAt(0).toUpperCase()+item.status.slice(1)}</span></div>
+                    <div class='submission-time'>${timeAgo(item.submittedAt)}</div>
+                </div>
+                <div class='submission-detail'><label>Kategori:</label> <span>${item.kategori}</span></div>
+                <div class='submission-detail'><label>Alamat:</label> <span>${item.alamat}</span></div>
+                ${item.status==='rejected'?`<div class='rejection-reason'>Alasan: ${item.rejectionReason||'-'}</div>`:''}
+            </div>
+        `).join('');
+    }
+    const listDiv = document.getElementById('list');
+    if (listDiv) listDiv.innerHTML = html;
+}
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDW3PGqq5KbD_4v6KT2YrvP3cqboyZMq4E';
+
+// FR-18: Admin Moderation System - Data structure for submissions
+const submissionStructure = {
+    id: Date.now(),
+    nama: '',
+    kategori: '',
+    alamat: '',
+    jam: '',
+    harga: '',
+    deskripsi: '',
+    foto: '',
+    parkir: '',
+    rute: '',
+    lat: 0,
+    lng: 0,
+    keliling: false,
+    halal: '',
+    kontak: '',
+    reviews: [],
+    status: 'pending', // 'pending', 'approved', 'rejected'
+    submittedBy: '',
+    submittedAt: Date.now(),
+    rejectionReason: null
+};
+
+function initSubmissions() {
+    if (!localStorage.getItem('pendingSubmissions')) {
+        localStorage.setItem('pendingSubmissions', '[]');
+    }
+}
     const initialKulinerData = [
       {
         nama: "Soto Sokaraja",
@@ -451,11 +1168,19 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyDW3PGqq5KbD_4v6KT2YrvP3cqboyZMq4E';
                 }
             };
             
+            let ownerBadge = '';
+            let claimBtn = '';
+            if (item.ownedBy) {
+                ownerBadge = `<span class='owner-badge'><i class='fas fa-crown'></i> Dimiliki oleh ${item.ownerName || item.ownedBy}</span>`;
+            } else if (window.currentUser && window.currentUser.email) {
+                claimBtn = `<button class='btn btn-warning' onclick='claimBusiness(${item.id})'><i class='fas fa-handshake'></i> Klaim Bisnis Ini</button>`;
+            }
             const content = `
                 <h3>${item.nama}</h3>
                 <div class="detail-badges">
                     ${getHalalLabel(item.halal)}
                     <span class="tipe-badge ${item.keliling ? 'keliling' : 'tetap'}">${item.keliling ? '🚚 Keliling' : '🏠 Tetap'}</span>
+                    ${ownerBadge}
                 </div>
                 <p><strong><i class="fas fa-tag"></i> Kategori:</strong> ${item.kategori}</p>
                 <p><strong><i class="fas fa-map-marker-alt"></i> Alamat:</strong> ${item.alamat}</p>
@@ -466,6 +1191,7 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyDW3PGqq5KbD_4v6KT2YrvP3cqboyZMq4E';
                 <p><strong><i class="fas fa-route"></i> Rute:</strong> ${item.rute}</p>
                 ${item.kontak ? `<p><strong><i class="fas fa-phone"></i> Kontak:</strong> <a href="tel:${item.kontak}">${item.kontak}</a></p>` : ''}
                 <img src="${item.foto}" alt="${item.nama}" onerror="this.src='https://via.placeholder.com/400x200?text=Gambar+Tidak+Tersedia';">
+                <div class='claim-business-section'>${claimBtn}</div>`
                 <div class="detail-actions">
                     <button onclick="openGoogleMaps(${item.lat}, ${item.lng})"><i class="fas fa-map"></i> Google Maps</button>
                     ${item.kontak ? `<button onclick="window.open('https://wa.me/${item.kontak.replace(/^0/, '62')}', '_blank')"><i class="fab fa-whatsapp"></i> WhatsApp</button>` : ''}
@@ -556,6 +1282,7 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyDW3PGqq5KbD_4v6KT2YrvP3cqboyZMq4E';
     function submitNewKuliner() {
         try {
             const formData = {
+                id: Date.now(),
                 nama: document.getElementById('add-nama')?.value?.trim() || '',
                 kategori: document.getElementById('add-kategori')?.value || '',
                 alamat: document.getElementById('add-alamat')?.value?.trim() || '',
@@ -568,7 +1295,13 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyDW3PGqq5KbD_4v6KT2YrvP3cqboyZMq4E';
                 lat: parseFloat(document.getElementById('add-lat')?.value) || 0,
                 lng: parseFloat(document.getElementById('add-lng')?.value) || 0,
                 keliling: document.getElementById('add-tipe')?.value === 'true',
-                reviews: []
+                halal: document.getElementById('add-halal')?.value || '',
+                kontak: document.getElementById('add-kontak')?.value?.trim() || '',
+                reviews: [],
+                status: 'pending',
+                submittedBy: (window.currentUser && window.currentUser.email) ? window.currentUser.email : 'anonymous',
+                submittedAt: Date.now(),
+                rejectionReason: null
             };
 
             if (!formData.nama || !formData.kategori || !formData.alamat || !formData.lat || !formData.lng) {
@@ -576,13 +1309,15 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyDW3PGqq5KbD_4v6KT2YrvP3cqboyZMq4E';
                 return;
             }
 
-            kulinerData.push(formData);
-            saveDataToLocalStorage();
-            renderMap();
-            populateCategoryDropdowns();
-            filterAndSortList();
+            let pending = [];
+            try {
+                pending = JSON.parse(localStorage.getItem('pendingSubmissions')) || [];
+            } catch (e) { pending = []; }
+            pending.push(formData);
+            localStorage.setItem('pendingSubmissions', JSON.stringify(pending));
+
             closeAddKulinerModal();
-            alert('Kuliner baru berhasil ditambahkan!');
+            showToast('Kontribusi Anda sedang direview oleh admin.', 'info');
         } catch (error) {
             console.error('Error submitting new kuliner:', error);
             alert('Terjadi kesalahan saat menambahkan kuliner');

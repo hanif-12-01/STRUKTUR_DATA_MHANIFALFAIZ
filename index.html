@@ -558,10 +558,31 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="knowledge-base.js"></script>
-    <script src="script.js"></script>
-    <script src="chatbot.js"></script>
+        <!-- Firebase SDK -->
+        <script type="module">
+            // TODO: Ganti config berikut dengan config Firebase project Anda
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+            import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+            const firebaseConfig = {
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_AUTH_DOMAIN",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_STORAGE_BUCKET",
+                messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+                appId: "YOUR_APP_ID"
+            };
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            window.firebaseAuth = auth;
+            window.GoogleAuthProvider = GoogleAuthProvider;
+            window.signInWithPopup = signInWithPopup;
+            window.fbSignOut = fbSignOut;
+            window.onAuthStateChanged = onAuthStateChanged;
+        </script>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script src="knowledge-base.js"></script>
+        <script src="script.js"></script>
+        <script src="chatbot.js"></script>
     
     <!-- Hide Splash Screen -->
     <script>
