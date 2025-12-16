@@ -1128,47 +1128,44 @@ function initSubmissions() {
         }
     }
 
-    function initMap() {
-        try {
-            // disable default zoomControl because we provide custom controls
-            map = L.map('map', { zoomControl: false }).setView([-7.4212, 109.2422], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-            renderMap();
+                function adjustMapControls() {
+                    try {
+                        const vw = window.innerWidth || document.documentElement.clientWidth;
+                        controls.style.position = 'fixed';
+                        controls.style.display = 'flex';
+                        // ensure controls float above other UI
+                        controls.style.zIndex = 2147483000;
+                        controls.style.pointerEvents = 'auto';
 
-            // Add custom map controls (zoom in/out, narrow/widen view)
-            try {
-                const container = map.getContainer();
+                        // hide controls when sidebar is open
+                        const sidebar = document.getElementById('sidebar');
+                        if (sidebar && sidebar.classList && sidebar.classList.contains('open')) {
+                            controls.style.display = 'none';
+                            return;
+                        }
 
-                // inject minimal CSS once
-                if (!document.getElementById('lm-map-controls-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'lm-map-controls-style';
-                    style.innerHTML = `
-                        .lm-map-controls { position: absolute; top: 10px; left: 10px; z-index: 1000; display:flex; flex-direction:column; gap:6px; }
-                        .lm-map-controls button { width:36px; height:36px; border-radius:6px; border:none; background:rgba(255,255,255,0.95); box-shadow:0 1px 4px rgba(0,0,0,0.3); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; }
-                        .lm-map-controls button[aria-label] { padding:0; }
-                        .lm-map-controls button:hover { transform:translateY(-1px); }
-                        .lm-map-controls .secondary { background: #fff7e9; }
-                        /* Responsive positioning: move to right on wide screens, bottom-left on small screens */
-                        @media (min-width: 900px) {
-                            .lm-map-controls { left: auto; right: 12px; top: 12px; }
+                        // compute header offset to avoid covering logo/header
+                        const headerEl = document.querySelector('.header');
+                        const headerH = headerEl ? headerEl.offsetHeight : 0;
+
+                        if (vw >= 900) {
+                            // Always place at right-top on desktop, below header
+                            controls.style.right = '12px';
+                            controls.style.left = 'auto';
+                            controls.style.top = (headerH + 8) + 'px';
+                            controls.style.bottom = 'auto';
+                            controls.style.flexDirection = 'column';
+                        } else {
+                            // mobile: bottom-left horizontal
+                            controls.style.left = '8px';
+                            controls.style.right = 'auto';
+                            controls.style.bottom = '12px';
+                            controls.style.top = 'auto';
+                            controls.style.flexDirection = 'row';
                         }
-                        @media (max-width: 480px) {
-                            .lm-map-controls { left: 8px; right: auto; top: auto; bottom: 12px; flex-direction:row; }
-                            .lm-map-controls button { width:40px; height:40px; }
-                        }
-                    `;
-                    document.head.appendChild(style);
+
+                    } catch (e) { console.warn('adjustMapControls error', e); }
                 }
-
-                // avoid duplicate controls: remove existing if present
-                const existingControls = document.getElementById('lm-map-controls');
-                if (existingControls) existingControls.remove();
-                const controls = document.createElement('div');
-                controls.className = 'lm-map-controls';
-
                 const btnZoomIn = document.createElement('button');
                 btnZoomIn.innerHTML = '+';
                 btnZoomIn.title = 'Persempit (Zoom In)';
@@ -1199,41 +1196,31 @@ function initSubmissions() {
 
                 function adjustMapControls() {
                     try {
-                        const sidebar = document.getElementById('sidebar');
-                        // if sidebar has explicit 'open' class, hide controls to avoid overlap
-                        if (sidebar && sidebar.classList && sidebar.classList.contains('open')) {
-                            controls.style.display = 'none';
-                            return;
-                        }
                         const vw = window.innerWidth || document.documentElement.clientWidth;
                         controls.style.position = 'fixed';
                         controls.style.display = 'flex';
                         // ensure controls float above other UI
                         controls.style.zIndex = 2147483000;
                         controls.style.pointerEvents = 'auto';
+
+                        // hide controls when sidebar is open
+                        const sidebar = document.getElementById('sidebar');
+                        if (sidebar && sidebar.classList && sidebar.classList.contains('open')) {
+                            controls.style.display = 'none';
+                            return;
+                        }
+
+                        // compute header offset to avoid covering logo/header
+                        const headerEl = document.querySelector('.header');
+                        const headerH = headerEl ? headerEl.offsetHeight : 0;
+
                         if (vw >= 900) {
-                            // if sidebar visible and wide, place to the right of sidebar
-                            const sidebar = document.getElementById('sidebar');
-                            if (sidebar && getComputedStyle(sidebar).display !== 'none' && sidebar.offsetWidth > 60) {
-                                const srect = sidebar.getBoundingClientRect();
-                                // place controls just to the right of sidebar, but keep inside viewport
-                                const left = Math.min(srect.right + 12, vw - 72);
-                                controls.style.left = left + 'px';
-                                controls.style.right = 'auto';
-                                controls.style.top = (Math.max(12, srect.top + 12)) + 'px';
-                                controls.style.bottom = 'auto';
-                                controls.style.flexDirection = 'column';
-                                // try to ensure controls appear above sidebar
-                                const sbZ = parseInt(getComputedStyle(sidebar).zIndex) || 1000;
-                                controls.style.zIndex = Math.max(2147483000, sbZ + 5);
-                            } else {
-                                // standard right-top placement
-                                controls.style.right = '12px';
-                                controls.style.left = 'auto';
-                                controls.style.top = '12px';
-                                controls.style.bottom = 'auto';
-                                controls.style.flexDirection = 'column';
-                            }
+                            // Always place at right-top on desktop, below header
+                            controls.style.right = '12px';
+                            controls.style.left = 'auto';
+                            controls.style.top = (headerH + 8) + 'px';
+                            controls.style.bottom = 'auto';
+                            controls.style.flexDirection = 'column';
                         } else {
                             // mobile: bottom-left horizontal
                             controls.style.left = '8px';
@@ -1242,6 +1229,7 @@ function initSubmissions() {
                             controls.style.top = 'auto';
                             controls.style.flexDirection = 'row';
                         }
+
                     } catch (e) { console.warn('adjustMapControls error', e); }
                 }
 
@@ -2428,6 +2416,29 @@ function initSubmissions() {
                         .promo-badge, .popup-badge { font-size:12px; padding:4px 6px }
                         /* Make map controls more compact */
                         #lm-map-controls button { width:32px; height:32px; font-size:16px }
+
+                        /* Force map controls to top-right below header and prevent centering */
+                        #lm-map-controls {
+                            position: fixed !important;
+                            right: 12px !important;
+                            left: auto !important;
+                            top: calc(60px + 8px) !important; /* header height + gap */
+                            transform: none !important;
+                            margin: 0 !important;
+                            display: flex !important;
+                            flex-direction: column !important;
+                            gap: 8px !important;
+                            z-index: 999999 !important;
+                            pointer-events: auto !important;
+                        }
+                        /* Ensure individual buttons are stacked and visible */
+                        #lm-map-controls button { display: block !important; box-shadow: 0 6px 18px rgba(0,0,0,0.12) !important; border-radius:8px !important; background:#fff !important; color:#222 !important; }
+
+                        /* Mobile: keep controls bottom-left but still override transforms */
+                        @media (max-width: 899px) {
+                            #lm-map-controls { right: auto !important; left: 8px !important; top: auto !important; bottom: 12px !important; flex-direction: row !important; }
+                        }
+
                         /* Center Add Kuliner modal */
                         #addKulinerModal .modal-content {
                             position: fixed !important;
