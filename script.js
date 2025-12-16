@@ -72,7 +72,7 @@ function sortByDistance() { if (typeof sortByDistance === 'function') return win
 
 function showWeatherRec() { if (typeof showWeatherRec === 'function') return window.showWeatherRec(); }
 
-function startVoiceSearch() { showToast('Pencarian suara belum tersedia pada mode ini.', 'info'); }
+// function startVoiceSearch() { showToast('Pencarian suara belum tersedia pada mode ini.', 'info'); }
 // Ensure common UI functions exist as safe stubs to avoid broken onclick handlers
 function ensureUIStubs() {
     const stubs = {
@@ -1144,15 +1144,20 @@ function initSubmissions() {
                             return;
                         }
 
-                        // compute header offset to avoid covering logo/header
+                        // compute header and sidebar offset to avoid covering logo/menu
                         const headerEl = document.querySelector('.header');
                         const headerH = headerEl ? headerEl.offsetHeight : 0;
+                        const sidebarEl = document.getElementById('sidebar');
+                        let sidebarW = 0;
+                        if (sidebarEl && getComputedStyle(sidebarEl).display !== 'none' && sidebarEl.classList.contains('open')) {
+                            sidebarW = sidebarEl.offsetWidth;
+                        }
 
                         if (vw >= 900) {
-                            // Always place at right-top on desktop, below header
-                            controls.style.right = '12px';
+                            // Place at right-top, but offset right if sidebar open
+                            controls.style.right = sidebarW ? (vw - sidebarW - 60) + 'px' : '24px';
                             controls.style.left = 'auto';
-                            controls.style.top = (headerH + 8) + 'px';
+                            controls.style.top = (headerH + 16) + 'px';
                             controls.style.bottom = 'auto';
                             controls.style.flexDirection = 'column';
                         } else {
