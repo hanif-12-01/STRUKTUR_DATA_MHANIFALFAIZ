@@ -2303,40 +2303,79 @@ function initSubmissions() {
     function showNews() {
         const list = document.getElementById('list');
         if (!list) return;
-        
-        list.innerHTML = `
-            <div class="news-section">
-                <h3 style="padding: 16px; color: var(--primary);">📰 Berita & Promo</h3>
-                
-                <div class="promo-card">
-                    <div class="promo-badge">🔥 PROMO</div>
-                    <h4>Diskon 20% di Bakso President!</h4>
-                    <p>Berlaku hingga akhir bulan. Syarat dan ketentuan berlaku.</p>
-                    <small>Berlaku: 1-31 Desember 2025</small>
+
+        // inject simple news styles once
+        if (!document.getElementById('lm-news-style')) {
+            const s = document.createElement('style');
+            s.id = 'lm-news-style';
+            s.innerHTML = `
+                .lm-news-hero { padding:18px 16px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center }
+                .lm-news-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; padding:16px }
+                .lm-news-card { background:#fff; border-radius:8px; padding:12px; box-shadow:0 1px 6px rgba(0,0,0,0.04); }
+                .lm-news-card img{ width:100%; height:140px; object-fit:cover; border-radius:6px }
+                .lm-news-detail { padding:16px }
+                .lm-news-back { margin-bottom:12px }
+            `;
+            document.head.appendChild(s);
+        }
+
+        const news = getNewsData().filter(n => n.status === 'published').sort((a,b)=> (b.publishedAt||0)-(a.publishedAt||0));
+
+        if (news.length === 0) {
+            list.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📰</div>
+                    <h3>Belum ada Berita & Promo</h3>
+                    <p>Belum ada berita yang dipublikasikan. Cek kembali nanti atau tambahkan dari panel admin.</p>
                 </div>
-                
-                <div class="promo-card">
-                    <div class="promo-badge new">✨ BARU</div>
-                    <h4>Sate Bebek Tambak Buka Cabang Baru</h4>
-                    <p>Kini hadir di Jl. Sudirman! Grand opening dengan beli 2 gratis 1.</p>
-                    <small>15 Desember 2025</small>
-                </div>
-                
-                <div class="promo-card">
-                    <div class="promo-badge event">🎉 EVENT</div>
-                    <h4>Festival Kuliner Purwokerto 2025</h4>
-                    <p>Ramaikan akhir tahun dengan berbagai kuliner khas Purwokerto di Alun-alun.</p>
-                    <small>25-31 Desember 2025</small>
-                </div>
-                
-                <div class="news-card">
-                    <h4>📖 Tips Memilih Soto Enak</h4>
-                    <p>Perhatikan kuah yang bening, daging yang empuk, dan pelayanan yang ramah...</p>
-                    <a href="#" onclick="showToast('Artikel lengkap segera hadir!', 'info')">Baca selengkapnya →</a>
+            `;
+            showToast('Belum ada Berita & Promo', 'info');
+            return;
+        }
+
+        // build grid of articles
+        let html = `
+            <div class="lm-news-hero">
+                <h2>📰 Berita & Promo</h2>
+                <div>
+                    <button class="btn" onclick="showSection('home')">Kembali</button>
                 </div>
             </div>
+            <div class="lm-news-grid">
+                ${news.map(n => `
+                    <article class="lm-news-card" role="article">
+                        ${n.featuredImage ? `<img src="${n.featuredImage}" alt="${n.title}">` : ''}
+                        <h3>${n.title}</h3>
+                        <div class="news-meta">${n.category} • ${new Date(n.publishedAt).toLocaleDateString('id-ID')}</div>
+                        <p>${(n.summary || n.content || '').slice(0,180)}${(n.content||'').length>180? '...':''}</p>
+                        <p><a href="#" onclick="showNewsDetail(${n.newsId});return false;">Baca selengkapnya →</a></p>
+                    </article>
+                `).join('')}
+            </div>
         `;
+
+        list.innerHTML = html;
         showToast('Berita & Promo 📰', 'info');
+    }
+
+    function showNewsDetail(newsId) {
+        const list = document.getElementById('list');
+        if (!list) return;
+        const news = getNewsData();
+        const n = news.find(x => x.newsId === newsId);
+        if (!n) return showToast('Berita tidak ditemukan', 'error');
+
+        list.innerHTML = `
+            <div class="lm-news-detail">
+                <button class="lm-news-back" onclick="showNews()">← Kembali ke Berita</button>
+                <h1>${n.title}</h1>
+                <div class="news-meta">${n.category} • ${new Date(n.publishedAt).toLocaleDateString('id-ID')}</div>
+                ${n.featuredImage ? `<img src="${n.featuredImage}" style="width:100%;max-height:400px;object-fit:cover;border-radius:8px;margin:12px 0">` : ''}
+                <div class="article-content">${n.content}</div>
+            </div>
+        `;
+        // scroll into view
+        setTimeout(()=>{ const top = list.getBoundingClientRect().top + window.scrollY - 20; window.scrollTo({ top, behavior: 'smooth' }); }, 80);
     }
     
     // Toggle auth modal placeholder
