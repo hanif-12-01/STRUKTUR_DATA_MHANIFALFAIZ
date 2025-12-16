@@ -1163,6 +1163,9 @@ function initSubmissions() {
                     document.head.appendChild(style);
                 }
 
+                // avoid duplicate controls: remove existing if present
+                const existingControls = document.getElementById('lm-map-controls');
+                if (existingControls) existingControls.remove();
                 const controls = document.createElement('div');
                 controls.className = 'lm-map-controls';
 
