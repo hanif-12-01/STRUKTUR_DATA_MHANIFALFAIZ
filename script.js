@@ -1277,7 +1277,7 @@ function initSubmissions() {
                 <p><strong><i class="fas fa-route"></i> Rute:</strong> ${item.rute}</p>
                 ${item.kontak ? `<p><strong><i class="fas fa-phone"></i> Kontak:</strong> <a href="tel:${item.kontak}">${item.kontak}</a></p>` : ''}
                 <img src="${item.foto}" alt="${item.nama}" onerror="this.src='https://via.placeholder.com/400x200?text=Gambar+Tidak+Tersedia';">
-                <div class='claim-business-section'>${claimBtn}</div>`
+                <div class='claim-business-section'>${claimBtn}</div>
                 <div class="detail-actions">
                     <button onclick="openGoogleMaps(${item.lat}, ${item.lng})"><i class="fas fa-map"></i> Google Maps</button>
                     ${item.kontak ? `<button onclick="window.open('https://wa.me/${item.kontak.replace(/^0/, '62')}', '_blank')"><i class="fab fa-whatsapp"></i> WhatsApp</button>` : ''}
@@ -2170,7 +2170,6 @@ function initSubmissions() {
             </div>
         `;
         showToast('Berita & Promo 📰', 'info');
-    }
     }
     
     // Toggle auth modal placeholder
