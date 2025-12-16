@@ -2176,3 +2176,43 @@ function initSubmissions() {
     function toggleAuthModal() {
         showToast('Fitur Login segera hadir! 🔐', 'info');
     }
+
+    // Basic accessibility helpers: ARIA attributes + Escape-to-close + aria-hidden observer
+    function initAccessibility() {
+        try {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(m => {
+                // set role and initial aria state
+                if (!m.hasAttribute('role')) m.setAttribute('role', 'dialog');
+                if (!m.hasAttribute('aria-modal')) m.setAttribute('aria-modal', 'true');
+                if (!m.hasAttribute('aria-hidden')) m.setAttribute('aria-hidden', m.style.display === 'none' ? 'true' : 'false');
+
+                // observe style changes to update aria-hidden
+                const obs = new MutationObserver(() => {
+                    const hidden = (m.style.display === 'none' || window.getComputedStyle(m).display === 'none');
+                    m.setAttribute('aria-hidden', hidden ? 'true' : 'false');
+                });
+                obs.observe(m, { attributes: true, attributeFilter: ['style', 'class'] });
+            });
+
+            // Close common modals on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' || e.key === 'Esc') {
+                    if (typeof closeDetail === 'function') closeDetail();
+                    if (typeof closeAddKulinerModal === 'function') closeAddKulinerModal();
+                    if (typeof closeAuthModal === 'function') closeAuthModal();
+                    // attempt to close other UI pieces safely
+                    try { const chat = document.getElementById('chatPopup'); if (chat && chat.style.display !== 'none' && typeof toggleChat === 'function') toggleChat(); } catch (e) {}
+                }
+            });
+        } catch (err) {
+            console.warn('initAccessibility error', err);
+        }
+    }
+
+    // Run accessibility init after DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAccessibility);
+    } else {
+        initAccessibility();
+    }
