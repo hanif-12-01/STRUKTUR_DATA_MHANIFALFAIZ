@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # 🍽 Lapor Mangan! - Purwokerto
 
 **Lapor Mangan!** adalah aplikasi web untuk menemukan informasi kuliner UMKM di Purwokerto. Aplikasi ini membantu Anda menjelajahi dan mendukung usaha kuliner lokal dengan mudah!
