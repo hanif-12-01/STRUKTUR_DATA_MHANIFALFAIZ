@@ -1198,7 +1198,60 @@ function initSubmissions() {
 
                 // append controls into map container
                 container.style.position = container.style.position || 'relative';
+                controls.id = 'lm-map-controls';
                 container.appendChild(controls);
+
+                // Adjust controls to avoid overlapping sidebar/menu
+                function adjustMapControls() {
+                    try {
+                        const sidebar = document.getElementById('sidebar');
+                        const vw = window.innerWidth || document.documentElement.clientWidth;
+                        // default styles reset
+                        controls.style.position = 'absolute';
+                        controls.style.display = 'flex';
+                        // Desktop behavior
+                        if (vw >= 900) {
+                            // if sidebar visible and attached to left, move controls to the right of sidebar
+                            if (sidebar && sidebar.offsetWidth > 50 && getComputedStyle(sidebar).display !== 'none') {
+                                const srect = sidebar.getBoundingClientRect();
+                                controls.style.left = (srect.right + 8) + 'px';
+                                controls.style.right = 'auto';
+                                controls.style.top = '12px';
+                                controls.style.bottom = 'auto';
+                                controls.style.flexDirection = 'column';
+                            } else {
+                                // standard right-top placement
+                                controls.style.right = '12px';
+                                controls.style.left = 'auto';
+                                controls.style.top = '12px';
+                                controls.style.bottom = 'auto';
+                                controls.style.flexDirection = 'column';
+                            }
+                        } else {
+                            // Mobile: bottom-left horizontal
+                            controls.style.left = '8px';
+                            controls.style.right = 'auto';
+                            controls.style.bottom = '12px';
+                            controls.style.top = 'auto';
+                            controls.style.flexDirection = 'row';
+                        }
+                    } catch (e) {
+                        console.warn('adjustMapControls error', e);
+                    }
+                }
+
+                // observe sidebar changes to re-adjust controls
+                try {
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        const mo = new MutationObserver(adjustMapControls);
+                        mo.observe(sidebar, { attributes: true, attributeFilter: ['class', 'style'] });
+                    }
+                } catch (e) { /* noop */ }
+
+                window.addEventListener('resize', adjustMapControls);
+                // initial adjust
+                setTimeout(adjustMapControls, 50);
             } catch (err) {
                 console.warn('Failed to add custom map controls', err);
             }
