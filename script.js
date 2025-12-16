@@ -10,7 +10,10 @@ function handleHashChange() {
         // Tampilkan halaman berita & promo fullpage
         document.querySelectorAll('.page, .main-content > section').forEach(s => s.style.display = 'none');
         const newsSection = document.getElementById('newsSection');
-        if (newsSection) newsSection.style.display = '';
+        if (newsSection) {
+            newsSection.style.display = '';
+            if (typeof renderNewsList === 'function') renderNewsList();
+        }
         // Optionally scroll to top
         window.scrollTo(0,0);
     } else {
