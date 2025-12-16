@@ -1135,6 +1135,65 @@ function initSubmissions() {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             renderMap();
+
+            // Add custom map controls (zoom in/out, narrow/widen view)
+            try {
+                const container = map.getContainer();
+
+                // inject minimal CSS once
+                if (!document.getElementById('lm-map-controls-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'lm-map-controls-style';
+                    style.innerHTML = `
+                        .lm-map-controls { position: absolute; top: 10px; left: 10px; z-index: 1000; display:flex; flex-direction:column; gap:6px; }
+                        .lm-map-controls button { width:36px; height:36px; border-radius:6px; border:none; background:rgba(255,255,255,0.95); box-shadow:0 1px 4px rgba(0,0,0,0.3); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; }
+                        .lm-map-controls button[aria-label] { padding:0; }
+                        .lm-map-controls button:hover { transform:translateY(-1px); }
+                        .lm-map-controls .secondary { background: #fff7e9; }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                const controls = document.createElement('div');
+                controls.className = 'lm-map-controls';
+
+                const btnZoomIn = document.createElement('button');
+                btnZoomIn.innerHTML = '+';
+                btnZoomIn.title = 'Persempit (Zoom In)';
+                btnZoomIn.setAttribute('aria-label', 'Persempit peta');
+                btnZoomIn.addEventListener('click', () => mapZoomIn());
+
+                const btnZoomOut = document.createElement('button');
+                btnZoomOut.innerHTML = '−';
+                btnZoomOut.title = 'Perlebar (Zoom Out)';
+                btnZoomOut.setAttribute('aria-label', 'Perlebar peta');
+                btnZoomOut.addEventListener('click', () => mapZoomOut());
+
+                const btnNarrow = document.createElement('button');
+                btnNarrow.innerHTML = '🎯';
+                btnNarrow.title = 'Persempit ke marker (Fit bounds)';
+                btnNarrow.setAttribute('aria-label', 'Persempit ke marker');
+                btnNarrow.className = 'secondary';
+                btnNarrow.addEventListener('click', () => narrowMap());
+
+                const btnWiden = document.createElement('button');
+                btnWiden.innerHTML = '↔';
+                btnWiden.title = 'Perlebar tampilan peta';
+                btnWiden.setAttribute('aria-label', 'Perlebar tampilan peta');
+                btnWiden.className = 'secondary';
+                btnWiden.addEventListener('click', () => widenMap());
+
+                controls.appendChild(btnZoomIn);
+                controls.appendChild(btnZoomOut);
+                controls.appendChild(btnNarrow);
+                controls.appendChild(btnWiden);
+
+                // append controls into map container
+                container.style.position = container.style.position || 'relative';
+                container.appendChild(controls);
+            } catch (err) {
+                console.warn('Failed to add custom map controls', err);
+            }
         } catch (error) {
             console.error('Error initializing map:', error);
         }
