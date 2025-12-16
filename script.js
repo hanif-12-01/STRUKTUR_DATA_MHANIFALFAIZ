@@ -1199,6 +1199,12 @@ function initSubmissions() {
 
                 function adjustMapControls() {
                     try {
+                        const sidebar = document.getElementById('sidebar');
+                        // if sidebar has explicit 'open' class, hide controls to avoid overlap
+                        if (sidebar && sidebar.classList && sidebar.classList.contains('open')) {
+                            controls.style.display = 'none';
+                            return;
+                        }
                         const vw = window.innerWidth || document.documentElement.clientWidth;
                         controls.style.position = 'fixed';
                         controls.style.display = 'flex';
@@ -1238,6 +1244,9 @@ function initSubmissions() {
                         }
                     } catch (e) { console.warn('adjustMapControls error', e); }
                 }
+
+                // expose for external callers (e.g., toggleSidebar)
+                window.LM_adjustMapControls = adjustMapControls;
 
                 window.addEventListener('resize', adjustMapControls);
                 setTimeout(adjustMapControls, 50);
@@ -2047,6 +2056,8 @@ function initSubmissions() {
         
         if (sidebar) sidebar.classList.toggle('open');
         if (overlay) overlay.classList.toggle('show');
+        // adjust map controls after toggling sidebar
+        try { if (window.LM_adjustMapControls) window.LM_adjustMapControls(); } catch(e) {}
     }
     
     // Quick filter function
