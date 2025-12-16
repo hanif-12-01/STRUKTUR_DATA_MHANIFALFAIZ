@@ -2414,6 +2414,19 @@ function initSubmissions() {
                         .promo-badge, .popup-badge { font-size:12px; padding:4px 6px }
                         /* Make map controls more compact */
                         #lm-map-controls button { width:32px; height:32px; font-size:16px }
+                        /* Center Add Kuliner modal */
+                        #addKulinerModal .modal-content {
+                            position: fixed !important;
+                            left: 50% !important;
+                            top: 50% !important;
+                            transform: translate(-50%, -50%) !important;
+                            width: min(760px, 95%) !important;
+                            max-height: calc(100vh - 48px) !important;
+                            overflow: auto !important;
+                        }
+                        /* Ensure overlay covers viewport and modal is above it */
+                        #addKulinerModal { display: none; }
+                        #addKulinerModal.show { display: block; }
                     `;
                     document.head.appendChild(cs);
                 }
