@@ -1,3 +1,6 @@
+function loginWithGoogle() { return signInWithGoogle(); }
+function submitKuliner(e) { e && e.preventDefault(); return submitNewKuliner(); }
+
 // Error handling wrapper untuk localStorage
 function safeGetItem(key) {
     try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; }
