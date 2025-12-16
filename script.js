@@ -1,3 +1,29 @@
+// Navigasi hash untuk halaman khusus (news, promo, dsb)
+function navigateToHash(path) {
+    window.location.hash = path;
+    handleHashChange();
+}
+
+function handleHashChange() {
+    const hash = window.location.hash.replace(/^#\/?/, '');
+    if (hash === 'news') {
+        // Tampilkan halaman berita & promo fullpage
+        document.querySelectorAll('.page, .main-content > section').forEach(s => s.style.display = 'none');
+        const newsSection = document.getElementById('newsSection');
+        if (newsSection) newsSection.style.display = '';
+        // Optionally scroll to top
+        window.scrollTo(0,0);
+    } else {
+        // Default: tampilkan home/beranda
+        document.querySelectorAll('.page, .main-content > section').forEach(s => s.style.display = '');
+        const newsSection = document.getElementById('newsSection');
+        if (newsSection) newsSection.style.display = 'none';
+    }
+}
+
+window.addEventListener('hashchange', handleHashChange);
+// Jalankan sekali saat load
+setTimeout(handleHashChange, 1);
 function loginWithGoogle() { return signInWithGoogle(); }
 function submitKuliner(e) { e && e.preventDefault(); return submitNewKuliner(); }
 
