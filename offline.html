@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF6B35">
+    <title>Offline - Lapor Mangan!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .offline-container {
+            background: white;
+            border-radius: 24px;
+            padding: 48px 32px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+        
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        h1 {
+            color: #2D3436;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        
+        p {
+            color: #636E72;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        .retry-btn {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .retry-btn:active {
+            transform: translateY(0);
+        }
+        
+        .tips {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #E9ECEF;
+        }
+        
+        .tips h3 {
+            color: #2D3436;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .tips ul {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .tips li {
+            color: #636E72;
+            font-size: 13px;
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .tips li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00B894;
+            font-weight: bold;
+        }
+        
+        .cached-data {
+            margin-top: 24px;
+            padding: 16px;
+            background: #F8F9FA;
+            border-radius: 12px;
+        }
+        
+        .cached-data h4 {
+            color: #2D3436;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .cached-data p {
+            color: #636E72;
+            font-size: 12px;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>Oops! Kamu Offline</h1>
+        <p>Sepertinya koneksi internetmu terputus. Jangan khawatir, kamu masih bisa melihat data yang sudah tersimpan.</p>
+        
+        <button class="retry-btn" onclick="location.reload()">
+            🔄 Coba Lagi
+        </button>
+        
+        <div class="cached-data">
+            <h4>💾 Data Tersimpan</h4>
+            <p>Kamu masih bisa mengakses daftar kuliner yang sudah pernah kamu lihat sebelumnya.</p>
+        </div>
+        
+        <div class="tips">
+            <h3>Tips saat Offline:</h3>
+            <ul>
+                <li>Cek koneksi WiFi atau data seluler</li>
+                <li>Coba matikan dan nyalakan mode pesawat</li>
+                <li>Pindah ke area dengan sinyal lebih baik</li>
+                <li>Favorit kuliner tersimpan secara lokal</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Auto retry when online
+        window.addEventListener('online', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>

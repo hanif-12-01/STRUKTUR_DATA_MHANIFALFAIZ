@@ -1,0 +1,104 @@
+{
+  "name": "Lapor Mangan! - Purwokerto",
+  "short_name": "Lapor Mangan!",
+  "description": "Aplikasi pencarian kuliner UMKM di Purwokerto. Temukan makanan terbaik di sekitarmu!",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#FF6B35",
+  "theme_color": "#FF6B35",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "id-ID",
+  "categories": ["food", "lifestyle", "navigation"],
+  "icons": [
+    {
+      "src": "icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tampilan Mobile Lapor Mangan!"
+    },
+    {
+      "src": "screenshots/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tampilan Desktop Lapor Mangan!"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Cari Kuliner",
+      "short_name": "Cari",
+      "description": "Cari kuliner di sekitarmu",
+      "url": "/index.html?action=search",
+      "icons": [{ "src": "icons/search-icon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Kuliner Terdekat",
+      "short_name": "Terdekat",
+      "description": "Lihat kuliner terdekat dari lokasimu",
+      "url": "/index.html?action=nearby",
+      "icons": [{ "src": "icons/location-icon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Acak Pilihan",
+      "short_name": "Acak",
+      "description": "Dapatkan rekomendasi kuliner acak",
+      "url": "/index.html?action=random",
+      "icons": [{ "src": "icons/random-icon.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
