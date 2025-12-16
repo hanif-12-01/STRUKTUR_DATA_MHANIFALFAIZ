@@ -1130,7 +1130,8 @@ function initSubmissions() {
 
     function initMap() {
         try {
-            map = L.map('map').setView([-7.4212, 109.2422], 13);
+            // disable default zoomControl because we provide custom controls
+            map = L.map('map', { zoomControl: false }).setView([-7.4212, 109.2422], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
@@ -1177,13 +1178,7 @@ function initSubmissions() {
                 btnZoomOut.setAttribute('aria-label', 'Perlebar peta');
                 btnZoomOut.addEventListener('click', () => mapZoomOut());
 
-                const btnNarrow = document.createElement('button');
-                btnNarrow.innerHTML = '🎯';
-                btnNarrow.title = 'Persempit ke marker (Fit bounds)';
-                btnNarrow.setAttribute('aria-label', 'Persempit ke marker');
-                btnNarrow.className = 'secondary';
-                btnNarrow.addEventListener('click', () => narrowMap());
-
+                // We only keep zoom in/out and widen for simplicity (remove target button per request)
                 const btnWiden = document.createElement('button');
                 btnWiden.innerHTML = '↔';
                 btnWiden.title = 'Perlebar tampilan peta';
@@ -1193,32 +1188,35 @@ function initSubmissions() {
 
                 controls.appendChild(btnZoomIn);
                 controls.appendChild(btnZoomOut);
-                controls.appendChild(btnNarrow);
                 controls.appendChild(btnWiden);
 
-                // append controls into map container
-                container.style.position = container.style.position || 'relative';
+                // append controls into document body and use fixed positioning to avoid sidebar overlap
                 controls.id = 'lm-map-controls';
-                container.appendChild(controls);
+                document.body.appendChild(controls);
 
-                // Adjust controls to avoid overlapping sidebar/menu
                 function adjustMapControls() {
                     try {
-                        const sidebar = document.getElementById('sidebar');
                         const vw = window.innerWidth || document.documentElement.clientWidth;
-                        // default styles reset
-                        controls.style.position = 'absolute';
+                        controls.style.position = 'fixed';
                         controls.style.display = 'flex';
-                        // Desktop behavior
+                        // ensure controls float above other UI
+                        controls.style.zIndex = 2147483000;
+                        controls.style.pointerEvents = 'auto';
                         if (vw >= 900) {
-                            // if sidebar visible and attached to left, move controls to the right of sidebar
-                            if (sidebar && sidebar.offsetWidth > 50 && getComputedStyle(sidebar).display !== 'none') {
+                            // if sidebar visible and wide, place to the right of sidebar
+                            const sidebar = document.getElementById('sidebar');
+                            if (sidebar && getComputedStyle(sidebar).display !== 'none' && sidebar.offsetWidth > 60) {
                                 const srect = sidebar.getBoundingClientRect();
-                                controls.style.left = (srect.right + 8) + 'px';
+                                // place controls just to the right of sidebar, but keep inside viewport
+                                const left = Math.min(srect.right + 12, vw - 72);
+                                controls.style.left = left + 'px';
                                 controls.style.right = 'auto';
-                                controls.style.top = '12px';
+                                controls.style.top = (Math.max(12, srect.top + 12)) + 'px';
                                 controls.style.bottom = 'auto';
                                 controls.style.flexDirection = 'column';
+                                // try to ensure controls appear above sidebar
+                                const sbZ = parseInt(getComputedStyle(sidebar).zIndex) || 1000;
+                                controls.style.zIndex = Math.max(2147483000, sbZ + 5);
                             } else {
                                 // standard right-top placement
                                 controls.style.right = '12px';
@@ -1228,29 +1226,17 @@ function initSubmissions() {
                                 controls.style.flexDirection = 'column';
                             }
                         } else {
-                            // Mobile: bottom-left horizontal
+                            // mobile: bottom-left horizontal
                             controls.style.left = '8px';
                             controls.style.right = 'auto';
                             controls.style.bottom = '12px';
                             controls.style.top = 'auto';
                             controls.style.flexDirection = 'row';
                         }
-                    } catch (e) {
-                        console.warn('adjustMapControls error', e);
-                    }
+                    } catch (e) { console.warn('adjustMapControls error', e); }
                 }
 
-                // observe sidebar changes to re-adjust controls
-                try {
-                    const sidebar = document.getElementById('sidebar');
-                    if (sidebar) {
-                        const mo = new MutationObserver(adjustMapControls);
-                        mo.observe(sidebar, { attributes: true, attributeFilter: ['class', 'style'] });
-                    }
-                } catch (e) { /* noop */ }
-
                 window.addEventListener('resize', adjustMapControls);
-                // initial adjust
                 setTimeout(adjustMapControls, 50);
             } catch (err) {
                 console.warn('Failed to add custom map controls', err);
@@ -2409,6 +2395,27 @@ function initSubmissions() {
                     if (typeof closeAuthModal === 'function') closeAuthModal();
                     // attempt to close other UI pieces safely
                     try { const chat = document.getElementById('chatPopup'); if (chat && chat.style.display !== 'none' && typeof toggleChat === 'function') toggleChat(); } catch (e) {}
+                }
+
+                // Tweak sidebar & list styles to be more compact/simple
+                if (!document.getElementById('lm-compact-style')) {
+                    const cs = document.createElement('style');
+                    cs.id = 'lm-compact-style';
+                    cs.innerHTML = `
+                        /* Compact sidebar items */
+                        .sidebar .nav-item { padding: 8px 10px; font-size: 14px; }
+                        .sidebar .nav-item i { margin-right: 8px; }
+                        .sidebar { width: 200px; }
+                        .sidebar { z-index: 1000; }
+                        /* Compact kuliner list cards */
+                        .kuliner-list .card, .kuliner-list .kuliner-card, .kuliner-list .list-item { margin-bottom: 8px; padding:10px; border-radius:8px }
+                        .kuliner-list .card h3, .kuliner-list .kuliner-card h3 { font-size:15px; margin-bottom:4px }
+                        /* Reduce visual clutter */
+                        .promo-badge, .popup-badge { font-size:12px; padding:4px 6px }
+                        /* Make map controls more compact */
+                        #lm-map-controls button { width:32px; height:32px; font-size:16px }
+                    `;
+                    document.head.appendChild(cs);
                 }
             });
         } catch (err) {
