@@ -73,6 +73,20 @@ function sortByDistance() { if (typeof sortByDistance === 'function') return win
 function showWeatherRec() { if (typeof showWeatherRec === 'function') return window.showWeatherRec(); }
 
 function startVoiceSearch() { showToast('Pencarian suara belum tersedia pada mode ini.', 'info'); }
+// Ensure common UI functions exist as safe stubs to avoid broken onclick handlers
+function ensureUIStubs() {
+    const stubs = {
+        showWeatherRec: () => showToast('Rekomendasi cuaca belum tersedia.', 'info'),
+        quickFilter: (f) => { showToast('Filter cepat: '+(f||'') , 'info'); applyFilters && applyFilters(f); },
+        sortByDistance: () => showToast('Urutkan berdasarkan jarak belum tersedia.', 'info'),
+        filterOpenNow: () => showToast('Filter buka sekarang diterapkan.', 'info'),
+        showRandomKuliner: () => { showToast('Acak kuliner dipilih.', 'info'); },
+        openSettings: () => showToast('Pengaturan belum diimplementasikan.', 'info')
+    };
+    Object.keys(stubs).forEach(k => { if (typeof window[k] !== 'function') window[k] = stubs[k]; });
+}
+
+ensureUIStubs();
 
 function quickFilter(name) { try { document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); const btn = document.querySelector(`.chip[data-filter="${name}"]`); if (btn) btn.classList.add('active'); applyFilters && applyFilters(); } catch(e){} }
 
@@ -508,6 +522,10 @@ function editMyBusiness(businessId) {
 // FR-07: Google OAuth (Firebase Auth)
 async function signInWithGoogle() {
     try {
+        if (!window.firebaseAuth || !window.GoogleAuthProvider || !window.signInWithPopup) {
+            showToast('Firebase belum dikonfigurasi. Silakan isi `firebaseConfig` di `index.html` sebelum menggunakan login Google.', 'warning');
+            return;
+        }
         const provider = new window.GoogleAuthProvider();
         const result = await window.signInWithPopup(window.firebaseAuth, provider);
         const user = result.user;
@@ -1127,7 +1145,7 @@ function initSubmissions() {
             markers.forEach(m => map.removeLayer(m));
             markers = [];
             kulinerData.forEach((item, index) => {
-                const iconEmoji = item.keliling ? '�' : '🏠';
+                const iconEmoji = item.keliling ? '🛵' : '🏠';
                 const animationClass = item.keliling ? 'keliling' : 'tetap';
                 
                 const marker = L.marker([item.lat, item.lng], {
@@ -1153,6 +1171,35 @@ function initSubmissions() {
         } catch (error) {
             console.error('Error rendering map:', error);
         }
+    }
+
+    // Map zoom helper functions (global) for UI buttons: persempit (zoom in) / perlebar (zoom out)
+    function mapZoomIn() {
+        try {
+            if (map) map.zoomIn();
+        } catch (e) { console.warn('mapZoomIn error', e); }
+    }
+
+    function mapZoomOut() {
+        try {
+            if (map) map.zoomOut();
+        } catch (e) { console.warn('mapZoomOut error', e); }
+    }
+
+    // Narrow the map to focus on markers (zoom in to bounds), or widen (zoom out a step)
+    function narrowMap() {
+        try {
+            if (!map || markers.length === 0) return;
+            const group = L.featureGroup(markers);
+            map.fitBounds(group.getBounds(), { padding: [50,50], maxZoom: 16 });
+        } catch (e) { console.warn('narrowMap error', e); }
+    }
+
+    function widenMap() {
+        try {
+            if (!map) return;
+            map.zoomOut();
+        } catch (e) { console.warn('widenMap error', e); }
     }
 
     function filterAndSortList() {
