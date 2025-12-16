@@ -1150,6 +1150,14 @@ function initSubmissions() {
                         .lm-map-controls button[aria-label] { padding:0; }
                         .lm-map-controls button:hover { transform:translateY(-1px); }
                         .lm-map-controls .secondary { background: #fff7e9; }
+                        /* Responsive positioning: move to right on wide screens, bottom-left on small screens */
+                        @media (min-width: 900px) {
+                            .lm-map-controls { left: auto; right: 12px; top: 12px; }
+                        }
+                        @media (max-width: 480px) {
+                            .lm-map-controls { left: 8px; right: auto; top: auto; bottom: 12px; flex-direction:row; }
+                            .lm-map-controls button { width:40px; height:40px; }
+                        }
                     `;
                     document.head.appendChild(style);
                 }
