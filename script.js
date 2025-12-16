@@ -1,6 +1,89 @@
 function loginWithGoogle() { return signInWithGoogle(); }
 function submitKuliner(e) { e && e.preventDefault(); return submitNewKuliner(); }
 
+// Generic navigation for app.html
+function navigate(page) {
+    try {
+        // hide all pages with class 'page'
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const target = document.getElementById('page-' + page);
+        if (target) target.classList.add('active');
+        // for index.html style
+        const sections = ['home','explore','favorites','news','map'];
+        sections.forEach(s => {
+            const el = document.getElementById(s + 'Section');
+            if (el) el.style.display = (s === page) ? '' : 'none';
+        });
+    } catch (e) { console.warn('navigate error', e); }
+}
+
+function showSection(name) { try { navigate(name); } catch(e) { console.warn(e); } }
+
+function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!sb) return;
+    const open = sb.classList.toggle('open');
+    if (overlay) overlay.style.display = open ? 'block' : 'none';
+}
+
+function toggleAuthModal() {
+    const modal = document.getElementById('authModal') || document.getElementById('loginModal');
+    if (!modal) return;
+    modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+}
+
+function closeLoginModal() { const m = document.getElementById('loginModal'); if (m) m.style.display = 'none'; }
+function closeSubmitModal() { const m = document.getElementById('submitModal'); if (m) m.style.display = 'none'; }
+function closeModal() { document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
+
+function toggleChat() {
+    const c = document.getElementById('chatPopup') || document.querySelector('.chat-popup');
+    if (!c) return;
+    c.style.display = (c.style.display === 'block') ? 'none' : 'block';
+}
+
+function sendChat() {
+    const input = document.getElementById('chatInput');
+    if (!input) return;
+    const msg = input.value.trim();
+    if (!msg) return;
+    // append simple message
+    const container = document.getElementById('chatMessages');
+    if (container) {
+        const el = document.createElement('div'); el.className='message message-user'; el.innerHTML = `<div class='message-content'>${msg}</div>`; container.appendChild(el);
+        input.value = '';
+        // simple bot reply
+        setTimeout(()=>{ const bot = document.createElement('div'); bot.className='message message-bot'; bot.innerHTML = `<div class='message-content'>Terima kasih! Kami akan merespon segera.</div>`; container.appendChild(bot); }, 600);
+    }
+}
+
+function getWeatherRecommendation() { if (typeof showWeatherRec === 'function') return showWeatherRec(); if (typeof getWeatherBasedRecommendation === 'function') return getWeatherBasedRecommendation(); }
+
+function applyFilters() { if (typeof filterAndSortList === 'function') return filterAndSortList(); }
+
+function showSubmitForm() { const m = document.getElementById('submitModal') || document.getElementById('addKulinerModal'); if (m) m.style.display='block'; }
+
+function showRandom() { if (typeof showRandomKuliner === 'function') return showRandomKuliner(); }
+
+function filterOpenNow() { if (typeof isTempatBuka === 'function') { filterAndSortList && filterAndSortList(); } }
+
+function sortByDistance() { if (typeof sortByDistance === 'function') return window.sortByDistance(); }
+
+function showWeatherRec() { if (typeof showWeatherRec === 'function') return window.showWeatherRec(); }
+
+function startVoiceSearch() { showToast('Pencarian suara belum tersedia pada mode ini.', 'info'); }
+
+function quickFilter(name) { try { document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); const btn = document.querySelector(`.chip[data-filter="${name}"]`); if (btn) btn.classList.add('active'); applyFilters && applyFilters(); } catch(e){} }
+
+function locateUser() { if (typeof locateUser === 'function') return window.locateUser(); if (navigator.geolocation) navigator.geolocation.getCurrentPosition(pos=>{ if (map) map.setView([pos.coords.latitude, pos.coords.longitude], 15); }); }
+
+function openSettings() { showToast('Settings belum diimplementasikan.', 'info'); }
+
+function showMyReviews() { showToast('Fitur Ulasan Saya belum diimplementasikan.', 'info'); }
+
+function sendSuggestion(text) { const input = document.getElementById('chatInput'); if (input) { input.value = text; sendChat(); } }
+
 // Error handling wrapper untuk localStorage
 function safeGetItem(key) {
     try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; }
