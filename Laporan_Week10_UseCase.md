@@ -39,6 +39,196 @@
 
 ---
 
+## 2. USE CASE SCENARIO VERSI DESAIN
+
+### 2.1 UC-08: Login dengan Google OAuth
+
+**Nama Usecase:** Login dengan Google OAuth  
+**Deskripsi:** User melakukan autentikasi menggunakan akun Google untuk mengakses fitur premium  
+**Prekondisi:** User belum login dan mengklik tombol "Masuk dengan Google"
+
+| No | Alur Utama |
+|----|------------|
+| 1  | User membuka aplikasi Lapor Mangan! |
+| 2  | User melihat tombol "Masuk dengan Google" di header |
+| 3  | User mengklik tombol "Masuk dengan Google" |
+| 4  | Sistem membuka popup OAuth Google |
+| 5  | User memilih akun Google dan memberikan permission |
+| 6  | Google mengirim token ke sistem |
+| 7  | Sistem menyimpan data user (uid, displayName, email, photoURL) |
+| 8  | Sistem menutup popup dan update UI (tampilkan foto profil + nama) |
+| 9  | Sistem unlock fitur premium (review, favorit, submit kuliner) |
+| 10 | Sistem tampilkan toast notifikasi "Berhasil login sebagai [Nama]" |
+
+| No | Alur Alternatif |
+|----|-----------------|
+| 1  | **[A1] User membatalkan login** - Jika user menutup popup OAuth di step 4, sistem kembali ke halaman sebelumnya tanpa perubahan |
+| 2  | **[A2] Google OAuth gagal** - Jika Google API error di step 6, sistem tampilkan toast error "Gagal login. Silakan coba lagi" |
+| 3  | **[A3] Firebase tidak dikonfigurasi** - Jika Firebase config kosong, sistem tampilkan peringatan "Firebase belum dikonfigurasi" |
+| 4  | **[A4] Network error** - Jika tidak ada internet saat step 4, sistem tampilkan "Tidak ada koneksi internet" |
+
+**Postkondisi:**  
+- User berhasil login dan status autentikasi tersimpan di Firebase Auth
+- UI berubah menampilkan foto profil dan nama user
+- Fitur review, favorit, dan submission menjadi accessible
+
+---
+
+### 2.2 UC-11: Tambah Review dan Rating
+
+**Nama Usecase:** Tambah Review dan Rating  
+**Deskripsi:** User yang sudah login memberikan ulasan tekstual dan rating bintang untuk kuliner tertentu  
+**Prekondisi:** User sudah login dan membuka detail kuliner
+
+| No | Alur Utama |
+|----|------------|
+| 1  | User membuka detail kuliner dengan klik card |
+| 2  | Sistem menampilkan modal detail kuliner dengan section review |
+| 3  | User scroll ke bagian bawah dan klik tombol "Tulis Review" |
+| 4  | Sistem menampilkan form review dengan field: rating (1-5 bintang) dan komentar (textarea) |
+| 5  | User memilih rating dengan klik icon bintang (1-5) |
+| 6  | User mengetik komentar minimal 10 karakter |
+| 7  | User mengklik tombol "Kirim Review" |
+| 8  | Sistem validasi input (rating harus >0, komentar minimal 10 karakter) |
+| 9  | Sistem simpan review ke localStorage dengan data: userId, userName, rating, comment, timestamp |
+| 10 | Sistem update rating rata-rata kuliner tersebut |
+| 11 | Sistem refresh tampilan review list (review baru muncul di top) |
+| 12 | Sistem tampilkan toast "Review berhasil ditambahkan!" dan tutup form |
+
+| No | Alur Alternatif |
+|----|-----------------|
+| 1  | **[A1] User belum login** - Jika user klik "Tulis Review" tanpa login, sistem tampilkan toast "Anda harus login untuk menulis review" dan buka modal login |
+| 2  | **[A2] Rating tidak dipilih** - Jika user submit tanpa pilih rating, sistem tampilkan error "Silakan pilih rating 1-5 bintang" |
+| 3  | **[A3] Komentar terlalu pendek** - Jika komentar <10 karakter, sistem tampilkan error "Komentar minimal 10 karakter" |
+| 4  | **[A4] Duplicate review** - Jika user sudah pernah review kuliner ini, sistem tampilkan warning "Anda sudah memberikan review untuk kuliner ini" |
+| 5  | **[A5] User membatalkan** - Jika user klik "Batal", sistem tutup form tanpa menyimpan data |
+
+**Postkondisi:**  
+- Review tersimpan di localStorage array `reviewsData`
+- Rating rata-rata kuliner terupdate
+- Review baru muncul di top list dengan label "[Baru]"
+- Total jumlah review bertambah 1
+
+---
+
+### 2.3 UC-17: Submit Kuliner Baru
+
+**Nama Usecase:** Submit Kuliner Baru (Kontribusi User)  
+**Deskripsi:** User registered mengirimkan data kuliner baru untuk ditambahkan ke database setelah disetujui admin  
+**Prekondisi:** User sudah login dan mengklik tombol "Tambah Kuliner"
+
+| No | Alur Utama |
+|----|------------|
+| 1  | User mengklik icon "+" atau menu "Tambah Kuliner" di sidebar |
+| 2  | Sistem membuka modal form submission dengan field: Nama Tempat, Kategori (dropdown), Alamat, Jam Buka, Harga, Deskripsi, Upload Foto, Latitude, Longitude |
+| 3  | User mengisi nama tempat (required, min 3 karakter) |
+| 4  | User memilih kategori dari dropdown (Soto, Sate, Bakso, Dessert, dll) |
+| 5  | User mengisi alamat lengkap (required) |
+| 6  | User mengisi jam operasional (format: "08:00 - 20:00") |
+| 7  | User mengisi rentang harga (format: "Rp15.000-Rp30.000") |
+| 8  | User mengisi deskripsi kuliner (min 20 karakter) |
+| 9  | User upload foto kuliner (maksimal 3 foto, each max 2MB) |
+| 10 | User mengklik tombol "Dapatkan Koordinat" untuk auto-detect atau input manual lat/lng |
+| 11 | User mengklik tombol "Kirim Submission" |
+| 12 | Sistem validasi semua field (nama, kategori, alamat, harga wajib diisi) |
+| 13 | Sistem generate submission ID (timestamp-based) |
+| 14 | Sistem simpan ke localStorage `pendingSubmissions` dengan status "pending" |
+| 15 | Sistem tampilkan toast "Terima kasih! Submission Anda akan direview oleh admin dalam 1-3 hari kerja" |
+| 16 | Sistem tutup modal form dan clear input fields |
+
+| No | Alur Alternatif |
+|----|-----------------|
+| 1  | **[A1] User belum login** - Jika user klik "Tambah Kuliner" tanpa login, sistem redirect ke halaman login dengan message "Login untuk berkontribusi" |
+| 2  | **[A2] Field wajib kosong** - Jika ada field required kosong, sistem highlight field dengan border merah dan tampilkan tooltip error |
+| 3  | **[A3] Format harga salah** - Jika harga tidak mengandung "Rp" atau format tidak valid, sistem tampilkan error "Format harga: Rp10.000-Rp20.000" |
+| 4  | **[A4] Foto terlalu besar** - Jika foto >2MB, sistem reject upload dan tampilkan "Ukuran foto maksimal 2MB per file" |
+| 5  | **[A5] Koordinat invalid** - Jika lat/lng di luar range Purwokerto, sistem tampilkan warning "Pastikan lokasi di area Purwokerto" |
+| 6  | **[A6] User membatalkan** - Jika user klik "Batal", sistem tampilkan confirm dialog "Yakin ingin membatalkan? Data yang diisi akan hilang" |
+
+**Postkondisi:**  
+- Data submission tersimpan di localStorage dengan status "pending"
+- Admin dapat melihat submission di panel moderasi
+- User dapat tracking status submission di halaman "Kontribusi Saya"
+- Email notifikasi dikirim ke admin (jika configured)
+
+---
+
+### 2.4 UC-02: Lihat Detail Kuliner
+
+**Nama Usecase:** Lihat Detail Kuliner  
+**Deskripsi:** User melihat informasi lengkap tentang satu tempat kuliner termasuk foto, lokasi, review, dan rating  
+**Prekondisi:** User berada di halaman daftar kuliner (home)
+
+| No | Alur Utama |
+|----|------------|
+| 1  | User melihat list card kuliner di halaman home |
+| 2  | User mengklik salah satu card kuliner yang menarik |
+| 3  | Sistem retrieve data kuliner berdasarkan index/id dari array `kulinerData` |
+| 4  | Sistem membuka modal detail dengan layout: Header (foto carousel), Body (info kuliner), Footer (action buttons) |
+| 5  | Sistem tampilkan foto kuliner di carousel (swipe left/right untuk multiple photos) |
+| 6  | Sistem tampilkan informasi: Nama Tempat (h2), Kategori (badge), Rating (bintang + angka), Alamat lengkap, Jam operasional, Harga, Nomor telepon, Status halal |
+| 7  | Sistem render map mini dengan marker lokasi kuliner (Leaflet.js) |
+| 8  | Sistem tampilkan deskripsi kuliner (paragraph) |
+| 9  | Sistem load dan render semua review untuk kuliner ini dari `reviewsData` |
+| 10 | Sistem tampilkan action buttons: "Favorit" (heart icon), "Review" (star icon), "Navigasi" (map icon), "Tutup" (X) |
+| 11 | User dapat scroll dalam modal untuk melihat semua konten |
+| 12 | User menutup modal dengan klik tombol "X" atau klik overlay |
+
+| No | Alur Alternatif |
+|----|-----------------|
+| 1  | **[A1] Data kuliner tidak ditemukan** - Jika index/id invalid, sistem tampilkan error toast "Data kuliner tidak ditemukan" dan tidak buka modal |
+| 2  | **[A2] Foto tidak ada** - Jika property `foto` null/undefined, sistem tampilkan placeholder image dengan icon kuliner |
+| 3  | **[A3] Tidak ada review** - Jika belum ada review, sistem tampilkan message "Belum ada ulasan. Jadilah yang pertama!" dengan CTA button "Tulis Review" |
+| 4  | **[A4] Map gagal load** - Jika Leaflet.js error, sistem tampilkan static address text tanpa map |
+| 5  | **[A5] Jam tutup** - Jika kuliner sedang tutup (current time di luar jam operasional), sistem tampilkan badge merah "TUTUP" |
+
+**Postkondisi:**  
+- Modal detail terbuka dengan semua informasi kuliner
+- User dapat interact dengan action buttons (favorit, review, navigasi)
+- View count untuk kuliner ini bertambah (analytics)
+
+---
+
+### 2.5 UC-19: Admin Approve Submission
+
+**Nama Usecase:** Admin Approve/Reject Submission Kuliner  
+**Deskripsi:** Admin mereview submission kuliner dari user dan memutuskan untuk approve (tambahkan ke database) atau reject  
+**Prekondisi:** Admin sudah login dan ada submission dengan status "pending"
+
+| No | Alur Utama |
+|----|------------|
+| 1  | Admin login dan membuka panel admin dashboard |
+| 2  | Sistem tampilkan tab "Review Submission" dengan counter badge jumlah pending |
+| 3  | Admin klik tab "Review Submission" |
+| 4  | Sistem load data dari `localStorage.pendingSubmissions` dan filter status="pending" |
+| 5  | Sistem render list submission card dengan info: Nama tempat, Kategori, Alamat, Foto preview, Submitter (user), Tanggal submit |
+| 6  | Admin klik salah satu submission card untuk melihat detail lengkap |
+| 7  | Sistem expand card atau buka modal dengan semua field submission |
+| 8  | Admin verify data (cek alamat di map, validasi foto, baca deskripsi) |
+| 9  | Admin memutuskan: APPROVE atau REJECT |
+| 10 | Jika APPROVE: Admin klik tombol "Setujui" (hijau dengan icon checkmark) |
+| 11 | Sistem pindahkan submission dari `pendingSubmissions` ke array `kulinerData` |
+| 12 | Sistem ubah status submission menjadi "approved" dan simpan ke `submissionHistory` |
+| 13 | Sistem tampilkan toast "Submission disetujui! Kuliner baru telah ditambahkan" |
+| 14 | Sistem kirim notifikasi ke submitter (jika system configured) |
+| 15 | Sistem refresh list submission (approved item hilang dari pending list) |
+
+| No | Alur Alternatif |
+|----|-----------------|
+| 1  | **[A1] Admin REJECT submission** - Jika admin klik "Tolak", sistem buka dialog input alasan penolakan (required), lalu simpan ke history dengan status "rejected" dan reason |
+| 2  | **[A2] Data tidak valid** - Jika admin temukan data palsu/spam, admin bisa flag submission sebagai "spam" dan blacklist user (optional) |
+| 3  | **[A3] Request edit** - Admin bisa klik "Minta Revisi" untuk kirim feedback ke user tanpa approve/reject langsung |
+| 4  | **[A4] Duplicate submission** - Jika kuliner sudah ada, admin reject dengan reason "Kuliner ini sudah terdaftar" |
+| 5  | **[A5] Foto tidak sesuai** - Jika foto kuliner tidak relevan, admin bisa approve dengan catatan atau minta ganti foto |
+
+**Postkondisi:**  
+- Jika APPROVED: Kuliner baru muncul di halaman utama dan bisa dicari oleh semua user
+- Jika REJECTED: Submission tersimpan di history dengan alasan penolakan
+- Submitter menerima notifikasi tentang status submission
+- Counter pending di admin panel berkurang 1
+
+---
+
 ## 3. USE CASE DIAGRAM
 
 ### 3.1 Diagram Use Case Lengkap
