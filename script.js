@@ -53,7 +53,26 @@ function toggleSidebar() {
     const overlay = document.getElementById('sidebarOverlay');
     if (!sb) return;
     const open = sb.classList.toggle('open');
-    if (overlay) overlay.style.display = open ? 'block' : 'none';
+    
+    // Toggle body class to prevent scrolling
+    if (open) {
+        document.body.classList.add('sidebar-open');
+    } else {
+        document.body.classList.remove('sidebar-open');
+    }
+    
+    // Toggle overlay
+    if (overlay) {
+        if (open) {
+            overlay.classList.add('show');
+            overlay.style.display = 'block';
+        } else {
+            overlay.classList.remove('show');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300); // Wait for transition
+        }
+    }
 }
 
 function toggleAuthModal() {
@@ -866,7 +885,8 @@ const initialKulinerData = [
         lng: 109.242,
         keliling: false,
         halal: "halal-self",
-        kontak: "081234567890"
+        kontak: "081234567890",
+        tipe: "warung" // FR-05: Tipe tempat (warung, restoran, pkl, cafe)
       },
       {
         nama: "Sate Bebek Tambak",
@@ -882,7 +902,8 @@ const initialKulinerData = [
         lng: 109.240,
         keliling: false,
         halal: "halal",
-        kontak: "081234567891"
+        kontak: "081234567891",
+        tipe: "restoran"
       },
       {
         nama: "Tempe Mendoan",
@@ -898,7 +919,8 @@ const initialKulinerData = [
         lng: 109.230,
         keliling: true,
         halal: "halal-self",
-        kontak: "081234567892"
+        kontak: "081234567892",
+        tipe: "pkl" // Pedagang Kaki Lima
       },
       {
         nama: "Nasi Liwet Mbah Maimun",
