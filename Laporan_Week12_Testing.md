@@ -1,53 +1,18 @@
-# LAPORAN ANALISIS PERANCANGAN PERANGKAT LUNAK
-## Week #12: Testing & Quality Assurance
-## Aplikasi "Lapor Mangan!" - Pencarian Kuliner Purwokerto
+# ASSIGNMENT WEEK #12: SOFTWARE TESTING
+## Aplikasi Lapor Mangan! - Pencarian Kuliner Purwokerto
+
+**Kelompok:** [Nomor Kelompok]  
+**Anggota:**
+- [NIM 1] - [Nama 1]
+- [NIM 2] - [Nama 2]
+- [NIM 3] - [Nama 3]
+- [NIM 4] - [Nama 4]
 
 ---
 
-### Halaman Sampul
+## 1. TEST CASE DOCUMENTATION
 
-**LAPORAN TUGAS KELOMPOK**  
-**Mata Kuliah: Analisis dan Perancangan Perangkat Lunak**
-
-**Judul Project:**  
-Aplikasi Lapor Mangan! - Platform Pencarian dan Informasi Kuliner UMKM Purwokerto
-
-**Kelompok:** [Nomor Kelompok]
-
-**Anggota Kelompok:**
-1. [NIM 1] - [Nama Anggota 1]
-2. [NIM 2] - [Nama Anggota 2]
-3. [NIM 3] - [Nama Anggota 3]
-4. [NIM 4] - [Nama Anggota 4]
-
-**Dosen Pengampu:** [Nama Dosen]  
-**Program Studi:** [Program Studi]  
-**Universitas:** [Nama Universitas]  
-**Tahun Akademik:** 2024/2025
-
----
-
-## DAFTAR ISI
-
-1. [Pendahuluan](#1-pendahuluan)
-2. [Metodologi Testing](#2-metodologi-testing)
-3. [Test Plan](#3-test-plan)
-4. [Test Case & Skenario](#4-test-case--skenario)
-5. [Hasil Testing](#5-hasil-testing)
-6. [Bug Report & Resolution](#6-bug-report--resolution)
-7. [Performance Testing](#7-performance-testing)
-8. [User Acceptance Testing (UAT)](#8-user-acceptance-testing-uat)
-9. [Kesimpulan & Rekomendasi](#9-kesimpulan--rekomendasi)
-10. [Referensi](#10-referensi)
-
----
-
-## 1. PENDAHULUAN
-
-### 1.1 Latar Belakang
-Setelah menyelesaikan tahap implementasi aplikasi "Lapor Mangan!" pada Week 10-11, diperlukan proses testing menyeluruh untuk memastikan aplikasi berfungsi sesuai requirement dan bebas dari bug kritis. Testing merupakan fase penting dalam Software Development Life Cycle (SDLC) untuk menjamin kualitas produk sebelum deployment.
-
-### 1.2 Tujuan Testing
+### 1.1 Functional Testing
 1. Memverifikasi bahwa semua fitur bekerja sesuai spesifikasi (Use Case)
 2. Mengidentifikasi dan memperbaiki bug sebelum release
 3. Memastikan aplikasi memenuhi standar performa dan keamanan

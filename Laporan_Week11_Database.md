@@ -1,53 +1,16 @@
-# LAPORAN PERANCANGAN BASIS DATA
+# ASSIGNMENT WEEK #11: DATABASE DESIGN
+## Aplikasi Lapor Mangan! - Pencarian Kuliner Purwokerto
 
-## APLIKASI PENCARIAN KULINER UMKM
-### "LAPOR MANGAN! - PURWOKERTO"
-
----
-
-**Kelompok:**
-- [NIM 1] - [Nama Anggota 1]
-- [NIM 2] - [Nama Anggota 2]
-- [NIM 3] - [Nama Anggota 3]
-- [NIM 4] - [Nama Anggota 4]
-
-**Mata Kuliah:** Analisis Perancangan Perangkat Lunak (APPL)
-
-**Dosen Pengampu:** [Nama Dosen]
-
-**Program Studi:** [Program Studi]
-
-**Universitas:** [Nama Universitas]
-
-**Tahun:** 2025
+**Kelompok:** [Nomor Kelompok]  
+**Anggota:**
+- [NIM 1] - [Nama 1]
+- [NIM 2] - [Nama 2]
+- [NIM 3] - [Nama 3]
+- [NIM 4] - [Nama 4]
 
 ---
 
-<div style="page-break-after: always;"></div>
-
-## DAFTAR ISI
-
-1. Pendahuluan
-2. Entity Relationship Diagram (ERD)
-3. Skema Relasi Database
-4. Penjelasan Atribut
-5. Referensi
-
----
-
-<div style="page-break-after: always;"></div>
-
-## 1. PENDAHULUAN
-
-### 1.1 Latar Belakang
-Aplikasi "Lapor Mangan!" merupakan Progressive Web Application (PWA) yang dirancang untuk membantu masyarakat Purwokerto dalam mencari informasi kuliner UMKM di wilayah Purwokerto. Aplikasi ini menyediakan fitur pencarian, filter, rekomendasi berbasis cuaca, dan peta interaktif.
-
-### 1.2 Tujuan Perancangan Database
-Perancangan basis data ini bertujuan untuk:
-- Menyimpan data kuliner UMKM secara terstruktur
-- Mengelola data pengguna dan autentikasi
-- Menyimpan review dan rating dari pengguna
-- Mengelola data submission (kontribusi) dari pengguna
+## 1. ENTITY RELATIONSHIP DIAGRAM (ERD)
 - Mengelola konten berita dan promo
 - Mendukung fitur favorit dan klaim bisnis
 

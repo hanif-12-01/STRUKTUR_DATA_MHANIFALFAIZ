@@ -1,139 +1,16 @@
-# LAPORAN ANALISIS PERANCANGAN PERANGKAT LUNAK
-## Week #10: Use Case Diagram & Analisis Sistem
-## Aplikasi "Lapor Mangan!" - Pencarian Kuliner Purwokerto
+# ASSIGNMENT WEEK #10: USE CASE DIAGRAM
+## Aplikasi Lapor Mangan! - Pencarian Kuliner Purwokerto
+
+**Kelompok:** [Nomor Kelompok]  
+**Anggota:**
+- [NIM 1] - [Nama 1]
+- [NIM 2] - [Nama 2]
+- [NIM 3] - [Nama 3]
+- [NIM 4] - [Nama 4]
 
 ---
 
-### Halaman Sampul
-
-**LAPORAN TUGAS KELOMPOK**  
-**Mata Kuliah: Analisis dan Perancangan Perangkat Lunak**
-
-**Judul Project:**  
-Aplikasi Lapor Mangan! - Platform Pencarian dan Informasi Kuliner UMKM Purwokerto
-
-**Kelompok:** [Nomor Kelompok]
-
-**Anggota Kelompok:**
-1. [NIM 1] - [Nama Anggota 1]
-2. [NIM 2] - [Nama Anggota 2]
-3. [NIM 3] - [Nama Anggota 3]
-4. [NIM 4] - [Nama Anggota 4]
-
-**Dosen Pengampu:** [Nama Dosen]  
-**Program Studi:** [Program Studi]  
-**Universitas:** [Nama Universitas]  
-**Tahun Akademik:** 2024/2025
-
----
-
-## DAFTAR ISI
-
-1. [Pendahuluan](#1-pendahuluan)
-2. [Analisis Kebutuhan Sistem](#2-analisis-kebutuhan-sistem)
-3. [Use Case Diagram](#3-use-case-diagram)
-4. [Deskripsi Use Case](#4-deskripsi-use-case)
-5. [Analisis Aktor](#5-analisis-aktor)
-6. [Skenario Use Case](#6-skenario-use-case)
-7. [Kesimpulan](#7-kesimpulan)
-8. [Referensi](#8-referensi)
-
----
-
-## 1. PENDAHULUAN
-
-### 1.1 Latar Belakang
-Purwokerto sebagai salah satu kota berkembang di Jawa Tengah memiliki potensi kuliner UMKM yang sangat beragam. Namun, informasi mengenai lokasi, menu, harga, dan review kuliner masih tersebar dan sulit diakses oleh wisatawan maupun masyarakat lokal. Aplikasi "Lapor Mangan!" hadir sebagai solusi digital berbasis Progressive Web Application (PWA) untuk memudahkan pencarian dan eksplorasi kuliner di Purwokerto.
-
-### 1.2 Tujuan Sistem
-1. Menyediakan platform terpadu untuk informasi kuliner UMKM Purwokerto
-2. Memudahkan pengguna dalam mencari lokasi kuliner dengan peta interaktif
-3. Memberikan informasi cuaca real-time untuk merencanakan kunjungan kuliner
-4. Menyediakan fitur review dan rating untuk meningkatkan kualitas layanan UMKM
-5. Memfasilitasi submission kuliner baru oleh pengguna dan pemilik UMKM
-
-### 1.3 Ruang Lingkup
-Aplikasi ini mencakup fitur-fitur utama:
-- Pencarian dan filter kuliner (kategori, harga, rating, lokasi)
-- Peta interaktif dengan marker lokasi kuliner
-- Informasi cuaca Purwokerto
-- Sistem review dan rating
-- Authentication dengan Google Sign-In
-- Chatbot untuk rekomendasi kuliner
-- Submission kuliner baru
-- Manajemen favorit
-- Informasi promo dan berita kuliner
-
----
-
-## 2. ANALISIS KEBUTUHAN SISTEM
-
-### 2.1 Kebutuhan Fungsional
-
-#### KF-01: Manajemen Pengguna
-- Sistem harus dapat melakukan registrasi pengguna baru
-- Sistem harus dapat melakukan login dengan Google OAuth
-- Sistem harus dapat menampilkan profil pengguna
-- Sistem harus dapat logout pengguna
-
-#### KF-02: Pencarian Kuliner
-- Sistem harus dapat menampilkan daftar kuliner
-- Sistem harus dapat melakukan filter berdasarkan kategori
-- Sistem harus dapat melakukan filter berdasarkan harga
-- Sistem harus dapat melakukan filter berdasarkan rating
-- Sistem harus dapat melakukan pencarian berdasarkan nama
-
-#### KF-03: Informasi Detail Kuliner
-- Sistem harus dapat menampilkan detail kuliner (nama, alamat, harga, jam buka)
-- Sistem harus dapat menampilkan foto kuliner
-- Sistem harus dapat menampilkan lokasi di peta
-- Sistem harus dapat menampilkan daftar review
-- Sistem harus dapat menampilkan rating rata-rata
-
-#### KF-04: Manajemen Review
-- Sistem harus dapat menambah review baru
-- Sistem harus dapat memberikan rating (1-5 bintang)
-- Sistem harus dapat menampilkan review dari pengguna lain
-- Sistem harus dapat menampilkan foto review
-
-#### KF-05: Peta Interaktif
-- Sistem harus dapat menampilkan peta Purwokerto
-- Sistem harus dapat menampilkan marker lokasi kuliner
-- Sistem harus dapat menampilkan rute ke lokasi kuliner
-- Sistem harus dapat zoom in/out peta
-- Sistem harus dapat menampilkan popup info saat klik marker
-
-#### KF-06: Informasi Cuaca
-- Sistem harus dapat menampilkan suhu saat ini
-- Sistem harus dapat menampilkan kondisi cuaca (cerah, hujan, berawan)
-- Sistem harus dapat menampilkan ikon cuaca
-- Sistem harus dapat melakukan refresh data cuaca
-
-#### KF-07: Chatbot Rekomendasi
-- Sistem harus dapat menerima pertanyaan pengguna
-- Sistem harus dapat memberikan rekomendasi kuliner
-- Sistem harus dapat memberikan informasi kategori kuliner
-- Sistem harus dapat memberikan informasi lokasi kuliner
-
-#### KF-08: Manajemen Favorit
-- Sistem harus dapat menambah kuliner ke favorit
-- Sistem harus dapat menghapus kuliner dari favorit
-- Sistem harus dapat menampilkan daftar favorit pengguna
-- Sistem harus dapat menyimpan favorit ke localStorage
-
-#### KF-09: Submission Kuliner
-- Sistem harus dapat menerima submission kuliner baru
-- Sistem harus dapat upload foto kuliner
-- Sistem harus dapat menyimpan data submission
-- Sistem harus dapat validasi data submission
-
-#### KF-10: Informasi Promo & Berita
-- Sistem harus dapat menampilkan promo terbaru
-- Sistem harus dapat menampilkan berita kuliner
-- Sistem harus dapat menampilkan periode promo
-- Sistem harus dapat menampilkan detail promo
-
-### 2.2 Kebutuhan Non-Fungsional
+## 1. USE CASE DIAGRAM
 
 #### KNF-01: Performa
 - Waktu loading halaman maksimal 3 detik
