@@ -26,8 +26,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Splash Screen -->
-    <div id="splashScreen" class="splash-screen">
+    <!-- Splash Screen - HIDDEN by default -->
+    <div id="splashScreen" class="splash-screen" style="display:none!important;">
         <div class="splash-content">
             <div class="splash-logo">🍽️</div>
             <h1>Lapor Mangan!</h1>
@@ -581,40 +581,6 @@
         <script src="knowledge-base.js"></script>
         <script src="script.js"></script>
         <script src="chatbot.js"></script>
-    
-    <!-- Hide Splash Screen -->
-    <script>
-        // Function to hide splash screen
-        function hideSplash() {
-            var splash = document.getElementById('splashScreen');
-            if (splash && splash.style.display !== 'none') {
-                splash.style.opacity = '0';
-                splash.style.transition = 'opacity 0.5s ease';
-                setTimeout(function() {
-                    splash.style.display = 'none';
-                }, 500);
-            }
-        }
-        
-        // Hide splash screen after page load
-        window.addEventListener('load', function() {
-            setTimeout(hideSplash, 1500);
-        });
-        
-        // Fallback - hide after 3 seconds no matter what (in case of errors)
-        setTimeout(hideSplash, 3000);
-        
-        // Extra fallback - hide after 5 seconds as last resort
-        setTimeout(function() {
-            var splash = document.getElementById('splashScreen');
-            if (splash) splash.style.display = 'none';
-        }, 5000);
-        
-        // Hide on any error to prevent infinite loading
-        window.onerror = function() {
-            setTimeout(hideSplash, 500);
-        };
-    </script>
     
     <!-- Service Worker Registration -->
     <script>

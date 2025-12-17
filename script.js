@@ -1016,19 +1016,40 @@ function initSubmissions() {
     let favoriteKuliner = new Set(JSON.parse(localStorage.getItem('favoriteKuliner')) || []);
 
     function loadData() {
-        const storedData = JSON.parse(localStorage.getItem('kulinerData'));
-        if (storedData && storedData.length > 0) {
-            kulinerData = storedData;
-        } else {
-            // Add default reviews to initial data
-            kulinerData = initialKulinerData.map(item => ({
-                ...item,
-                reviews: [
-                    { name: "Admin", rating: 5, comment: "Tempat yang sangat direkomendasikan!" },
-                    { name: "Pengunjung", rating: 4, comment: "Makanannya enak, suasana nyaman." }
-                ]
-            }));
+        console.log('Loading data...');
+        try {
+            const storedData = localStorage.getItem('kulinerData');
+            if (storedData) {
+                const parsed = JSON.parse(storedData);
+                if (parsed && parsed.length > 0) {
+                    kulinerData = parsed;
+                    console.log('Loaded from localStorage:', kulinerData.length, 'items');
+                    return;
+                }
+            }
+        } catch (e) {
+            console.error('Error loading from localStorage:', e);
         }
+        
+        // Use initial data if localStorage is empty or error
+        console.log('Using initialKulinerData');
+        kulinerData = initialKulinerData.map(item => ({
+            ...item,
+            reviews: item.reviews || [
+                { name: "Admin", rating: 5, comment: "Tempat yang sangat direkomendasikan!" },
+                { name: "Pengunjung", rating: 4, comment: "Makanannya enak, suasana nyaman." }
+            ]
+        }));
+        
+        // Save to localStorage
+        try {
+            localStorage.setItem('kulinerData', JSON.stringify(kulinerData));
+            console.log('Saved initial data to localStorage');
+        } catch (e) {
+            console.error('Error saving to localStorage:', e);
+        }
+        
+        console.log('Data loaded successfully:', kulinerData.length, 'items');
     }
 
     let map;
@@ -1063,27 +1084,32 @@ function initSubmissions() {
     });
 
     function initializeApp() {
-        loadData();
-        populateCategoryDropdowns();
-        initMap();
-        renderList();
-        fetchWeather();
-        setupEventListeners();
-        
-        // Hide splash screen after app is loaded
-        setTimeout(() => {
-            hideSplashScreen();
-        }, 1500);
+        console.log('Initializing app...');
+        try {
+            loadData();
+            console.log('Data loaded:', kulinerData.length, 'items');
+            populateCategoryDropdowns();
+            initMap();
+            renderList();
+            setupEventListeners();
+            
+            // Fetch weather async - don't block app initialization
+            fetchWeather().catch(err => {
+                console.error('Weather fetch failed:', err);
+                simulateWeather();
+            });
+            
+            console.log('App initialized successfully!');
+        } catch (error) {
+            console.error('Error initializing app:', error);
+            alert('Error loading app: ' + error.message);
+        }
     }
     
     function hideSplashScreen() {
         const splash = document.getElementById('splashScreen');
         if (splash) {
-            splash.style.opacity = '0';
-            splash.style.transition = 'opacity 0.5s ease';
-            setTimeout(() => {
-                splash.style.display = 'none';
-            }, 500);
+            splash.style.display = 'none';
         }
     }
 
@@ -1178,129 +1204,6 @@ function initSubmissions() {
         }
     }
 
-                function adjustMapControls() {
-                    try {
-                        const vw = window.innerWidth || document.documentElement.clientWidth;
-                        controls.style.position = 'fixed';
-                        controls.style.display = 'flex';
-                        // ensure controls float above other UI
-                        controls.style.zIndex = 2147483000;
-                        controls.style.pointerEvents = 'auto';
-
-                        // hide controls when sidebar is open
-                        const sidebar = document.getElementById('sidebar');
-                        if (sidebar && sidebar.classList && sidebar.classList.contains('open')) {
-                            controls.style.display = 'none';
-                            return;
-                        }
-
-                        // compute header and sidebar offset to avoid covering logo/menu
-                        const headerEl = document.querySelector('.header');
-                        const headerH = headerEl ? headerEl.offsetHeight : 0;
-                        const sidebarEl = document.getElementById('sidebar');
-                        let sidebarW = 0;
-                        if (sidebarEl && getComputedStyle(sidebarEl).display !== 'none' && sidebarEl.classList.contains('open')) {
-                            sidebarW = sidebarEl.offsetWidth;
-                        }
-
-                        if (vw >= 900) {
-                            // Place at right-top, but offset right if sidebar open
-                            controls.style.right = sidebarW ? (vw - sidebarW - 60) + 'px' : '24px';
-                            controls.style.left = 'auto';
-                            controls.style.top = (headerH + 16) + 'px';
-                            controls.style.bottom = 'auto';
-                            controls.style.flexDirection = 'column';
-                        } else {
-                            // mobile: bottom-left horizontal
-                            controls.style.left = '8px';
-                            controls.style.right = 'auto';
-                            controls.style.bottom = '12px';
-                            controls.style.top = 'auto';
-                            controls.style.flexDirection = 'row';
-                        }
-
-                    } catch (e) { console.warn('adjustMapControls error', e); }
-                }
-                const btnZoomIn = document.createElement('button');
-                btnZoomIn.innerHTML = '+';
-                btnZoomIn.title = 'Persempit (Zoom In)';
-                btnZoomIn.setAttribute('aria-label', 'Persempit peta');
-                btnZoomIn.addEventListener('click', () => mapZoomIn());
-
-                const btnZoomOut = document.createElement('button');
-                btnZoomOut.innerHTML = '−';
-                btnZoomOut.title = 'Perlebar (Zoom Out)';
-                btnZoomOut.setAttribute('aria-label', 'Perlebar peta');
-                btnZoomOut.addEventListener('click', () => mapZoomOut());
-
-                // We only keep zoom in/out and widen for simplicity (remove target button per request)
-                const btnWiden = document.createElement('button');
-                btnWiden.innerHTML = '↔';
-                btnWiden.title = 'Perlebar tampilan peta';
-                btnWiden.setAttribute('aria-label', 'Perlebar tampilan peta');
-                btnWiden.className = 'secondary';
-                btnWiden.addEventListener('click', () => widenMap());
-
-                controls.appendChild(btnZoomIn);
-                controls.appendChild(btnZoomOut);
-                controls.appendChild(btnWiden);
-
-                // append controls into document body and use fixed positioning to avoid sidebar overlap
-                controls.id = 'lm-map-controls';
-                document.body.appendChild(controls);
-
-                function adjustMapControls() {
-                    try {
-                        const vw = window.innerWidth || document.documentElement.clientWidth;
-                        controls.style.position = 'fixed';
-                        controls.style.display = 'flex';
-                        // ensure controls float above other UI
-                        controls.style.zIndex = 2147483000;
-                        controls.style.pointerEvents = 'auto';
-
-                        // hide controls when sidebar is open
-                        const sidebar = document.getElementById('sidebar');
-                        if (sidebar && sidebar.classList && sidebar.classList.contains('open')) {
-                            controls.style.display = 'none';
-                            return;
-                        }
-
-                        // compute header offset to avoid covering logo/header
-                        const headerEl = document.querySelector('.header');
-                        const headerH = headerEl ? headerEl.offsetHeight : 0;
-
-                        if (vw >= 900) {
-                            // Always place at right-top on desktop, below header
-                            controls.style.right = '12px';
-                            controls.style.left = 'auto';
-                            controls.style.top = (headerH + 8) + 'px';
-                            controls.style.bottom = 'auto';
-                            controls.style.flexDirection = 'column';
-                        } else {
-                            // mobile: bottom-left horizontal
-                            controls.style.left = '8px';
-                            controls.style.right = 'auto';
-                            controls.style.bottom = '12px';
-                            controls.style.top = 'auto';
-                            controls.style.flexDirection = 'row';
-                        }
-
-                    } catch (e) { console.warn('adjustMapControls error', e); }
-                }
-
-                // expose for external callers (e.g., toggleSidebar)
-                window.LM_adjustMapControls = adjustMapControls;
-
-                window.addEventListener('resize', adjustMapControls);
-                setTimeout(adjustMapControls, 50);
-            } catch (err) {
-                console.warn('Failed to add custom map controls', err);
-            }
-        } catch (error) {
-            console.error('Error initializing map:', error);
-        }
-    }
-
     function renderMap() {
         try {
             markers.forEach(m => map.removeLayer(m));
@@ -1374,43 +1277,62 @@ function initSubmissions() {
     }
 
     function renderList(search = "", category = "", sortOption = "", openNow = false, tipeFilter = "", halalFilter = "") {
+        console.log('renderList called');
         const list = document.getElementById("list");
-        if (!list) return;
+        if (!list) {
+            console.error('List element not found!');
+            return;
+        }
         
-        list.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat daftar kuliner...</p></div>';
-        
-        setTimeout(() => {
+        try {
+            console.log('Rendering list with', kulinerData.length, 'items');
             list.innerHTML = "";
+            
+            // Check if data exists
+            if (!kulinerData || kulinerData.length === 0) {
+                list.innerHTML = `
+                    <div class="not-found">
+                        <i class="fas fa-utensils"></i>
+                        <h3>Belum ada data kuliner</h3>
+                        <p>Data sedang dimuat...</p>
+                    </div>
+                `;
+                return;
+            }
+            
             let filteredData = kulinerData.filter(d => {
-                const matchSearch = d.nama.toLowerCase().includes(search.toLowerCase());
-                const matchCategory = category === "" || d.kategori === category;
-                const matchOpenNow = !openNow || isTempatBuka(d.jam);
-                
-                // Filter tipe penjual (FR-05)
-                let matchTipe = true;
-                if (tipeFilter === "tetap") {
-                    matchTipe = !d.keliling;
-                } else if (tipeFilter === "keliling") {
-                    matchTipe = d.keliling === true;
+                try {
+                    const matchSearch = d.nama && d.nama.toLowerCase().includes(search.toLowerCase());
+                    const matchCategory = category === "" || d.kategori === category;
+                    const matchOpenNow = !openNow || (d.jam && isTempatBuka(d.jam));
+                    
+                    let matchTipe = true;
+                    if (tipeFilter === "tetap") {
+                        matchTipe = !d.keliling;
+                    } else if (tipeFilter === "keliling") {
+                        matchTipe = d.keliling === true;
+                    }
+                    
+                    let matchHalal = true;
+                    if (halalFilter !== "") {
+                        matchHalal = d.halal === halalFilter;
+                    }
+                    
+                    return matchSearch && matchCategory && matchOpenNow && matchTipe && matchHalal;
+                } catch (e) {
+                    console.error('Error filtering item:', e);
+                    return false;
                 }
-                
-                // Filter kehalalan (FR-19)
-                let matchHalal = true;
-                if (halalFilter !== "") {
-                    matchHalal = d.halal === halalFilter;
-                }
-                
-                return matchSearch && matchCategory && matchOpenNow && matchTipe && matchHalal;
             });
             
             if (sortOption === "nama") {
-                filteredData.sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+                filteredData.sort((a, b) => (a.nama || '').localeCompare(b.nama || '', 'id'));
             } else if (sortOption === "rating") {
                 filteredData.sort((a, b) => (getAverageRating(b) || 0) - (getAverageRating(a) || 0));
             } else if (sortOption === "harga-asc" || sortOption === "harga-desc") {
                 filteredData.sort((a, b) => {
-                    const priceA = parseFloat(a.harga.replace(/[^0-9,-]/g, '').split('-')[0]) || 0;
-                    const priceB = parseFloat(b.harga.replace(/[^0-9,-]/g, '').split('-')[0]) || 0;
+                    const priceA = parseFloat((a.harga || '').replace(/[^0-9,-]/g, '').split('-')[0]) || 0;
+                    const priceB = parseFloat((b.harga || '').replace(/[^0-9,-]/g, '').split('-')[0]) || 0;
                     return sortOption === "harga-asc" ? priceA - priceB : priceB - priceA;
                 });
             }
@@ -1419,7 +1341,7 @@ function initSubmissions() {
                 list.innerHTML = `
                     <div class="not-found">
                         <i class="fas fa-utensils"></i>
-                        <h3>Oops! Tidak ada hasil ditemukan</h3>
+                        <h3>Tidak ada hasil ditemukan</h3>
                         <p>Coba kata kunci atau kategori yang berbeda.</p>
                     </div>
                 `;
@@ -1430,23 +1352,38 @@ function initSubmissions() {
             cardContainer.className = 'card-container';
             
             filteredData.forEach((d, i) => {
-                const div = document.createElement("div");
-                div.className = "card";
-                div.innerHTML = `
-                  <h3>${d.nama}</h3>
-                  <p><i class="fas fa-tag"></i> ${d.kategori}</p>
-                  <p><i class="fas fa-map-marker-alt"></i> ${d.alamat}</p>
-                  <div class="card-footer">
-                    <small><i class="fas fa-clock"></i> ${d.jam}</small>
-                    <div class="rating">${getAverageRating(d)} <i class="fas fa-star"></i></div>
-                  </div>
-                `;
-                div.onclick = () => showDetail(kulinerData.indexOf(d));
-                cardContainer.appendChild(div);
+                try {
+                    const div = document.createElement("div");
+                    div.className = "card";
+                    const avgRating = getAverageRating(d) || 0;
+                    div.innerHTML = `
+                      <h3>${d.nama || 'Tanpa Nama'}</h3>
+                      <p><i class="fas fa-tag"></i> ${d.kategori || 'Umum'}</p>
+                      <p><i class="fas fa-map-marker-alt"></i> ${d.alamat || 'Alamat tidak tersedia'}</p>
+                      <div class="card-footer">
+                        <small><i class="fas fa-clock"></i> ${d.jam || 'Jam tidak tersedia'}</small>
+                        <div class="rating">${avgRating.toFixed(1)} <i class="fas fa-star"></i></div>
+                      </div>
+                    `;
+                    div.onclick = () => showDetail(kulinerData.indexOf(d));
+                    cardContainer.appendChild(div);
+                } catch (e) {
+                    console.error('Error creating card:', e);
+                }
             });
             
             list.appendChild(cardContainer);
-        }, 300);
+            console.log('List rendered successfully with', filteredData.length, 'items');
+        } catch (error) {
+            console.error('Error rendering list:', error);
+            list.innerHTML = `
+                <div class="not-found">
+                    <h3>Terjadi kesalahan</h3>
+                    <p>${error.message}</p>
+                    <button onclick="location.reload()">Refresh Halaman</button>
+                </div>
+            `;
+        }
     }
 
     function showDetail(index) {
@@ -1868,30 +1805,64 @@ function initSubmissions() {
     }
 
     async function fetchWeather() {
+        console.log('Fetching weather...');
         try {
             const API_KEY = '80fa2675a270d693f2a2ac21865a6eba';
-            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Purwokerto,id&appid=${API_KEY}&units=metric&lang=id`);
-            if (!response.ok) throw new Error('Gagal mengambil data cuaca');
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+            
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Purwokerto,id&appid=${API_KEY}&units=metric&lang=id`, {
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+                console.warn('Weather API response not ok:', response.status);
+                throw new Error('Gagal mengambil data cuaca');
+            }
+            
             const data = await response.json();
             currentWeatherData = data;
             
-            document.getElementById("weatherTemp").textContent = `${Math.round(data.main.temp)}°C`;
-            document.getElementById("weatherDetailsTemp").textContent = `${Math.round(data.main.temp)}°C`;
-            document.getElementById("weatherMinTemp").textContent = `${Math.round(data.main.temp_min)}°C`;
-            document.getElementById("weatherMaxTemp").textContent = `${Math.round(data.main.temp_max)}°C`;
-            document.getElementById("weatherHumidity").textContent = `${data.main.humidity}%`;
-            document.getElementById("weatherWind").textContent = `${data.wind.speed} m/s`;
-            document.getElementById("weatherDetailsDesc").textContent = data.weather[0].description;
-            document.getElementById("weatherCondition").textContent = data.weather[0].main;
+            console.log('Weather data received:', data);
+            
+            const tempElement = document.getElementById("weatherTemp");
+            if (tempElement) tempElement.textContent = `${Math.round(data.main.temp)}°C`;
+            
+            const detailsTempElement = document.getElementById("weatherDetailsTemp");
+            if (detailsTempElement) detailsTempElement.textContent = `${Math.round(data.main.temp)}°C`;
+            
+            const minTempElement = document.getElementById("weatherMinTemp");
+            if (minTempElement) minTempElement.textContent = `${Math.round(data.main.temp_min)}°C`;
+            
+            const maxTempElement = document.getElementById("weatherMaxTemp");
+            if (maxTempElement) maxTempElement.textContent = `${Math.round(data.main.temp_max)}°C`;
+            
+            const humidityElement = document.getElementById("weatherHumidity");
+            if (humidityElement) humidityElement.textContent = `${data.main.humidity}%`;
+            
+            const windElement = document.getElementById("weatherWind");
+            if (windElement) windElement.textContent = `${data.wind.speed} m/s`;
+            
+            const descElement = document.getElementById("weatherDetailsDesc");
+            if (descElement) descElement.textContent = data.weather[0].description;
+            
+            const conditionElement = document.getElementById("weatherCondition");
+            if (conditionElement) conditionElement.textContent = data.weather[0].main;
             
             const iconCode = data.weather[0].icon;
             const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-            document.getElementById("weatherIcon").outerHTML = `<img src="${iconUrl}" class="weather-icon" style="width:22px;height:22px;">`;
-            document.getElementById("weatherDetailsIcon").outerHTML = `<img src="${iconUrl}" class="weather-details-icon" style="width:45px;height:45px;">`;
+            
+            const iconElement = document.getElementById("weatherIcon");
+            if (iconElement) iconElement.outerHTML = `<img src="${iconUrl}" class="weather-icon" style="width:22px;height:22px;" alt="weather">`;
+            
+            const detailsIconElement = document.getElementById("weatherDetailsIcon");
+            if (detailsIconElement) detailsIconElement.outerHTML = `<img src="${iconUrl}" class="weather-details-icon" style="width:45px;height:45px;" alt="weather">`;
             
             const today = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById("weatherDate").textContent = today.toLocaleDateString('id-ID', options);
+            const dateElement = document.getElementById("weatherDate");
+            if (dateElement) dateElement.textContent = today.toLocaleDateString('id-ID', options);
             
             const sunrise = new Date(data.sys.sunrise * 1000);
             const sunset = new Date(data.sys.sunset * 1000);
@@ -1900,8 +1871,14 @@ function initSubmissions() {
                 const minutes = String(date.getMinutes()).padStart(2, '0');
                 return `${hours}:${minutes}`;
             };
-            document.getElementById("weatherSunrise").textContent = formatTime(sunrise);
-            document.getElementById("weatherSunset").textContent = formatTime(sunset);
+            
+            const sunriseElement = document.getElementById("weatherSunrise");
+            if (sunriseElement) sunriseElement.textContent = formatTime(sunrise);
+            
+            const sunsetElement = document.getElementById("weatherSunset");
+            if (sunsetElement) sunsetElement.textContent = formatTime(sunset);
+            
+            console.log('Weather updated successfully');
             
         } catch (error) {
             console.error('Error fetching weather:', error);
@@ -1910,6 +1887,7 @@ function initSubmissions() {
     }
 
     function simulateWeather() {
+        console.log('Using simulated weather data');
         const weatherData = {
             main: { temp: 28, temp_min: 22, temp_max: 32, humidity: 75 },
             wind: { speed: 2.5 },
@@ -1918,31 +1896,17 @@ function initSubmissions() {
         };
         currentWeatherData = weatherData;
         
-        document.getElementById("weatherTemp").textContent = `${weatherData.main.temp}°C`;
-        document.getElementById("weatherDetailsTemp").textContent = `${weatherData.main.temp}°C`;
-        document.getElementById("weatherMinTemp").textContent = `${weatherData.main.temp_min}°C`;
-        document.getElementById("weatherMaxTemp").textContent = `${weatherData.main.temp_max}°C`;
-        document.getElementById("weatherHumidity").textContent = `${weatherData.main.humidity}%`;
-        document.getElementById("weatherWind").textContent = `${weatherData.wind.speed} m/s`;
-        document.getElementById("weatherDetailsDesc").textContent = weatherData.weather[0].description;
-        document.getElementById("weatherCondition").textContent = weatherData.weather[0].main;
-        
-        document.getElementById("weatherIcon").className = "fas fa-cloud-sun weather-icon";
-        document.getElementById("weatherDetailsIcon").className = "fas fa-cloud-sun weather-details-icon";
-        
-        const today = new Date();
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById("weatherDate").textContent = today.toLocaleDateString('id-ID', options);
-        
-        const sunrise = new Date(weatherData.sys.sunrise * 1000);
-        const sunset = new Date(weatherData.sys.sunset * 1000);
-        const formatTime = (date) => {
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${hours}:${minutes}`;
-        };
-        document.getElementById("weatherSunrise").textContent = formatTime(sunrise);
-        document.getElementById("weatherSunset").textContent = formatTime(sunset);
+        try {
+            const tempElement = document.getElementById("weatherTemp");
+            if (tempElement) tempElement.textContent = `${Math.round(weatherData.main.temp)}°C`;
+            
+            const detailsTempElement = document.getElementById("weatherDetailsTemp");
+            if (detailsTempElement) detailsTempElement.textContent = `${Math.round(weatherData.main.temp)}°C`;
+            
+            console.log('Simulated weather applied');
+        } catch (e) {
+            console.error('Error applying simulated weather:', e);
+        }
     }
 
     function isTempatBuka(jamString) {

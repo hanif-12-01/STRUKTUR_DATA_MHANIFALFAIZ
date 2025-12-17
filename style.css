@@ -184,12 +184,20 @@ a {
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.3s ease;
+}
+
+.splash-screen[style*="display:none"],
+.splash-screen[style*="display: none"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 }
 
 .splash-screen.hidden {
     opacity: 0;
     visibility: hidden;
+    display: none;
 }
 
 .splash-content {
