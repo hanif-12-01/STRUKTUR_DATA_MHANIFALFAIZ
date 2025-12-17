@@ -1035,6 +1035,27 @@ function initSubmissions() {
     let markers = [];
     let currentWeatherData = null;
 
+    // Inisialisasi Map
+    function initMap() {
+        try {
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) {
+                console.warn('Map container not found');
+                return;
+            }
+            
+            map = L.map('map').setView([-7.4212, 109.2422], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            renderMap();
+            console.log('Map initialized successfully');
+        } catch (error) {
+            console.error('Error initializing map:', error);
+        }
+    }
+
     // Inisialisasi DOM
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM loaded - initializing app');
