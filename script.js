@@ -849,7 +849,9 @@ function initSubmissions() {
         localStorage.setItem('pendingSubmissions', '[]');
     }
 }
-    const initialKulinerData = [
+
+// Data kuliner awal untuk Purwokerto
+const initialKulinerData = [
       {
         nama: "Soto Sokaraja",
         kategori: "Soto",
