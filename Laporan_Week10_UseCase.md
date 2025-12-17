@@ -229,7 +229,103 @@
 
 ---
 
-## 3. USE CASE DIAGRAM
+## 3. IDENTIFIKASI OBJECT DALAM USE CASE SCENARIO
+
+Berikut adalah identifikasi object-object yang muncul dalam Use Case Scenario yang telah dibuat. Object dikategorikan menjadi 3 jenis berdasarkan pattern MVC (Model-View-Controller):
+- **Boundary (Interface)**: Object yang berinteraksi langsung dengan user (UI elements)
+- **Entity (Basisdata)**: Object yang merepresentasikan data/model
+- **Controller (Pemrosesan)**: Object yang mengatur logic dan proses bisnis
+
+### TABEL OBJECT
+
+| No | Nama Object | Jenis / Tipe Object | Keterangan |
+|----|-------------|---------------------|------------|
+| 1  | LoginButton | Boundary | Tombol "Masuk dengan Google" di header aplikasi |
+| 2  | OAuthPopup | Boundary | Popup window Google OAuth untuk autentikasi |
+| 3  | UserProfileWidget | Boundary | Widget menampilkan foto profil dan nama user setelah login |
+| 4  | ToastNotification | Boundary | Pop-up notifikasi untuk feedback ke user (success/error) |
+| 5  | User | Entity | Data pengguna (uid, displayName, email, photoURL, loginStatus) |
+| 6  | AuthToken | Entity | Token autentikasi dari Google OAuth |
+| 7  | AuthController | Controller | Mengatur proses login, logout, session management |
+| 8  | FirebaseAuthService | Controller | Service untuk komunikasi dengan Firebase Authentication API |
+| 9  | DetailModal | Boundary | Modal popup menampilkan detail lengkap kuliner |
+| 10 | ReviewForm | Boundary | Form input untuk menulis review (rating + komentar) |
+| 11 | StarRatingInput | Boundary | Input bintang 1-5 untuk rating kuliner |
+| 12 | CommentTextarea | Boundary | Textarea untuk input komentar review |
+| 13 | ReviewList | Boundary | List component menampilkan semua review kuliner |
+| 14 | Review | Entity | Data review (userId, userName, rating, comment, timestamp, kulinerID) |
+| 15 | Kuliner | Entity | Data kuliner (id, nama, kategori, alamat, harga, rating, foto, lat, lng) |
+| 16 | ReviewController | Controller | Mengatur proses submit, validate, dan save review |
+| 17 | RatingCalculator | Controller | Menghitung rating rata-rata dari semua review |
+| 18 | SubmissionForm | Boundary | Form lengkap untuk submit kuliner baru (multi-field) |
+| 19 | CategoryDropdown | Boundary | Dropdown select untuk pilih kategori kuliner |
+| 20 | PhotoUploader | Boundary | Component upload foto (drag & drop atau browse) |
+| 21 | CoordinatePicker | Boundary | Button/Input untuk dapatkan koordinat GPS (auto/manual) |
+| 22 | Submission | Entity | Data submission (id, kulinerData, status, submitterId, submittedAt) |
+| 23 | SubmissionController | Controller | Mengatur proses validasi, save, dan tracking submission |
+| 24 | ValidationService | Controller | Service untuk validasi input form (format, required, size) |
+| 25 | KulinerCard | Boundary | Card component di list kuliner (homepage) |
+| 26 | PhotoCarousel | Boundary | Carousel untuk swipe multiple foto kuliner |
+| 27 | MiniMap | Boundary | Leaflet map mini menampilkan marker lokasi kuliner |
+| 28 | ActionButtonGroup | Boundary | Group button: Favorit, Review, Navigasi, Tutup |
+| 29 | KulinerController | Controller | Mengatur logic retrieve dan display detail kuliner |
+| 30 | MapService | Controller | Service untuk render Leaflet map dan marker |
+| 31 | AdminDashboard | Boundary | Panel admin dengan tabs (submission, berita, promo, users) |
+| 32 | SubmissionReviewPanel | Boundary | Panel khusus untuk review submission pending |
+| 33 | SubmissionCard | Boundary | Card component menampilkan preview submission |
+| 34 | ApproveButton | Boundary | Button hijau untuk approve submission |
+| 35 | RejectButton | Boundary | Button merah untuk reject submission |
+| 36 | ReasonDialog | Boundary | Dialog input alasan penolakan submission |
+| 37 | SubmissionHistory | Entity | Data history submission (status, reviewedBy, reviewedAt, reason) |
+| 38 | AdminController | Controller | Mengatur proses moderasi (approve/reject/request edit) |
+| 39 | NotificationService | Controller | Service untuk kirim notifikasi ke user (email/push) |
+| 40 | LocalStorageManager | Controller | Mengatur penyimpanan dan retrieval data dari localStorage |
+
+### 3.1 Penjelasan Kategori Object
+
+#### **Boundary Objects (Interface)**
+Object yang berhubungan langsung dengan user interface dan interaksi user. Contoh:
+- `LoginButton`, `OAuthPopup`: Interface untuk proses login
+- `ReviewForm`, `StarRatingInput`: Interface untuk input review
+- `DetailModal`, `PhotoCarousel`: Interface untuk menampilkan konten
+- `AdminDashboard`, `SubmissionReviewPanel`: Interface untuk admin
+
+**Total Boundary Objects: 19**
+
+#### **Entity Objects (Basisdata)**
+Object yang merepresentasikan data atau model dalam aplikasi. Contoh:
+- `User`: Data pengguna (credentials, profile)
+- `Kuliner`: Data tempat kuliner (info, lokasi, rating)
+- `Review`: Data ulasan user
+- `Submission`: Data kontribusi user
+- `SubmissionHistory`: History moderasi admin
+
+**Total Entity Objects: 7**
+
+#### **Controller Objects (Pemrosesan)**
+Object yang mengatur business logic, validasi, dan komunikasi antar layer. Contoh:
+- `AuthController`: Mengatur authentication flow
+- `ReviewController`: Mengatur proses review
+- `SubmissionController`: Mengatur submission workflow
+- `ValidationService`: Validasi input
+- `NotificationService`: Kirim notifikasi
+- `LocalStorageManager`: Data persistence
+
+**Total Controller Objects: 14**
+
+### 3.2 Mapping Object ke Use Case
+
+| Use Case | Boundary Objects | Entity Objects | Controller Objects |
+|----------|------------------|----------------|-------------------|
+| **UC-08: Login Google OAuth** | LoginButton, OAuthPopup, UserProfileWidget, ToastNotification | User, AuthToken | AuthController, FirebaseAuthService |
+| **UC-11: Tambah Review** | DetailModal, ReviewForm, StarRatingInput, CommentTextarea, ReviewList, ToastNotification | Review, Kuliner, User | ReviewController, RatingCalculator, ValidationService |
+| **UC-17: Submit Kuliner** | SubmissionForm, CategoryDropdown, PhotoUploader, CoordinatePicker, ToastNotification | Submission, Kuliner | SubmissionController, ValidationService, LocalStorageManager |
+| **UC-02: Lihat Detail** | KulinerCard, DetailModal, PhotoCarousel, MiniMap, ActionButtonGroup, ReviewList | Kuliner, Review | KulinerController, MapService |
+| **UC-19: Admin Approve** | AdminDashboard, SubmissionReviewPanel, SubmissionCard, ApproveButton, RejectButton, ReasonDialog, ToastNotification | Submission, SubmissionHistory, Kuliner | AdminController, NotificationService, LocalStorageManager |
+
+---
+
+## 4. USE CASE DIAGRAM
 
 ### 3.1 Diagram Use Case Lengkap
 
