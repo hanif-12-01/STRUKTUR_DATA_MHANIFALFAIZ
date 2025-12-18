@@ -899,62 +899,6 @@ int main() {
 
 #### Output:
 ```
-========================================
-   PROGRAM IMPLEMENTASI GRAPH
-========================================
-
-Menambahkan node A, B, C, D, E, F, G, H...
-
-Menghubungkan node-node...
-
-=== Informasi Graph ===
-Node A terhubung dengan: B, C
-Node B terhubung dengan: A, D, E
-Node C terhubung dengan: A, F, G
-Node D terhubung dengan: B, H
-Node E terhubung dengan: B, H
-Node F terhubung dengan: C, H
-Node G terhubung dengan: C, H
-Node H terhubung dengan: D, E, F, G
-======================
-
-========================================
-   LATIHAN 2: DEPTH FIRST SEARCH (DFS)
-========================================
-DFS Traversal: A B E H G F C D 
-
-========================================
-   LATIHAN 3: BREADTH FIRST SEARCH (BFS)
-========================================
-BFS Traversal: A B C D E F G H 
-
---- Testing DFS dari node B ---
-DFS Traversal: B E H G C F A D 
-
---- Testing BFS dari node C ---
-BFS Traversal: C A F G B H D E 
-
-========================================
-   TESTING DELETE NODE
-========================================
-Menghapus node D...
-
-=== Informasi Graph ===
-Node A terhubung dengan: B, C
-Node B terhubung dengan: A, E
-Node C terhubung dengan: A, F, G
-Node E terhubung dengan: B, H
-Node F terhubung dengan: C, H
-Node G terhubung dengan: C, H
-Node H terhubung dengan: E, F, G
-======================
-
-DFS setelah menghapus node D:
-A B E H G C F 
-
-========================================
-   PROGRAM SELESAI
-========================================
 ```
 
 #### Penjelasan:
@@ -1100,5 +1044,6 @@ Dari praktikum **Graph** yang telah dilakukan, dapat disimpulkan:
 [6] S. S. Skiena, *The Algorithm Design Manual*, 2nd ed. London, UK: Springer, 2008.
 
 [7] N. Karumanchi, *Data Structures and Algorithms Made Easy: Data Structures and Algorithmic Puzzles*, 5th ed. Hyderabad, India: CareerMonk Publications, 2017.
+
 
 [8] A. Drozdek, *Data Structures and Algorithms in C++*, 4th ed. Boston, MA: Cengage Learning, 2012.
