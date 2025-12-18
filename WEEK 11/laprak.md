@@ -225,8 +225,6 @@ Topological sort adalah pengurutan linear dari vertex dalam directed acyclic gra
 
 ### 1. GUIDED I - Implementasi Graph Berarah (Directed Graph)
 
-Program ini mengimplementasikan ADT Graph berarah sederhana menggunakan adjacency list dengan struktur pointer Graph.
-
 #### graph.h
 ```cpp
 #ifndef GRAPH_H
@@ -479,8 +477,6 @@ C → D
 ## Unguided
 
 ### 1. UNGUIDED I - Implementasi Graph Tidak Berarah Lengkap dengan DFS dan BFS
-
-Program ini mengimplementasikan Graph tidak berarah lengkap dengan fitur traversal DFS dan BFS menggunakan Stack dan Queue.
 
 #### graph.h
 ```cpp
@@ -1042,4 +1038,5 @@ Dari praktikum **Graph** yang telah dilakukan, dapat disimpulkan:
 [7] N. Karumanchi, *Data Structures and Algorithms Made Easy: Data Structures and Algorithmic Puzzles*, 5th ed. Hyderabad, India: CareerMonk Publications, 2017.
 
 [8] A. Drozdek, *Data Structures and Algorithms in C++*, 4th ed. Boston, MA: Cengage Learning, 2012.
+
 
