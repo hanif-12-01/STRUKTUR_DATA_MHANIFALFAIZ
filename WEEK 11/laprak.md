@@ -383,11 +383,7 @@ Node B terhubung ke: D
 Node C terhubung ke: D
 Node D:
 ```
-Berikut adalah contoh hasil output program UNGUIDED:
 
-![Output A](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2011/op%20a.png)
-
-![Output B](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2011/op%20b.png)
 #### Penjelasan:
 
 Program ini mengimplementasikan Graph Berarah (Directed Graph) dengan struktur data yang lebih kompleks menggunakan pointer ke struct Graph:
@@ -503,12 +499,7 @@ struct ElmNode {
     int visited;
     adrEdge firstEdge;
     adrNode Next;
-};
 
-struct ElmEdge {
-    adrNode Node;
-    adrEdge Next;
-};
 
 struct Graph {
     adrNode First;
@@ -902,8 +893,10 @@ int main() {
 ```
 
 #### Output:
+![Output A](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2011/op%20a.png)
 
-
+![Output B](https://github.com/hanif-12-01/STRUKTUR_DATA_MHANIFALFAIZ/blob/master/WEEK%2011/op%20b.png)
+```
 
 #### Penjelasan:
 
@@ -1050,4 +1043,3 @@ Dari praktikum **Graph** yang telah dilakukan, dapat disimpulkan:
 [7] N. Karumanchi, *Data Structures and Algorithms Made Easy: Data Structures and Algorithmic Puzzles*, 5th ed. Hyderabad, India: CareerMonk Publications, 2017.
 
 [8] A. Drozdek, *Data Structures and Algorithms in C++*, 4th ed. Boston, MA: Cengage Learning, 2012.
-
