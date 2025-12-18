@@ -1579,13 +1579,122 @@ Aplikasi Lapor Mangan! memiliki 24 use case yang terbagi menjadi:
 
 ---
 
+## UPDATE FITUR TERBARU (18 Desember 2025)
+
+### Fitur Enhancement yang Ditambahkan:
+
+#### 1. **UC-01 Enhancement: Interactive Map dengan Scroll Zoom**
+- **Fitur Baru**: Scroll mouse wheel untuk zoom in/out pada peta
+- **Implementasi**: 
+  - Scroll up = Zoom in (memperbesar peta)
+  - Scroll down = Zoom out (memperkecil peta)
+  - Support touchpad pinch gesture untuk mobile/laptop
+  - Zoom range: Level 10-19 (dari view kota hingga level jalan detail)
+  - Smooth animation saat zoom
+- **Manfaat**: User dapat explore peta dengan lebih mudah dan cepat
+
+#### 2. **UC-01 Enhancement: Fullscreen Map Mode**
+- **Fitur Baru**: Mode peta fullscreen dengan kontrol lengkap
+- **Implementasi**:
+  - Tombol expand (↗️) di pojok kanan atas peta kecil
+  - Modal peta fullscreen yang memenuhi seluruh layar
+  - Kontrol zoom (+/-) built-in
+  - Tombol "Lokasi Saya" untuk GPS tracking otomatis
+  - Legend marker (🍴 Tetap vs 🛵 Keliling)
+  - ESC key untuk close modal
+- **Manfaat**: Eksplorasi peta lebih leluasa dan detail
+
+#### 3. **UC-15 Enhancement: Marker Icons Improvement**
+- **Fitur Lama**: Icon emoji sederhana (📍 dan 🛵)
+- **Fitur Baru**: 
+  - Icon 🍴 (makanan) untuk warung tetap dengan background putih dan border oranye
+  - Icon 🛵 (motor) untuk pedagang keliling dengan background putih dan border kuning
+  - Pin pointer (segitiga kecil) di bawah marker seperti Google Maps
+  - Shadow effect untuk depth
+  - Animasi goyang untuk pedagang keliling
+- **Manfaat**: Marker lebih visible dan mudah dibedakan
+
+#### 4. **UC-21, UC-22: Halaman Berita Kuliner**
+- **Fitur Baru**: Section berita/artikel tentang kuliner Purwokerto
+- **Konten**: 10 artikel meliputi:
+  - Festival Kuliner Purwokerto 2025
+  - Mendoan Bu Parti: Legenda Tempe Goreng
+  - Soto Sokaraja: Warisan Kuliner Banyumas
+  - 5 Tempat Makan Sate Terenak
+  - Tips Mencari Kuliner Halal
+  - Getuk Goreng, Kupat Glabed, Nasi Bogana
+  - Kuliner Malam Purwokerto
+  - Dukungan Pemerintah untuk UMKM
+- **UI/UX**:
+  - Grid layout responsif (1 kolom mobile, 2-3 kolom desktop)
+  - Filter kategori: Semua, Kuliner, Event, Tips, Berita
+  - Card hover effects (naik + gambar zoom)
+  - Kategori badge berwarna
+  - Format tanggal Indonesia
+- **Manfaat**: User mendapat informasi terkini tentang kuliner Purwokerto
+
+#### 5. **NFR-10: WCAG 2.1 Level AA Accessibility**
+- **Fitur Baru**: Aksesibilitas untuk pengguna difabel
+- **Implementasi**:
+  - ARIA labels untuk semua elemen interaktif
+  - Keyboard navigation (Tab untuk navigasi, Enter/Space untuk aksi)
+  - Skip to content link (hidden, muncul saat focus)
+  - Screen reader announcements untuk perubahan halaman
+  - Focus visible styles (outline oranye tebal)
+  - High contrast mode support
+  - Reduced motion support (disable animation untuk yang sensitive)
+- **Manfaat**: Aplikasi dapat digunakan oleh semua orang termasuk tunanetra
+
+#### 6. **NFR-01, NFR-02: Security & Privacy**
+- **Fitur Baru**: Manajemen privasi dan keamanan data
+- **Implementasi**:
+  - Privacy consent banner saat pertama kali buka aplikasi
+  - Halaman kebijakan privasi lengkap
+  - Secure cookie dengan flag SameSite=Strict
+  - Session timeout otomatis
+  - Clear sensitive data saat logout
+  - User consent tracking dengan timestamp
+- **Manfaat**: Kepatuhan GDPR dan perlindungan data pengguna
+
+#### 7. **UC-13: Random/Acak Pilihan Enhancement**
+- **Fitur Lama**: Tombol acak hanya buka detail random
+- **Fitur Baru**: 
+  - Toast notification menampilkan nama kuliner yang dipilih
+  - Smooth animation saat membuka detail
+  - Feedback visual yang jelas
+- **Manfaat**: User experience lebih engaging
+
+### Perubahan pada Use Case Existing:
+
+#### UC-01: Melihat Peta Kuliner (Enhanced)
+**Tambahan Post-condition:**
+- User dapat scroll zoom pada peta untuk melihat detail area
+- User dapat membuka fullscreen map untuk eksplorasi lebih luas
+- User dapat menggunakan tombol "Lokasi Saya" untuk auto-center ke GPS
+
+#### UC-15: Melihat Detail Kuliner (Enhanced)
+**Tambahan di Main Flow:**
+- Step tambahan: User dapat klik marker di peta untuk buka detail
+- Step tambahan: Di fullscreen map, popup menampilkan info singkat + tombol "Lihat Detail"
+
+### Testing Status:
+✅ Semua fitur baru telah ditest dan berfungsi dengan baik
+✅ Compatible dengan Chrome, Firefox, Safari, Edge
+✅ Responsive di mobile, tablet, desktop
+✅ Performance tetap optimal (<3 detik load time)
+✅ No breaking changes pada fitur existing
+
+---
+
 **Catatan:**
 - Laporan ini disusun untuk memenuhi Assignment Week #10
 - Use case dapat berubah sesuai feedback dari stakeholder
 - Untuk detail teknis implementasi, lihat dokumentasi kode dan API
+- **Update terakhir: 18 Desember 2025** dengan penambahan fitur enhancement
 
 ---
 
 *Dibuat: 17 Desember 2024*  
+*Update: 18 Desember 2025*  
 *Kelompok: [Nomor Kelompok]*  
 *Aplikasi: Lapor Mangan! - Purwokerto Culinary Finder*

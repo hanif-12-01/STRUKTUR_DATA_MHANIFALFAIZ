@@ -498,12 +498,218 @@ ORDER BY p.validUntil ASC;
 
 ---
 
+## UPDATE DATABASE SCHEMA (18 Desember 2025)
+
+### Penambahan Field & Struktur Baru:
+
+#### 1. **Table: kuliner (Enhanced)**
+Penambahan field untuk support fitur map enhancement:
+```sql
+ALTER TABLE kuliner 
+ADD COLUMN map_zoom_level INT DEFAULT 14 COMMENT 'Default zoom level untuk marker ini',
+ADD COLUMN marker_style VARCHAR(50) DEFAULT 'default' COMMENT 'Style marker: default, featured, premium';
+```
+
+**Contoh Data:**
+```json
+{
+  "id": 1,
+  "nama": "Soto Sokaraja",
+  "lat": -7.421,
+  "lng": 109.242,
+  "map_zoom_level": 15,
+  "marker_style": "featured",
+  // ... field lainnya
+}
+```
+
+#### 2. **Table: news (New - 10 Artikel)**
+Table baru untuk menyimpan artikel berita kuliner:
+```sql
+CREATE TABLE news (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  judul VARCHAR(255) NOT NULL,
+  konten TEXT NOT NULL,
+  gambar VARCHAR(500),
+  tanggal DATE NOT NULL,
+  kategori ENUM('Event', 'Kuliner', 'Tips', 'Berita') NOT NULL,
+  author VARCHAR(100) DEFAULT 'Redaksi Lapor Mangan',
+  views INT DEFAULT 0,
+  published BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_kategori (kategori),
+  INDEX idx_tanggal (tanggal)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+**Sample Data (10 Artikel yang Ditambahkan):**
+```sql
+INSERT INTO news (judul, konten, gambar, tanggal, kategori, author) VALUES
+('Festival Kuliner Purwokerto 2025 Hadirkan Ratusan UMKM Lokal', 'Festival kuliner terbesar...', 'url', '2025-12-15', 'Event', 'Redaksi Lapor Mangan'),
+('Mendoan Bu Parti: Legenda Tempe Goreng yang Mendunia', 'Mendoan Bu Parti...', 'url', '2025-12-16', 'Kuliner', 'Redaksi Lapor Mangan'),
+-- ... 8 artikel lainnya
+```
+
+#### 3. **Table: user_settings (New)**
+Table untuk menyimpan preferensi user terkait privacy dan accessibility:
+```sql
+CREATE TABLE user_settings (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  privacy_consent BOOLEAN DEFAULT FALSE,
+  privacy_consent_date TIMESTAMP NULL,
+  accessibility_mode BOOLEAN DEFAULT FALSE,
+  high_contrast BOOLEAN DEFAULT FALSE,
+  reduce_motion BOOLEAN DEFAULT FALSE,
+  keyboard_nav_only BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+#### 4. **Table: map_interactions (New - Analytics)**
+Table untuk tracking interaksi user dengan map (untuk analytics):
+```sql
+CREATE TABLE map_interactions (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NULL,
+  session_id VARCHAR(100) NOT NULL,
+  action_type ENUM('zoom_in', 'zoom_out', 'scroll_zoom', 'marker_click', 'fullscreen_open', 'locate_me') NOT NULL,
+  lat DECIMAL(10, 7),
+  lng DECIMAL(10, 7),
+  zoom_level INT,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_action (action_type),
+  INDEX idx_session (session_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### LocalStorage Implementation (Current):
+
+Untuk prototype saat ini, struktur data di LocalStorage:
+
+```javascript
+// localStorage keys
+lm_kuliner          // Array kuliner data
+lm_berita           // Array berita (10 artikel baru)
+lm_promo            // Array promo
+lm_users            // Array users
+lm_submissions      // Array submissions
+lm_favorites        // Set favorite IDs per user
+lm_privacy_consent  // Boolean consent status
+lm_privacy_consent_date  // ISO date string
+lm_currentUser      // Object current user
+lm_initialized      // Boolean flag
+```
+
+**Example Data Structure:**
+```javascript
+// lm_berita
+[
+  {
+    id: 1,
+    judul: "Festival Kuliner Purwokerto 2025",
+    konten: "Full text...",
+    gambar: "https://...",
+    tanggal: "2025-12-15",
+    kategori: "Event",
+    author: "Redaksi Lapor Mangan"
+  },
+  // ... 9 more
+]
+
+// lm_privacy_consent
+{
+  consent: true,
+  consentDate: "2025-12-18T10:30:00Z",
+  version: "1.0"
+}
+```
+
+### Query Optimization untuk Fitur Baru:
+
+#### Query 1: Get Berita with Filter
+```sql
+-- Filter berita by kategori
+SELECT id, judul, konten, gambar, tanggal, kategori, author, views
+FROM news
+WHERE kategori = 'Kuliner' 
+  AND published = TRUE
+ORDER BY tanggal DESC
+LIMIT 10;
+```
+
+#### Query 2: Track Map Zoom Activity
+```sql
+-- Analytics: Most zoomed areas
+SELECT 
+  ROUND(lat, 2) as area_lat,
+  ROUND(lng, 2) as area_lng,
+  COUNT(*) as zoom_count,
+  AVG(zoom_level) as avg_zoom
+FROM map_interactions
+WHERE action_type IN ('zoom_in', 'zoom_out', 'scroll_zoom')
+  AND timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+GROUP BY ROUND(lat, 2), ROUND(lng, 2)
+ORDER BY zoom_count DESC
+LIMIT 10;
+```
+
+#### Query 3: Popular Berita by Category
+```sql
+SELECT kategori, COUNT(*) as total_artikel, SUM(views) as total_views
+FROM news
+WHERE published = TRUE
+GROUP BY kategori
+ORDER BY total_views DESC;
+```
+
+### Migration Script:
+
+```sql
+-- Migration v1.1 - Add new features
+START TRANSACTION;
+
+-- Add new columns to kuliner
+ALTER TABLE kuliner 
+ADD COLUMN map_zoom_level INT DEFAULT 14,
+ADD COLUMN marker_style VARCHAR(50) DEFAULT 'default';
+
+-- Create news table
+CREATE TABLE news (...);
+
+-- Create user_settings table
+CREATE TABLE user_settings (...);
+
+-- Create map_interactions table
+CREATE TABLE map_interactions (...);
+
+-- Insert initial news data
+INSERT INTO news (judul, konten, gambar, tanggal, kategori, author) VALUES (...);
+
+COMMIT;
+```
+
+### Performance Considerations:
+
+1. **Indexing untuk Berita**: Index pada `kategori` dan `tanggal` untuk filter cepat
+2. **Partitioning untuk Map Interactions**: Table besar, consider partitioning by month
+3. **Caching**: Berita jarang berubah, cache di client-side (localStorage)
+4. **Lazy Loading**: Load berita on-demand saat user buka tab Berita
+
+---
+
 **Catatan:** 
 - Laporan ini merupakan bagian dari tugas Analisis Perancangan Perangkat Lunak (APPL)
 - Database design dapat diimplementasikan menggunakan MySQL, PostgreSQL, atau Firebase Firestore
 - Prototype saat ini menggunakan LocalStorage untuk demonstrasi
+- **Update terakhir: 18 Desember 2025** dengan penambahan table news, user_settings, dan map_interactions
 
 ---
 
 **Disusun oleh Kelompok [Nomor Kelompok]**  
-**Tanggal:** Desember 2025
+**Tanggal:** Desember 2025  
+**Update:** 18 Desember 2025

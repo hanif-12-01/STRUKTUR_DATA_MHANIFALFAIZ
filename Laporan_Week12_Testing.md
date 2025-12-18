@@ -48,6 +48,44 @@ Testing mencakup:
 - `validateKulinerForm()` - Form validation
 
 #### 2.1.2 Integration Testing
+
+**Update Terbaru (18 Desember 2025):**
+
+**Fitur Baru yang Ditambahkan:**
+1. **Map Scroll Zoom** (FR-01 Enhancement)
+   - Scroll mouse up/down untuk zoom in/out pada peta
+   - Mendukung touchpad zoom (pinch gesture)
+   - Double-click untuk zoom in cepat
+   - Zoom range: 10-19 (dari kota hingga level jalan)
+   - Smooth zoom animation
+
+2. **Fullscreen Map Improvements**
+   - Modal peta fullscreen dengan kontrol lengkap
+   - Tombol "Lokasi Saya" untuk GPS tracking
+   - Legend marker (Tetap vs Keliling)
+   - Enhanced marker icons (🍴 dan 🛵)
+   - Popup detail kuliner di marker
+
+3. **Accessibility Features** (NFR-10)
+   - ARIA labels untuk screen readers
+   - Keyboard navigation (Tab, Enter, Space)
+   - Skip to content link
+   - Focus visible styles
+   - High contrast mode support
+
+4. **Privacy & Security** (NFR-01, NFR-02)
+   - Privacy consent banner
+   - Secure cookie management
+   - Data protection policy
+   - User consent tracking
+
+5. **Berita & Artikel** (FR-21, FR-22)
+   - 10 artikel kuliner Purwokerto
+   - Filter berdasarkan kategori
+   - Grid layout responsif
+   - Card hover effects
+
+**Integration Testing:**
 **Definisi:** Testing interaksi antar modul dan external systems  
 **Focus Areas:**
 - Google OAuth login flow

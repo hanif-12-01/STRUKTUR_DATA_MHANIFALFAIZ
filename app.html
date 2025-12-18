@@ -63,6 +63,9 @@
     <main id="page-home" class="page active">
         <!-- Map -->
         <section class="map-section">
+            <button class="map-fullscreen-btn" onclick="openFullscreenMap()" title="Lihat peta fullscreen">
+                <i class="fas fa-expand"></i>
+            </button>
             <div id="map"></div>
         </section>
 
@@ -123,12 +126,40 @@
         </section>
     </main>
 
+    <!-- Fullscreen Map Modal -->
+    <div id="fullscreenMapModal" class="fullscreen-map-modal">
+        <div class="fullscreen-map-header">
+            <h3><i class="fas fa-map-marked-alt"></i> Peta Kuliner Purwokerto</h3>
+            <button class="close-fullscreen-map" onclick="closeFullscreenMap()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="fullscreenMap" class="fullscreen-map-container"></div>
+        <button class="locate-me-btn" onclick="locateMe()" title="Lokasi Saya">
+            <i class="fas fa-location-arrow"></i>
+        </button>
+        <div class="fullscreen-map-legend">
+            <div class="legend-item"><span class="legend-icon" style="background: white; border: 2px solid #FF6B35; border-radius: 50%; padding: 4px; display: inline-flex; align-items: center; justify-content: center;">🍴</span> Tetap</div>
+            <div class="legend-item"><span class="legend-icon" style="background: white; border: 2px solid #FFA94D; border-radius: 50%; padding: 4px; display: inline-flex; align-items: center; justify-content: center;">🛵</span> Keliling</div>
+        </div>
+    </div>
+
     <!-- Page: Berita -->
     <main id="page-berita" class="page">
         <div class="page-header">
             <h2>Berita & Artikel</h2>
             <p>Tips, event, dan liputan kuliner Purwokerto</p>
         </div>
+        
+        <!-- Filter Kategori Berita -->
+        <div class="berita-filter">
+            <button class="berita-filter-btn active" onclick="filterBerita('all')">Semua</button>
+            <button class="berita-filter-btn" onclick="filterBerita('Kuliner')">Kuliner</button>
+            <button class="berita-filter-btn" onclick="filterBerita('Event')">Event</button>
+            <button class="berita-filter-btn" onclick="filterBerita('Tips')">Tips</button>
+            <button class="berita-filter-btn" onclick="filterBerita('Berita')">Berita</button>
+        </div>
+        
         <div id="beritaList" class="berita-grid"></div>
     </main>
 
