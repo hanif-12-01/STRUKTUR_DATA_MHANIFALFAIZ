@@ -898,8 +898,7 @@ int main() {
 ```
 
 #### Output:
-```
-```
+
 
 #### Penjelasan:
 
@@ -1047,3 +1046,4 @@ Dari praktikum **Graph** yang telah dilakukan, dapat disimpulkan:
 
 
 [8] A. Drozdek, *Data Structures and Algorithms in C++*, 4th ed. Boston, MA: Cengage Learning, 2012.
+
