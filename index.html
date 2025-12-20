@@ -192,7 +192,8 @@
                 <div class="search-container">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="search" placeholder="Cari kuliner favorit..." aria-label="Cari kuliner">
+                        <input type="text" id="searchInput" placeholder="Cari kuliner favorit..."
+                            aria-label="Cari kuliner">
                     </div>
                 </div>
 
@@ -237,19 +238,19 @@
                     <!-- Advanced Filters -->
                     <div class="filter-bar">
                         <div class="filter-group">
-                            <select id="filter" aria-label="Filter Kategori">
+                            <select id="categoryFilter" aria-label="Filter Kategori">
                                 <option value="">🏷️ Semua Kategori</option>
                             </select>
                         </div>
                         <div class="filter-group">
-                            <select id="filterTipe" aria-label="Filter Tipe">
+                            <select id="typeFilter" aria-label="Filter Tipe">
                                 <option value="">🏪 Semua Tipe</option>
                                 <option value="tetap">🏠 Warung Tetap</option>
                                 <option value="keliling">🚚 Pedagang Keliling</option>
                             </select>
                         </div>
                         <div class="filter-group">
-                            <select id="filterHalal" aria-label="Filter Kehalalan">
+                            <select id="halalFilter" aria-label="Filter Kehalalan">
                                 <option value="">☪️ Semua Status</option>
                                 <option value="halal">✅ Halal MUI</option>
                                 <option value="halal-self">🕌 Halal (Self-Declared)</option>
@@ -257,7 +258,7 @@
                             </select>
                         </div>
                         <div class="filter-group">
-                            <select id="sort" aria-label="Urutkan">
+                            <select id="sortFilter" aria-label="Urutkan">
                                 <option value="">📊 Urutkan</option>
                                 <option value="nama">🔤 Nama A-Z</option>
                                 <option value="rating">⭐ Rating Tertinggi</option>
@@ -283,7 +284,7 @@
                     <h2>Kuliner Populer</h2>
                     <span class="result-count" id="resultCount">0 hasil</span>
                 </div>
-                <div id="list" class="kuliner-list">
+                <div id="kulinerList" class="kuliner-list">
                     <div class="loading">
                         <div class="spinner"></div>
                         <p>Memuat daftar kuliner...</p>
@@ -318,17 +319,17 @@
     </main>
 
     <!-- Detail Popup -->
-    <div class="modal detail-modal" id="detailPopup">
+    <div class="modal detail-modal" id="detailModal">
         <div class="modal-content detail-content">
             <button class="modal-close" onclick="closeDetail()" aria-label="Tutup">
                 <i class="fas fa-times"></i>
             </button>
-            <div id="detailContent"></div>
+            <div id="modalContent"></div>
         </div>
     </div>
 
     <!-- Add Kuliner Modal -->
-    <div class="modal" id="addKulinerModal">
+    <div class="modal" id="submitModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-plus-circle"></i> Tambah Kuliner Baru</h2>
@@ -595,9 +596,7 @@
 
 
 
-    <script src="script.js?v=4"></script>
-    <script src="features-additional.js?v=4"></script>
-    <script src="chatbot.js?v=4"></script>
+    <script src="script.js?v=5"></script>
 
     <!-- Service Worker Registration -->
     <script>

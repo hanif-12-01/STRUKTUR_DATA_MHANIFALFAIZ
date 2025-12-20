@@ -1,270 +1,753 @@
-﻿
-// ============================================
-// LAPOR MANGAN! - MAIN SCRIPT (RESTORATION)
-// v5.0 - Emergency Fix
+﻿// ============================================
+// LAPOR MANGAN! - Main Application Script
+// Consolidated Logic for FR & NFR Compliance
 // ============================================
 
-// 1. DATABASE LOKAL (LocalStorage)
+// ============================================
+// DATABASE (LocalStorage Simulation)
+// ============================================
 const DB = {
-    get(key, dev = []) {
-        try { return JSON.parse(localStorage.getItem(`lm_${key}`)) || dev; }
-        catch { return dev; }
+    get(key, defaultValue = []) {
+        try {
+            const data = localStorage.getItem(`lm_${key}`);
+            return data ? JSON.parse(data) : defaultValue;
+        } catch { return defaultValue; }
     },
-    set(key, val) {
-        localStorage.setItem(`lm_${key}`, JSON.stringify(val));
+
+    set(key, value) {
+        localStorage.setItem(`lm_${key}`, JSON.stringify(value));
     },
+
     init() {
-        if (!localStorage.getItem('lm_init')) {
-            this.set('users', []);
-            localStorage.setItem('lm_init', 'true');
+        if (!localStorage.getItem('lm_initialized')) {
+            this.set('kuliner', initialKulinerData);
+            this.set('berita', initialBeritaData);
+            this.set('promo', initialPromoData);
+            this.set('users', [{ id: 1, email: 'admin@lapormangan.id', name: 'Admin', role: 'admin' }]);
+            this.set('submissions', []);
+            this.set('initialized', true);
         }
     }
 };
-DB.init();
 
-// 2. USER AUTH
-let currentUser = null;
-
-function checkUserSession() {
-    currentUser = DB.get('current_user', null);
-    updateUserUI(currentUser);
-}
-
-function updateUserUI(user) {
-    const profile = document.getElementById('userProfileSection');
-    const nameDisplay = document.getElementById('userNameDisplay');
-    const emailDisplay = document.getElementById('userEmailDisplay');
-    const loginBtn = document.getElementById('authBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    if (user) {
-        if (nameDisplay) nameDisplay.textContent = user.name;
-        if (emailDisplay) emailDisplay.textContent = user.email;
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'block';
-    } else {
-        if (nameDisplay) nameDisplay.textContent = 'Tamu';
-        if (emailDisplay) emailDisplay.textContent = 'Silakan Login';
-        if (loginBtn) loginBtn.style.display = 'block';
-        if (logoutBtn) logoutBtn.style.display = 'none';
-    }
-}
-
-function loginWithGoogle() {
-    // Simulasi Login
-    const user = {
-        id: 'user_' + Date.now(),
-        name: 'Pengguna Baru',
-        email: 'user@example.com',
-        photo: 'https://via.placeholder.com/100'
-    };
-    DB.set('current_user', user);
-    checkUserSession();
-    closeAuthModal();
-    alert('Berhasil login sebagai ' + user.name);
-}
-
-function signOut() {
-    localStorage.removeItem('lm_current_user');
-    checkUserSession();
-    alert('Berhasil keluar');
-}
-
-// 3. KULINER DATA (REAL IMAGES)
-window.kulinerData = [
+// ============================================
+// INITIAL DATA
+// ============================================
+const initialKulinerData = [
     {
         id: 1,
-        nama: "Soto Kecik Sokaraja",
+        nama: "Soto Sokaraja",
         kategori: "Soto",
-        deskripsi: "Soto khas Sokaraja dengan kuah kacang yang gurih dan ketupat.",
-        alamat: "Jl. Jend. Soedirman No. 12, Sokaraja",
-        jam: "08.00 - 20.00",
-        harga: "Rp 20.000 - Rp 35.000",
-        lat: -7.4589,
-        lng: 109.2890,
-        gambar: "https://images.unsplash.com/photo-1572656631137-7935297eff55?w=500&q=80", // Real Soto Image
-        rating: 4.8,
-        reviews: []
+        alamat: "Jl. Jend. Sudirman No.58, Purwokerto",
+        jam: "07:00 - 15:00",
+        harga: "Rp15.000 - Rp20.000",
+        deskripsi: "Kuah kental dengan irisan daging sapi, khas Sokaraja yang legendaris.",
+        foto: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=400",
+        lat: -7.421, lng: 109.242,
+        keliling: false,
+        halal: "halal",
+        kontak: "081234567890",
+        parkir: "Tersedia luas",
+        rute: "Area Sokaraja, dekat pasar",
+        verified: true,
+        reviews: [
+            { userId: 1, name: "Budi", rating: 5, comment: "Soto terenak di Purwokerto!", date: "2025-12-10" },
+            { userId: 2, name: "Ani", rating: 4, comment: "Kuahnya gurih, porsi pas", date: "2025-12-08" }
+        ]
     },
     {
         id: 2,
-        nama: "Bakso Pekih",
-        kategori: "Bakso",
-        deskripsi: "Bakso legendaris di Purwokerto dengan tekstur daging asli yang padat.",
-        alamat: "Jl. Pekih No. 10, Purwokerto",
-        jam: "09.00 - 18.00",
-        harga: "Rp 25.000 - Rp 40.000",
-        lat: -7.4213,
-        lng: 109.2345,
-        gambar: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=500&q=80", // Real Bakso Image
-        rating: 4.7,
-        reviews: []
+        nama: "Sate Bebek Tambak",
+        kategori: "Sate",
+        alamat: "Jl. Tambak, Purwokerto",
+        jam: "16:00 - 22:00",
+        harga: "Rp25.000 - Rp40.000",
+        deskripsi: "Sate bebek gurih dengan bumbu kacang dan arang khas, favorit malam hari.",
+        foto: "https://images.unsplash.com/photo-1529563021893-cc83c992d75d?w=400",
+        lat: -7.423, lng: 109.240,
+        keliling: false,
+        halal: "halal",
+        kontak: "081234567891",
+        parkir: "Tersedia",
+        rute: "Jl. Tambak",
+        verified: true,
+        reviews: [{ userId: 3, name: "Dimas", rating: 5, comment: "Wajib coba!", date: "2025-12-05" }]
     },
     {
         id: 3,
-        nama: "Sate Ayam Martawi",
-        kategori: "Sate",
-        deskripsi: "Sate ayam dengan potongan besar dan bumbu kacang kental khas.",
-        alamat: "Jl. Masjid No. 4, Purwokerto",
-        jam: "10.00 - 22.00",
-        harga: "Rp 30.000 - Rp 50.000",
-        lat: -7.4245,
-        lng: 109.2312,
-        gambar: "https://images.unsplash.com/photo-1529563021893-cc83c9123490?w=500&q=80", // Real Satay
-        rating: 4.6,
+        nama: "Mendoan Bu Parti",
+        kategori: "Jajanan Tradisional",
+        alamat: "Pasar Sokaraja, Purwokerto",
+        jam: "06:00 - 18:00",
+        harga: "Rp2.000 - Rp5.000",
+        deskripsi: "Tempe tipis digoreng renyah, disajikan dengan sambal kecap pedas.",
+        foto: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400",
+        lat: -7.420, lng: 109.230,
+        keliling: true,
+        halal: "halal-self",
+        kontak: "081234567892",
+        parkir: "Area Pasar",
+        rute: "Berkeliling Pasar Sokaraja",
+        verified: true,
         reviews: []
     },
     {
         id: 4,
-        nama: "Tempe Mendoan Eco 21",
-        kategori: "Jajanan Tradisional",
-        deskripsi: "Tempe mendoan hangat dengan sambal kecap pedas manis.",
-        alamat: "Jl. HR Bunyamin, Purwokerto",
-        jam: "15.00 - 23.00",
-        harga: "Rp 3.000 / pcs",
-        lat: -7.4012,
-        lng: 109.2456,
-        gambar: "https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=500&q=80", // Fried Tempeh
-        rating: 4.9,
+        nama: "Nasi Liwet Mbah Maimun",
+        kategori: "Makanan Berat",
+        alamat: "Jl. Pahlawan No.123, Purwokerto",
+        jam: "16:00 - 22:00",
+        harga: "Rp18.000 - Rp25.000",
+        deskripsi: "Nasi gurih santan dengan lauk ayam suwir, telur, dan tempe orek.",
+        foto: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400",
+        lat: -7.425, lng: 109.250,
+        keliling: false,
+        halal: "halal",
+        kontak: "081234567893",
+        parkir: "Tersedia",
+        rute: "Jl. Pahlawan",
+        verified: true,
         reviews: []
     },
     {
         id: 5,
-        nama: "Gudeg Yu Djum",
+        nama: "Bakso President",
+        kategori: "Bakso",
+        alamat: "Jl. Dr. Angka No.88, Purwokerto",
+        jam: "08:00 - 21:00",
+        harga: "Rp15.000 - Rp25.000",
+        deskripsi: "Bakso besar dengan kuah gurih dan tekstur kenyal, ikonik di Purwokerto.",
+        foto: "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400",
+        lat: -7.418, lng: 109.245,
+        keliling: false,
+        halal: "halal",
+        kontak: "081234567894",
+        parkir: "Luas",
+        rute: "Jl. Dr. Angka",
+        verified: true,
+        reviews: []
+    },
+    {
+        id: 6,
+        nama: "Gudeg Mbah Siti",
         kategori: "Gudeg",
-        deskripsi: "Gudeg kering khas Jogja yang hadir di Purwokerto.",
-        alamat: "Jl. Overste Isdiman, Purwokerto",
-        jam: "07.00 - 21.00",
-        harga: "Rp 25.000 - Rp 60.000",
-        lat: -7.4111,
-        lng: 109.2399,
-        gambar: "https://images.unsplash.com/photo-1626202157715-671c6dc0011d?w=500&q=80", // Gudeg like
-        rating: 4.5,
+        alamat: "Jl. Slamet Riyadi No.45, Purwokerto",
+        jam: "09:00 - 19:00",
+        harga: "Rp20.000 - Rp30.000",
+        deskripsi: "Gudeg manis khas Jawa dengan krengsengan ayam.",
+        foto: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400",
+        lat: -7.430, lng: 109.235,
+        keliling: false,
+        halal: "halal-self",
+        kontak: "081234567895",
+        parkir: "Tersedia",
+        rute: "Jl. Slamet Riyadi",
+        verified: true,
+        reviews: []
+    },
+    {
+        id: 7,
+        nama: "Cilok Bang Jali",
+        kategori: "Jajanan Tradisional",
+        alamat: "Keliling area GOR Satria",
+        jam: "14:00 - 21:00",
+        harga: "Rp5.000 - Rp10.000",
+        deskripsi: "Cilok kenyal dengan bumbu kacang spesial.",
+        foto: "https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400",
+        lat: -7.424, lng: 109.244,
+        keliling: true,
+        halal: "unknown",
+        kontak: "081234567896",
+        parkir: "-",
+        rute: "Keliling GOR Satria",
+        verified: true,
+        reviews: []
+    },
+    {
+        id: 8,
+        nama: "Es Dawet Ayu",
+        kategori: "Minuman",
+        alamat: "Alun-alun Purwokerto",
+        jam: "10:00 - 22:00",
+        harga: "Rp5.000 - Rp8.000",
+        deskripsi: "Es dawet segar dengan santan dan gula merah.",
+        foto: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400",
+        lat: -7.422, lng: 109.241,
+        keliling: true,
+        halal: "halal-self",
+        kontak: "081234567897",
+        parkir: "Area Alun-alun",
+        rute: "Alun-alun Purwokerto",
+        verified: true,
+        reviews: []
+    },
+    {
+        id: 9,
+        nama: "Ayam Bakar Pak Tono",
+        kategori: "Ayam",
+        alamat: "Jl. Diponegoro No.78, Purwokerto",
+        jam: "11:00 - 23:00",
+        harga: "Rp25.000 - Rp40.000",
+        deskripsi: "Ayam bakar bumbu rempah dengan sambal matah.",
+        foto: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400",
+        lat: -7.422, lng: 109.248,
+        keliling: false,
+        halal: "halal",
+        kontak: "081234567898",
+        parkir: "Luas",
+        rute: "Jl. Diponegoro",
+        verified: true,
+        reviews: []
+    },
+    {
+        id: 10,
+        nama: "Lontong Sayur Mbah Rini",
+        kategori: "Lontong",
+        alamat: "Jl. Ahmad Yani No.90, Purwokerto",
+        jam: "07:00 - 14:00",
+        harga: "Rp12.000 - Rp18.000",
+        deskripsi: "Lontong dengan sayur labu siam santan.",
+        foto: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400",
+        lat: -7.415, lng: 109.240,
+        keliling: false,
+        halal: "halal-self",
+        kontak: "081234567899",
+        parkir: "Tersedia",
+        rute: "Jl. Ahmad Yani",
+        verified: true,
         reviews: []
     }
 ];
 
-window.getAllKulinerData = () => window.kulinerData;
+const initialBeritaData = [
+    {
+        id: 1,
+        judul: "Festival Kuliner Purwokerto 2025",
+        konten: "Festival kuliner terbesar di Purwokerto akan diselenggarakan pada tanggal 20-25 Desember 2025 di Alun-alun Purwokerto.",
+        gambar: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600",
+        tanggal: "2025-12-15",
+        kategori: "Event",
+        author: "Admin"
+    },
+    {
+        id: 2,
+        judul: "Tips Mencari Kuliner Halal",
+        konten: "Pastikan tempat makan memiliki sertifikat halal MUI atau minimal sudah dikenal masyarakat sebagai tempat makan halal.",
+        gambar: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600",
+        tanggal: "2025-12-12",
+        kategori: "Tips",
+        author: "Admin"
+    }
+];
 
-// 4. MAP FUNCTIONALITY
-let map, markers = [];
+const initialPromoData = [
+    {
+        id: 1,
+        judul: "Diskon 20% Soto Sokaraja",
+        deskripsi: "Dapatkan diskon 20% untuk pembelian minimal Rp50.000",
+        kulinerId: 1,
+        berlakuSampai: "2025-12-31",
+        kode: "SOTO20",
+        aktif: true
+    }
+];
 
+// ============================================
+// STATE MANAGEMENT
+// ============================================
+let state = {
+    currentUser: null,
+    currentPage: 'home',
+    kulinerData: [],
+    favorites: new Set(),
+    map: null,
+    markers: [],
+    weather: null
+};
+
+// ============================================
+// INITIALIZATION
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    DB.init();
+    loadState();
+    initApp();
+});
+
+function loadState() {
+    state.kulinerData = DB.get('kuliner', initialKulinerData);
+    state.favorites = new Set(DB.get('favorites', []));
+    state.currentUser = DB.get('currentUser', null);
+}
+
+function initApp() {
+    initMap();
+    renderKulinerList();
+    populateFilters();
+    fetchWeather();
+    setupEventListeners();
+    updateAuthUI();
+    checkUrlHash();
+
+    // Init Chatbot
+    const fab = document.querySelector('.chatbot-fab') || document.querySelector('.chat-fab');
+    if (fab) fab.onclick = toggleChat;
+}
+
+// ============================================
+// MAP (FR-01, FR-02)
+// ============================================
 function initMap() {
-    const mapEl = document.getElementById('map');
-    if (!mapEl) return;
-
-    // Default Purwokerto
-    const center = [-7.4245, 109.2302];
-    map = L.map('map', {
-        center: center,
-        zoom: 13,
-        zoomControl: false
-    });
-
+    if (!document.getElementById('map')) return;
+    state.map = L.map('map', { zoomControl: false }).setView([-7.4212, 109.2422], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
-        maxZoom: 19
-    }).addTo(map);
-
+        attribution: '© OpenStreetMap'
+    }).addTo(state.map);
     renderMarkers();
-    console.log('Map initialized');
+
+    // Re-locate user button
+    const locateBtn = document.querySelector('.map-locate-btn');
+    if (locateBtn) locateBtn.onclick = sortByDistance;
 }
 
-function renderMarkers() {
-    if (!map) return;
-    markers.forEach(m => map.removeLayer(m));
-    markers = [];
+function renderMarkers(data = state.kulinerData) {
+    if (!state.map) return;
+    state.markers.forEach(m => state.map.removeLayer(m));
+    state.markers = [];
 
-    window.kulinerData.forEach(item => {
-        if (item.lat && item.lng) {
-            const m = L.marker([item.lat, item.lng])
-                .addTo(map)
-                .bindPopup(`<b>${item.nama}</b><br>${item.kategori}`);
-            markers.push(m);
-        }
+    data.forEach((item) => {
+        const icon = item.keliling ? '🛵' : '📍';
+        const marker = L.marker([item.lat, item.lng], {
+            icon: L.divIcon({
+                html: `<div class="marker-icon ${item.keliling ? 'keliling' : ''}" style="background:white; padding:5px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.3); font-size:20px;">${icon}</div>`,
+                className: '',
+                iconSize: [32, 32]
+            })
+        }).addTo(state.map);
+
+        marker.bindPopup(`<strong>${item.nama}</strong><br>${item.kategori}<br><button onclick="showDetail(${item.id})" class="btn-xs btn-primary" style="margin-top:5px;">Lihat Detail</button>`);
+        marker.on('click', () => {
+            // Optional: Center map
+        });
+        state.markers.push(marker);
     });
 }
 
-function locateUser() {
-    if (map) map.locate({ setView: true, maxZoom: 15 });
-}
-
-// 5. RENDERING LIST
-function getAverageRating(item) {
-    if (!item.reviews || item.reviews.length === 0) return item.rating || 0;
-    const sum = item.reviews.reduce((acc, r) => acc + r.rating, 0);
-    return (sum / item.reviews.length).toFixed(1);
-}
-
-window.renderKulinerList = function (data = window.kulinerData) {
-    const list = document.getElementById('list');
-    const count = document.getElementById('resultCount');
-    if (!list) return;
-
-    list.innerHTML = '';
-    if (count) count.textContent = data.length + ' hasil';
-
-    if (data.length === 0) {
-        list.innerHTML = '<div class="empty-state">Tidak ditemukan</div>';
+function sortByDistance() {
+    if (!navigator.geolocation) {
+        showToast('Geolocation tidak didukung', 'error');
         return;
     }
 
-    data.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.onclick = () => alert('Detail: ' + item.nama);
+    showToast('Mencari lokasi...', 'info');
+    navigator.geolocation.getCurrentPosition(pos => {
+        const sorted = [...state.kulinerData].sort((a, b) => {
+            const distA = getDistance(pos.coords.latitude, pos.coords.longitude, a.lat, a.lng);
+            const distB = getDistance(pos.coords.latitude, pos.coords.longitude, b.lat, b.lng);
+            return distA - distB;
+        });
+        renderKulinerList(sorted);
+        renderMarkers(sorted);
+        state.map.setView([pos.coords.latitude, pos.coords.longitude], 15);
 
-        card.innerHTML = `
-            <div class="card-image" style="height:140px; overflow:hidden;">
-                <img src="${item.gambar}" alt="${item.nama}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/300'">
-            </div>
-            <div class="card-content" style="padding:12px;">
-                <h3 style="margin:0; font-size:16px;">${item.nama}</h3>
-                <span class="rating-badge" style="font-size:12px; color:#FF6B35;">★ ${getAverageRating(item)}</span>
-                <p style="margin:4px 0; color:#666; font-size:13px;">${item.kategori} • ${item.harga}</p>
-                <p style="margin:0; font-size:12px; color:#999;">📍 ${item.alamat}</p>
-            </div>
-        `;
-        list.appendChild(card);
+        // Add user marker
+        L.marker([pos.coords.latitude, pos.coords.longitude], {
+            icon: L.divIcon({ html: '🔵', className: 'user-marker', iconSize: [20, 20] })
+        }).addTo(state.map).bindPopup('Lokasi Anda').openPopup();
+
+        showToast('Diurutkan berdasarkan jarak terdekat');
+    }, () => {
+        showToast('Gagal mengakses lokasi', 'error');
+    });
+}
+
+function getDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// ============================================
+// FILTERS & SORTING
+// ============================================
+function populateFilters() {
+    const categories = ["Soto", "Sate", "Bakso", "Gudeg", "Ayam", "Lontong", "Jajanan Tradisional", "Makanan Berat", "Minuman"];
+    const select = document.getElementById('categoryFilter');
+    if (select) {
+        select.innerHTML = '<option value="">Kategori</option>';
+        categories.forEach(cat => {
+            select.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+    }
+}
+
+function applyFilters() {
+    const search = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+    const category = document.getElementById('categoryFilter')?.value || '';
+    const type = document.getElementById('typeFilter')?.value || '';
+    const halal = document.getElementById('halalFilter')?.value || '';
+    const sort = document.getElementById('sortFilter')?.value || '';
+    const openNow = document.getElementById('openNowFilter')?.checked || false;
+
+    let filtered = state.kulinerData.filter(k => {
+        const matchSearch = k.nama.toLowerCase().includes(search) || k.kategori.toLowerCase().includes(search);
+        const matchCategory = !category || k.kategori === category;
+        const matchType = !type || (type === 'tetap' ? !k.keliling : k.keliling);
+        const matchHalal = !halal || k.halal === halal;
+        const matchOpen = !openNow || isOpen(k.jam);
+        return matchSearch && matchCategory && matchType && matchHalal && matchOpen;
     });
 
-    // Remove loading fallback
-    const loading = document.querySelector('.loading');
-    if (loading) loading.remove();
+    // Sorting
+    if (sort === 'nama') filtered.sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+    else if (sort === 'rating') filtered.sort((a, b) => getAvgRating(b) - getAvgRating(a));
+    else if (sort === 'harga-asc') filtered.sort((a, b) => parsePrice(a.harga) - parsePrice(b.harga));
+    else if (sort === 'harga-desc') filtered.sort((a, b) => parsePrice(b.harga) - parsePrice(a.harga));
+
+    renderKulinerList(filtered);
+    renderMarkers(filtered);
+
+    document.getElementById('resultCount').textContent = `${filtered.length} hasil`;
+}
+
+function isOpen(jam) {
+    if (!jam) return false;
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const [start, end] = jam.split(' - ').map(t => {
+        const [h, m] = t.split(':').map(Number);
+        return h * 60 + (m || 0);
+    });
+    return currentMinutes >= start && currentMinutes <= end;
+}
+
+function parsePrice(harga) {
+    const match = harga.match(/\d+/);
+    return match ? parseInt(match[0]) : 0;
+}
+
+function getAvgRating(item) {
+    if (!item.reviews || item.reviews.length === 0) return 0;
+    return item.reviews.reduce((sum, r) => sum + r.rating, 0) / item.reviews.length;
+}
+
+function filterOpenNow() {
+    const chk = document.getElementById('openNowFilter');
+    if (chk) {
+        chk.checked = !chk.checked;
+        applyFilters();
+    }
+}
+
+function showRandom() {
+    const random = state.kulinerData[Math.floor(Math.random() * state.kulinerData.length)];
+    if (random) showDetail(random.id);
+}
+
+// ============================================
+// KULINER LIST & DETAIL
+// ============================================
+function renderKulinerList(data = state.kulinerData) {
+    const list = document.getElementById('kulinerList');
+    if (!list) return;
+
+    if (data.length === 0) {
+        list.innerHTML = '<div class="empty-state"><p>Tidak ada hasil ditemukan</p></div>';
+        return;
+    }
+
+    list.innerHTML = data.map(item => `
+        <div class="kuliner-card" onclick="showDetail(${item.id})" style="cursor:pointer; margin-bottom:15px; background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+            <div style="height:120px; overflow:hidden;">
+                <img src="${item.foto}" alt="${item.nama}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/300x150?text=No+Image'">
+            </div>
+            <div class="card-body" style="padding:12px;">
+                <h3 style="margin:0 0 5px 0; font-size:16px;">${item.nama}</h3>
+                <p style="margin:0; color:#666; font-size:12px;">${item.kategori} • ${item.harga}</p>
+                <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+                   <span style="font-size:12px; color:${isOpen(item.jam) ? 'green' : 'red'}">${isOpen(item.jam) ? '● Buka' : '○ Tutup'}</span>
+                   <span style="color:#FF6B35; font-size:12px;">★ ${getAvgRating(item).toFixed(1)}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function showDetail(id) {
+    const item = state.kulinerData.find(k => k.id === id);
+    if (!item) return;
+
+    const isFav = state.favorites.has(id);
+    const detailContent = document.getElementById('modalContent');
+
+    detailContent.innerHTML = `
+        <div style="position:relative;">
+            <img src="${item.foto}" style="width:100%; height:200px; object-fit:cover; border-radius:10px;">
+            <button onclick="toggleFavorite(${item.id})" style="position:absolute; top:10px; right:10px; background:white; border:none; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.2); color:${isFav ? 'red' : '#ccc'}; font-size:18px;">
+                <i class="fas fa-heart"></i>
+            </button>
+        </div>
+        <div style="padding:15px 0;">
+            <h2 style="margin:0;">${item.nama}</h2>
+            <div style="display:flex; gap:5px; margin:10px 0;">
+                <span class="badge" style="background:#eee; padding:2px 8px; border-radius:4px; font-size:12px;">${item.kategori}</span>
+                <span class="badge" style="background:${item.halal === 'halal' ? '#d4edda' : '#f8f9fa'}; color:${item.halal === 'halal' ? '#155724' : '#666'}; padding:2px 8px; border-radius:4px; font-size:12px;">${item.halal === 'halal' ? 'Halal MUI' : 'Halal'}</span>
+            </div>
+            
+            <div class="info-list" style="display:flex; flex-direction:column; gap:8px; font-size:14px; margin-bottom:15px;">
+                <div><i class="fas fa-clock" style="width:20px; color:#666;"></i> ${item.jam} (${isOpen(item.jam) ? 'Buka' : 'Tutup'})</div>
+                <div><i class="fas fa-map-marker-alt" style="width:20px; color:#666;"></i> ${item.alamat}</div>
+                <div><i class="fas fa-tag" style="width:20px; color:#666;"></i> ${item.harga}</div>
+                <div><i class="fas fa-parking" style="width:20px; color:#666;"></i> ${item.parkir || 'Info parkir tidak tersedia'}</div>
+            </div>
+            
+            <p style="color:#444; line-height:1.5;">${item.deskripsi}</p>
+            
+            <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}', '_blank')" class="btn btn-primary" style="width:100%; padding:12px; margin-top:10px;">
+                <i class="fas fa-directions"></i> Petunjuk Arah
+            </button>
+        </div>
+    `;
+
+    document.getElementById('detailModal').classList.add('show');
+    state.map.setView([item.lat, item.lng], 16);
+}
+
+function closeModal() {
+    document.getElementById('detailModal').classList.remove('show');
+}
+
+// ============================================
+// CHATBOT AI (MakanBot)
+// ============================================
+function toggleChat() {
+    document.getElementById('chatPanel').classList.toggle('active'); // Changed to toggle Class
+    // Ensure display logic in CSS handles .active
+    const panel = document.getElementById('chatPanel');
+    if (panel.style.display === 'flex') {
+        panel.style.display = 'none';
+        panel.classList.remove('active');
+    } else {
+        panel.style.display = 'flex';
+        panel.classList.add('active');
+    }
+}
+
+function sendChat() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    const messages = document.getElementById('chatMessages');
+    messages.innerHTML += `<div class="chat-msg user" style="align-self:flex-end; background:#dcf8c6; padding:8px 12px; border-radius:15px; margin:5px 0; max-width:80%;">${msg}</div>`;
+    input.value = '';
+
+    // Typing simulation
+    const id = Date.now();
+    messages.innerHTML += `<div id="typing-${id}" class="chat-msg bot" style="align-self:flex-start; background:white; padding:8px 12px; border-radius:15px; margin:5px 0; border:1px solid #eee;">...</div>`;
+    messages.scrollTop = messages.scrollHeight;
+
+    setTimeout(() => {
+        document.getElementById(`typing-${id}`).remove();
+        const reply = MakanBotAI.generateResponse(msg);
+        messages.innerHTML += `<div class="chat-msg bot" style="align-self:flex-start; background:white; padding:8px 12px; border-radius:15px; margin:5px 0; border:1px solid #eee;">${reply.replace(/\n/g, '<br>')}</div>`;
+        messages.scrollTop = messages.scrollHeight;
+    }, 800);
+}
+
+function handleChatKey(e) {
+    if (e.key === 'Enter') sendChat();
+}
+
+const MakanBotAI = {
+    intents: {
+        greeting: ['halo', 'hai', 'hi', 'pagi', 'siang'],
+        askFood: ['makan', 'kuliner', 'lapar', 'cari makan'],
+        askCheap: ['murah', 'hemat', 'budget', 'terjangkau'],
+        askOpen: ['buka', 'open', 'sekarang'],
+        askLegendary: ['legendaris', 'legend', 'terkenal', 'hits'],
+        askTakeaway: ['take away', 'bungkus', 'bawa pulang', 'dibungkus'],
+        askSouvenir: ['oleh-oleh', 'buah tangan', 'khas'],
+        askWeather: ['hujan', 'panas', 'cuaca'],
+        askHelp: ['help', 'bantuan', 'bisa apa']
+    },
+
+    generateResponse(msg) {
+        const lower = msg.toLowerCase();
+
+        // Help
+        if (this.match(lower, 'askHelp')) return "Aku bisa bantu cari kuliner:\n- 'Yang murah apa?'\n- 'Rekomendasi soto legendaris'\n- 'Oleh-oleh khas Purwokerto'\n- 'Makanan pas hujan'";
+
+        // Greeting
+        if (this.match(lower, 'greeting')) return "Halo! 👋 MakanBot di sini. Lagi cari kuliner apa?";
+
+        // Legendary (Use Case 6)
+        if (this.match(lower, 'askLegendary') || lower.includes('legendaris')) {
+            const legends = state.kulinerData.filter(k => k.nama.includes('Soto') || k.nama.includes('Bebek') || k.nama.includes('President'));
+            const pick = this.pick(legends);
+            return `Purwokerto punya banyak kuliner legendaris! Salah satunya **${pick.nama}**. Wajib coba! 🌟`;
+        }
+
+        // Take Away (Use Case 8)
+        if (this.match(lower, 'askTakeaway')) {
+            return "Buat dibawa pulang, **Sate Bebek Tambak** atau **Ayam Bakar Pak Tono** paling pas! Praktis dan tetap enak sampai rumah. 🏠";
+        }
+
+        // Souvenir (Use Case 9)
+        if (this.match(lower, 'askSouvenir')) {
+            return "Oleh-oleh khas Purwokerto paling top ya **Tempe Mendoan**! Bisa beli mentah atau matang di Pasar Sokaraja (Mendoan Bu Parti). 🎁";
+        }
+
+        // Weather (Use Case 2)
+        if (this.match(lower, 'askWeather') || lower.includes('hujan')) {
+            if (lower.includes('hujan')) return "Wah lagi hujan ya? 🌧️ Enaknya makan yang anget-anget kayak **Soto Sokaraja** atau **Bakso President**! 🍜";
+            return "Cek ikon cuaca di pojok kanan atas ya! Aku bisa kasih rekomendasi sesuai cuaca. 😉";
+        }
+
+        // Cheap (Use Case 5)
+        if (this.match(lower, 'askCheap')) {
+            const cheap = state.kulinerData.filter(k => parsePrice(k.harga) <= 15000);
+            const pick = this.pick(cheap);
+            return `Mau yang hemat? Coba **${pick.nama}** (${pick.harga}). Dijamin kenyang tapi dompet aman! 💸`;
+        }
+
+        // Default Logic
+        if (lower.includes('soto')) return this.recommend('Soto');
+        if (lower.includes('sate')) return this.recommend('Sate');
+        if (lower.includes('makan')) return "Bingung mau makan apa? Coba fitur 'Acak' di menu filter, atau aku pilihkan **Gudeg Mbah Siti**? 😋";
+
+        return "Maaf, aku kurang ngerti. Coba tanya 'kuliner legendaris' atau 'makan murah'. 😊";
+    },
+
+    match(text, intent) {
+        return this.intents[intent].some(keyword => text.includes(keyword));
+    },
+
+    pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)] || arr[0];
+    },
+
+    recommend(cat) {
+        const items = state.kulinerData.filter(k => k.kategori.includes(cat));
+        if (!items.length) return `Belum ada data ${cat} nih.`;
+        return `Rekomendasi ${cat}: **${items[0].nama}** di ${items[0].alamat}.`;
+    }
 };
 
-// 6. UI HELPERS
-function toggleSidebar() {
+// ============================================
+// WEATHER & UTILS
+// ============================================
+async function fetchWeather() {
+    try {
+        const res = await fetch('https://wttr.in/Purwokerto?format=j1');
+        const data = await res.json();
+        const temp = data.current_condition[0].temp_C;
+        const code = data.current_condition[0].weatherCode; // Wttr.in code
+
+        state.weather = { temp, code };
+        updateWeatherUI();
+    } catch (e) {
+        console.warn('Weather fetch failed');
+        state.weather = { temp: 28, code: '113' }; // Fallback
+        updateWeatherUI();
+    }
+}
+
+function updateWeatherUI() {
+    const el = document.getElementById('weatherWidget');
+    if (!el || !state.weather) return;
+
+    let icon = '☀️';
+    // Simplified mapping
+    if (['119', '122'].includes(state.weather.code)) icon = '☁️';
+    if (['266', '296', '308'].includes(state.weather.code)) icon = '🌧️';
+
+    el.innerHTML = `<span class="weather-icon">${icon}</span> <span class="weather-temp">${state.weather.temp}°C</span>`;
+    el.onclick = getWeatherRecommendation;
+}
+
+function getWeatherRecommendation() {
+    if (!state.weather) return;
+    let msg = `Cuaca: ${state.weather.temp}°C. `;
+    if (state.weather.temp < 26) {
+        msg += "Adem nih! Makan Soto Sokaraja enak kayaknya.";
+        alert(msg);
+    } else {
+        msg += "Panas ya? Minum Es Dawet Ayu seger banget!";
+        alert(msg);
+    }
+}
+
+function showToast(msg, type = 'info') {
+    // Simple toast
+    const div = document.createElement('div');
+    div.className = 'toast show';
+    div.innerText = msg;
+    div.style.cssText = "position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:20px; z-index:9999;";
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 3000);
+}
+
+function showSubmitForm() {
+    document.getElementById('submitModal').classList.add('show');
+}
+function closeSubmitModal() {
+    document.getElementById('submitModal').classList.remove('show');
+}
+function submitKuliner(e) {
+    e.preventDefault();
+    showToast("Terima kasih! Data kuliner berhasil diajukan.");
+    closeSubmitModal();
+}
+
+function loginWithGoogle() {
+    showToast("Login berhasil! (Simulasi)");
+    document.getElementById('authBtn').innerHTML = `<button onclick="location.reload()" class="btn-xs">Logout</button>`;
+    document.getElementById('loginModal').classList.remove('show');
+}
+function closeLoginModal() { document.getElementById('loginModal').classList.remove('show'); }
+function toggleAuthModal() { document.getElementById('loginModal').classList.add('show'); }
+
+// Run
+window.showDetail = showDetail; // Expose
+window.navigate = (p) => showToast("Navigasi ke " + p);
+
+// HTML Event Handlers
+window.closeDetail = closeModal;
+window.closeAddKulinerModal = closeSubmitModal;
+window.toggleAuthModal = toggleAuthModal;
+window.showRandomKuliner = showRandom;
+window.showWeatherRec = getWeatherRecommendation;
+window.locateUser = sortByDistance;
+
+window.filterHalal = () => {
+    const el = document.getElementById('halalFilter');
+    if (el) { el.value = 'halal'; applyFilters(); }
+};
+window.sortPrice = () => {
+    const el = document.getElementById('sortFilter');
+    if (el) { el.value = 'harga-asc'; applyFilters(); }
+};
+window.sortRating = () => {
+    const el = document.getElementById('sortFilter');
+    if (el) { el.value = 'rating'; applyFilters(); }
+};
+window.quickFilter = (type) => {
+    if (type === 'all') {
+        document.querySelectorAll('select').forEach(s => s.value = '');
+        const search = document.getElementById('searchInput');
+        if (search) search.value = '';
+        applyFilters();
+    }
+};
+
+window.showAddKulinerModal = showSubmitForm;
+window.toggleSidebar = () => {
     const sb = document.getElementById('sidebar');
     const ov = document.getElementById('sidebarOverlay');
     if (sb) sb.classList.toggle('active');
     if (ov) ov.classList.toggle('active');
-}
-window.toggleSidebar = toggleSidebar;
-
-function closeAuthModal() {
-    document.getElementById('authModal').classList.remove('show');
-}
-window.closeAuthModal = closeAuthModal;
-
-function showSection(id) {
-    // Simple navigation
-    console.log('Navigating to ' + id);
-}
-window.showSection = showSection;
-
-// 7. INITIALIZATION
-document.addEventListener('DOMContentLoaded', () => {
-    checkUserSession();
-    initMap();
-    window.renderKulinerList();
-
-    // Chatbot Fix Listener
-    const fab = document.querySelector('.chatbot-fab');
-    if (fab) {
-        fab.onclick = (e) => {
-            e.preventDefault();
-            if (window.toggleChat) window.toggleChat();
-        };
-    }
-});
+};
+window.showPrivacyPolicy = () => alert("Kebijakan Privasi:\nData disimpan lokal di browser Anda. Kami menjamin keamanan data pengguna.");
