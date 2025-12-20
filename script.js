@@ -80,7 +80,6 @@ function updateUserUI(user) {
     const emailDisplay = document.getElementById('userEmailDisplay');
     const loginBtn = document.getElementById('authBtn');
     const logoutBtn = document.getElementById('logoutBtn');
-    const adminBtn = document.getElementById('adminBtn');
 
     if (user) {
         // User Logged In
@@ -89,20 +88,12 @@ function updateUserUI(user) {
         if (loginBtn) loginBtn.style.display = 'none';
         if (logoutBtn) logoutBtn.style.display = 'block';
 
-        // Admin Check
-        if (user.role === 'admin' && adminBtn) {
-            adminBtn.style.display = 'block';
-        } else if (adminBtn) {
-            adminBtn.style.display = 'none';
-        }
-
     } else {
         // Guest Mode
         if (nameDisplay) nameDisplay.textContent = 'Tamu';
         if (emailDisplay) emailDisplay.textContent = 'Silakan Login';
         if (loginBtn) loginBtn.style.display = 'block';
         if (logoutBtn) logoutBtn.style.display = 'none';
-        if (adminBtn) adminBtn.style.display = 'none';
     }
 }
 
@@ -168,15 +159,7 @@ function loginUser(email, password) {
     const users = DB.get('users');
     let user = users.find(u => u.email === email && u.password === password);
 
-    // Hardcoded Admin Check
-    if (email === 'admin@lapor.com' && password === 'admin123') {
-        user = {
-            id: 'admin',
-            name: 'Administrator',
-            email: 'admin@lapor.com',
-            role: 'admin'
-        };
-    }
+
 
     if (user) {
         currentUser = user;
@@ -185,11 +168,7 @@ function loginUser(email, password) {
         toggleAuthModal();
         alert(`Selamat datang, ${user.name}!`);
 
-        // Direct to admin panel if admin
-        if (user.role === 'admin') {
-            showSection('admin');
-            toggleSidebar();
-        }
+
     } else {
         alert('Email atau password salah!');
     }
@@ -2703,118 +2682,4 @@ window.getAllKulinerData = function () {
 
 
 
-// ============================================
-// ADMIN DASHBOARD LOGIC
-// ============================================
 
-function switchAdminTab(tab) {
-    document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
-    if (document.getElementById('adminDataTab')) document.getElementById('adminDataTab').style.display = (tab === 'data' ? 'block' : 'none');
-    if (document.getElementById('adminModerationTab')) document.getElementById('adminModerationTab').style.display = (tab === 'moderation' ? 'block' : 'none');
-
-    // Update button active state
-    const buttons = document.querySelectorAll('.admin-tabs button');
-    if (buttons.length > 0) {
-        buttons.forEach(b => b.classList.remove('active'));
-        if (tab === 'data' && buttons[0]) buttons[0].classList.add('active');
-        if (tab === 'moderation' && buttons[1]) buttons[1].classList.add('active');
-    }
-
-    if (tab === 'data') renderAdminData();
-    if (tab === 'moderation') renderModeration();
-}
-
-function renderAdminData(search = '') {
-    const tbody = document.getElementById('adminDataTableBody');
-    if (!tbody) return;
-
-    const searchInput = document.getElementById('adminSearch');
-    const filter = searchInput ? searchInput.value.toLowerCase() : '';
-
-    // Use window.kulinerData if available
-    const data = typeof kulinerData !== 'undefined' ? kulinerData : (typeof initialKulinerData !== 'undefined' ? initialKulinerData : []);
-
-    let html = '';
-    data.forEach((item, index) => {
-        if (item.nama.toLowerCase().includes(filter)) {
-            html += `
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 12px;">
-                        <b>${item.nama}</b><br>
-                        <small>${item.alamat}</small>
-                    </td>
-                    <td style="padding: 12px;">
-                        <span class="badge ${item.halal === 'halal' ? 'halal-mui' : 'halal-unknown'}">${item.kategori}</span>
-                    </td>
-                    <td style="padding: 12px; text-align: right;">
-                        <button onclick="editKuliner(${index})" class="btn-icon" style="color: blue; margin-right: 8px;" title="Edit"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteKuliner(${index})" class="btn-icon" style="color: red;" title="Hapus"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `;
-        }
-    });
-    tbody.innerHTML = html;
-}
-
-function deleteKuliner(index) {
-    if (confirm('Yakin ingin menghapus data ini?')) {
-        // Remove from array
-        if (typeof kulinerData !== 'undefined') {
-            kulinerData.splice(index, 1);
-            // Save to DB
-            if (typeof DB !== 'undefined') DB.set('kulinerData', kulinerData);
-            // Refresh UI
-            renderAdminData();
-            if (typeof filterAndSortList === 'function') filterAndSortList();
-            alert('Data berhasil dihapus.');
-        }
-    }
-}
-
-function editKuliner(index) {
-    alert('Fitur Edit akan membuka modal yang sama dengan Tambah Kuliner.');
-    // Pre-fill logic would go here
-    if (typeof openAddKulinerModal === 'function') openAddKulinerModal();
-}
-
-function renderModeration() {
-    const list = document.getElementById('moderationList');
-    if (!list) return;
-
-    const pending = [
-        { id: 991, nama: "Coto Makassar Daeng", kategori: "Soto", alamat: "Jl. Soeparno" },
-        { id: 992, nama: "Es Dawet Ayu Asli", kategori: "Minuman", alamat: "Pasar Wage" }
-    ];
-
-    if (pending.length === 0) {
-        list.innerHTML = '<p class="empty-state">Belum ada usulan baru.</p>';
-        return;
-    }
-
-    let html = '';
-    pending.forEach(p => {
-        html += `
-            <div class="card" style="margin-bottom: 10px; padding: 15px; border-left: 4px solid orange; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                    <div>
-                        <h4 style="margin:0 0 5px 0;">${p.nama}</h4>
-                        <p style="margin:0; font-size:14px; color:#666;">${p.alamat} • <span class="badge">${p.kategori}</span></p>
-                    </div>
-                </div>
-                <div style="margin-top: 15px; display:flex; gap:10px;">
-                    <button class="btn-primary" style="padding:5px 15px; font-size:14px;" onclick="approveSubmission('${p.nama}')">Setujui</button>
-                    <button class="btn-secondary" style="padding:5px 15px; font-size:14px; background:#ffebee; color:#c62828;" onclick="alert('Usulan ditolak.')">Tolak</button>
-                </div>
-            </div>
-        `;
-    });
-    list.innerHTML = html;
-}
-
-function approveSubmission(nama) {
-    alert('Data ' + nama + ' berhasil disetujui dan ditambahkan ke database!');
-    // In real app: move from pending list to kulinerData
-    // For demo, just alert
-    renderModeration();
-}

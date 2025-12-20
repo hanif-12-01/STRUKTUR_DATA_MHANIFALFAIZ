@@ -3489,12 +3489,7 @@
                     <i class="fas fa-heart"></i>
                     <span>Favorit</span>
                 </a>
-                <a href="#" class="nav-item" id="adminBtn"
-                    onclick="showSection('admin'); toggleSidebar(); return false;"
-                    style="display: none; color: #e67e22;">
-                    <i class="fas fa-user-shield"></i>
-                    <span>Admin Panel</span>
-                </a>
+
                 <a href="#/news" class="nav-item" onclick="navigateToHash('/news');return false;">
                     <i class="fas fa-newspaper"></i>
                     <span>Berita & Promo</span>
@@ -3645,51 +3640,7 @@
                 </div>
             </section>
 
-            <!-- Admin Section -->
-            <section class="admin-section page" id="adminSection" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-user-shield"></i> Admin Dashboard</h2>
-                </div>
 
-                <div class="admin-tabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <button class="btn-primary" onclick="switchAdminTab('data')" style="flex:1;">Data
-                        Kuliner</button>
-                    <button class="btn-secondary" onclick="switchAdminTab('moderation')"
-                        style="flex:1;">Moderasi</button>
-                </div>
-
-                <!-- Tab Data -->
-                <div id="adminDataTab" class="admin-tab-content">
-                    <div class="admin-toolbar"
-                        style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                        <input type="text" id="adminSearch" placeholder="Cari..." oninput="renderAdminData()"
-                            style="padding: 10px; border-radius: 8px; border: 1px solid #ddd; width: 60%;">
-                        <button onclick="openAddKulinerModal()" class="btn-primary"><i class="fas fa-plus"></i>
-                            Baru</button>
-                    </div>
-                    <div class="table-responsive" style="overflow-x: auto;">
-                        <table class="admin-table" style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: #f8f9fa; border-bottom: 2px solid #eee;">
-                                    <th style="padding: 12px; text-align: left;">Nama</th>
-                                    <th style="padding: 12px; text-align: left;">Ket</th>
-                                    <th style="padding: 12px; text-align: right;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminDataTableBody">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Tab Moderation -->
-                <div id="adminModerationTab" class="admin-tab-content" style="display: none;">
-                    <div id="moderationList" class="kuliner-list">
-                        <p class="empty-state">Belum ada usulan baru.</p>
-                    </div>
-                </div>
-            </section>
         </main>
 
         <!-- Detail Popup -->
@@ -3912,23 +3863,23 @@
     <!-- Firebase SDK -->
     <!-- Firebase SDK -->
     <script type="module">
-            // TODO: Ganti config berikut dengan config Firebase project ializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-            import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-            const firebaseConfig = {
-                apiKey: "YOUR_API_KEY",
-                authDomain: "YOUR_AUTH_DOMAIN",
-                projectId: "YOUR_PROJECT_ID",
-                storageBucket: "YOUR_STORAGE_BUCKET",
-                messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-                appId: "YOUR_APP_ID"
-            };
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            window.firebaseAuth = auth;
-            window.GoogleAuthProvider = GoogleAuthProvider;
-            window.signInWithPopup = signInWithPopup;
-            window.fbSignOut = fbSignOut;
-            window.onAuthStateChanged = onAuthStateChanged;
+        // TODO: Ganti config berikut dengan config Firebase project ializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        window.firebaseAuth = auth;
+        window.GoogleAuthProvider = GoogleAuthProvider;
+        window.signInWithPopup = signInWithPopup;
+        window.fbSignOut = fbSignOut;
+        window.onAuthStateChanged = onAuthStateChanged;
     </script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="knowledge-base.js?v=4"></script>
@@ -3976,12 +3927,12 @@
 
     <!-- Service Worker Registration -->
     <script>
-            if  in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('sw.js')
-                        .then(reg => console.log('Service Worker registered'))
-                        .catch(err => console.log('Service Worker registration failed:', err));
-                });
-            }
+        if  in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            });
+        }
     </script>
 </body>
