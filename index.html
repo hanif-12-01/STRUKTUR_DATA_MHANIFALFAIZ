@@ -1,654 +1,238 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Lapor Mangan! - Aplikasi pencarian kuliner UMKM di Purwokerto. Temukan makanan terbaik di sekitarmu!">
-    <meta name="theme-color" content="#FF6B35">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Lapor Mangan!">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-    
     <title>Lapor Mangan! - Purwokerto</title>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Icons & Maps -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="app-complete.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <!-- Splash Screen -->
-    <div id="splashScreen" class="splash-screen">
-        <div class="splash-content">
-            <div class="splash-logo">🍽️</div>
-            <h1>Lapor Mangan!</h1>
-            <p>Temukan Kuliner Terbaik di Purwokerto</p>
-            <div class="splash-loader"></div>
+    <header>
+        <div class="header-content">
+            <button class="menu-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1>🍽 Lapor Mangan! - Purwokerto</h1>
         </div>
-    </div>
-
-    <!-- Main App -->
-    <div id="app" class="app-container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-left">
-                <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="logo">
-                    <span class="logo-icon">🍽️</span>
-                    <div class="logo-text">
-                        <h1>Lapor Mangan!</h1>
-                        <span class="logo-subtitle">Purwokerto</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="header-right">
-                <!-- Weather Widget -->
-                <div class="weather-widget" id="weatherWidget" onclick="toggleWeatherDetails()">
-                    <i class="fas fa-cloud-sun weather-icon" id="weatherIcon"></i>
-                    <span class="weather-temp" id="weatherTemp">--°C</span>
-                    <i class="fas fa-chevron-down weather-arrow" id="weatherArrow"></i>
-                </div>
-                
-                <!-- User Auth -->
-                <div class="user-auth" id="userAuth">
-                    <button class="auth-btn" onclick="toggleAuthModal()" id="loginBtn">
-                        <i class="fas fa-user"></i>
-                        <span>Masuk</span>
-                    </button>
-                    <div class="user-profile" id="userProfile" style="display: none;">
-                        <img src="" alt="User" id="userAvatar" class="user-avatar">
-                        <div class="user-dropdown" id="userDropdown">
-                            <span id="userName">User</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Add Kuliner Button -->
-                <button class="add-btn" onclick="openAddKulinerModal()" aria-label="Tambah Kuliner">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- Weather Details Dropdown -->
+        <div class="weather-info" id="weatherInfo" onclick="toggleWeatherDetails()">
+            <i class="fas fa-cloud-sun weather-icon" id="weatherIcon"></i>
+            <span class="weather-temp" id="weatherTemp">--°C</span>
+        </div>
+        <button class="add-kuliner-btn" onclick="openAddKulinerModal()" title="Tambah Kuliner Baru">+</button>
         <div class="weather-details" id="weatherDetails">
             <div class="weather-details-header">
-                <h3><i class="fas fa-cloud-sun" id="weatherDetailsIcon"></i> Cuaca Purwokerto</h3>
-                <button class="close-weather" onclick="toggleWeatherDetails()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <h3>Cuaca Purwokerto</h3>
+                <small id="weatherDate">Hari ini</small>
             </div>
-            <div class="weather-date" id="weatherDate">Hari ini</div>
             <div class="weather-details-main">
-                <div class="weather-big-icon">
-                    <i class="fas fa-cloud-sun" id="weatherBigIcon"></i>
-                </div>
-                <div class="weather-info">
-                    <div class="weather-temp-large" id="weatherDetailsTemp">--°C</div>
-                    <div class="weather-desc" id="weatherDetailsDesc">--</div>
+                <i class="fas fa-cloud-sun weather-details-icon" id="weatherDetailsIcon"></i>
+                <div>
+                    <div class="weather-details-temp" id="weatherDetailsTemp">--°C</div>
+                    <div class="weather-details-desc" id="weatherDetailsDesc">--</div>
                 </div>
             </div>
-            <div class="weather-stats">
+            <div class="weather-details-stats">
                 <div class="weather-stat">
-                    <div class="stat-icon"><i class="fas fa-temperature-low"></i></div>
-                    <div class="stat-info">
-                        <span class="stat-label">Suhu Min</span>
-                        <span class="stat-value" id="weatherMinTemp">--°C</span>
-                    </div>
+                    <i class="fas fa-temperature-low"></i>
+                    <span>Min: <span id="weatherMinTemp">--°C</span></span>
                 </div>
                 <div class="weather-stat">
-                    <div class="stat-icon"><i class="fas fa-temperature-high"></i></div>
-                    <div class="stat-info">
-                        <span class="stat-label">Suhu Max</span>
-                        <span class="stat-value" id="weatherMaxTemp">--°C</span>
-                    </div>
+                    <i class="fas fa-temperature-high"></i>
+                    <span>Max: <span id="weatherMaxTemp">--°C</span></span>
                 </div>
                 <div class="weather-stat">
-                    <div class="stat-icon"><i class="fas fa-tint"></i></div>
-                    <div class="stat-info">
-                        <span class="stat-label">Kelembapan</span>
-                        <span class="stat-value" id="weatherHumidity">--%</span>
-                    </div>
+                    <i class="fas fa-tint"></i>
+                    <span>Kelembapan: <span id="weatherHumidity">--%</span></span>
                 </div>
                 <div class="weather-stat">
-                    <div class="stat-icon"><i class="fas fa-wind"></i></div>
-                    <div class="stat-info">
-                        <span class="stat-label">Angin</span>
-                        <span class="stat-value" id="weatherWind">-- m/s</span>
-                    </div>
+                    <i class="fas fa-wind"></i>
+                    <span>Angin: <span id="weatherWind">-- m/s</span></span>
                 </div>
                 <div class="weather-stat">
-                    <div class="stat-icon sunrise"><i class="fas fa-sun"></i></div>
-                    <div class="stat-info">
-                        <span class="stat-label">Terbit</span>
-                        <span class="stat-value" id="weatherSunrise">--:--</span>
-                    </div>
+                    <i class="fas fa-sun"></i>
+                    <span>Terbit: <span id="weatherSunrise">--:--</span></span>
                 </div>
                 <div class="weather-stat">
-                    <div class="stat-icon sunset"><i class="fas fa-moon"></i></div>
-                    <div class="stat-info">
-                        <span class="stat-label">Terbenam</span>
-                        <span class="stat-value" id="weatherSunset">--:--</span>
-                    </div>
+                    <i class="fas fa-moon"></i>
+                    <span>Terbenam: <span id="weatherSunset">--:--</span></span>
                 </div>
-            </div>
-            <div class="weather-recommendation">
-                <button class="weather-rec-btn" onclick="showWeatherRec()">
-                    <i class="fas fa-utensils"></i> Rekomendasi Kuliner Sesuai Cuaca
-                </button>
-            </div>
-            <div id="weatherCondition" style="display:none;"></div>
-        </div>
-
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <span class="logo-icon">🍽️</span>
-                <h2>Menu</h2>
-                <button class="close-sidebar" onclick="toggleSidebar()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" onclick="showSection('home')">
-                    <i class="fas fa-home"></i>
-                    <span>Beranda</span>
-                </a>
-                <a href="#" class="nav-item" onclick="showSection('explore')">
-                    <i class="fas fa-compass"></i>
-                    <span>Jelajahi</span>
-                </a>
-                <a href="#" class="nav-item" onclick="showSection('favorites')">
-                    <i class="fas fa-heart"></i>
-                    <span>Favorit</span>
-                </a>
-                <a href="#/news" class="nav-item" onclick="navigateToHash('/news');return false;">
-                    <i class="fas fa-newspaper"></i>
-                    <span>Berita & Promo</span>
-                </a>
-                <a href="#" class="nav-item" onclick="showSection('map')">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <span>Peta</span>
-                </a>
-            </nav>
-            <div class="sidebar-footer">
-                <div class="app-version">v1.0.0</div>
-            </div>
-        </aside>
-        
-        <!-- Sidebar Overlay -->
-        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Map Section -->
-            <section class="map-section">
-                <div id="map"></div>
-                <button class="map-locate-btn" onclick="locateUser()" aria-label="Lokasi Saya">
-                    <i class="fas fa-crosshairs"></i>
-                </button>
-            </section>
-
-            <!-- Search & Filter Section -->
-            <section class="search-section">
-                <div class="search-container">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="search" placeholder="Cari kuliner favorit..." aria-label="Cari kuliner">
-                        <!-- voice search button removed -->
-                    </div>
-                </div>
-                
-                <!-- Quick Filter Chips -->
-                <div class="filter-chips">
-                    <button class="chip active" data-filter="all" onclick="quickFilter('all')">
-                        <i class="fas fa-utensils"></i> Semua
-                    </button>
-                    <button class="chip" data-filter="nearby" onclick="sortByDistance()">
-                        <i class="fas fa-location-arrow"></i> Terdekat
-                    </button>
-                    <button class="chip" data-filter="open" onclick="filterOpenNow()">
-                        <i class="fas fa-clock"></i> Buka Sekarang
-                    </button>
-                    <button class="chip" data-filter="random" onclick="showRandomKuliner()">
-                        <i class="fas fa-random"></i> Acak
-                    </button>
-                    <button class="chip weather-chip" data-filter="weather" onclick="showWeatherRec()">
-                        <i class="fas fa-cloud-sun"></i> Cuaca
-                    </button>
-                </div>
-
-                <!-- Advanced Filters -->
-                <div class="filter-bar">
-                    <div class="filter-group">
-                        <select id="filter" aria-label="Filter Kategori">
-                            <option value="">🏷️ Semua Kategori</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <select id="filterTipe" aria-label="Filter Tipe">
-                            <option value="">🏪 Semua Tipe</option>
-                            <option value="tetap">🏠 Warung Tetap</option>
-                            <option value="keliling">🚚 Pedagang Keliling</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <select id="filterHalal" aria-label="Filter Kehalalan">
-                            <option value="">☪️ Semua Status</option>
-                            <option value="halal">✅ Halal MUI</option>
-                            <option value="halal-self">🕌 Halal (Self-Declared)</option>
-                            <option value="unknown">❓ Belum Diketahui</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <select id="sort" aria-label="Urutkan">
-                            <option value="">📊 Urutkan</option>
-                            <option value="nama">🔤 Nama A-Z</option>
-                            <option value="rating">⭐ Rating Tertinggi</option>
-                            <option value="harga-asc">💰 Harga Terendah</option>
-                            <option value="harga-desc">💎 Harga Tertinggi</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Toggle Filters -->
-                <div class="toggle-filters">
-                    <label class="toggle-filter">
-                        <input type="checkbox" id="openNowFilter">
-                        <span class="toggle-slider"></span>
-                        <span class="toggle-label">Hanya tampilkan yang buka</span>
-                    </label>
-                </div>
-            </section>
-
-            <!-- Kuliner List Section -->
-            <section class="list-section">
-                <div class="section-header">
-                    <h2>Kuliner Populer</h2>
-                    <span class="result-count" id="resultCount">0 hasil</span>
-                </div>
-                <div id="kulinerList" class="kuliner-grid"></div>
-            </section>
-
-            <!-- News & Promo Section (Hidden by default) -->
-            <section class="news-section" id="newsSection" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-newspaper"></i> Berita & Promo</h2>
-                </div>
-                <div id="newsList" class="news-list">
-                    <!-- News items will be rendered here -->
-                </div>
-            </section>
-
-            <!-- Favorites Section (Hidden by default) -->
-            <section class="favorites-section" id="favoritesSection" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-heart"></i> Kuliner Favorit</h2>
-                </div>
-                <div id="favoritesList" class="kuliner-list">
-                    <!-- Favorites will be rendered here -->
-                </div>
-            </section>
-        </main>
-
-        <!-- Detail Popup -->
-        <div class="modal detail-modal" id="detailPopup">
-            <div class="modal-content detail-content">
-                <button class="modal-close" onclick="closeDetail()" aria-label="Tutup">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div id="detailContent"></div>
-            </div>
-        </div>
-
-        <!-- Add Kuliner Modal -->
-        <div class="modal" id="addKulinerModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2><i class="fas fa-plus-circle"></i> Tambah Kuliner Baru</h2>
-                    <button class="modal-close" onclick="closeAddKulinerModal()" aria-label="Tutup">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addKulinerForm" class="form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="add-nama"><i class="fas fa-store"></i> Nama Kuliner *</label>
-                                <input type="text" id="add-nama" placeholder="Contoh: Soto Sokaraja" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="add-kategori"><i class="fas fa-tag"></i> Kategori *</label>
-                                <select id="add-kategori" required>
-                                    <option value="">Pilih Kategori</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="add-alamat"><i class="fas fa-map-marker-alt"></i> Alamat *</label>
-                            <input type="text" id="add-alamat" placeholder="Jl. Contoh No.123, Purwokerto" required>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="add-jam"><i class="fas fa-clock"></i> Jam Operasional</label>
-                                <input type="text" id="add-jam" placeholder="08:00 - 21:00">
-                            </div>
-                            <div class="form-group">
-                                <label for="add-harga"><i class="fas fa-money-bill"></i> Kisaran Harga</label>
-                                <input type="text" id="add-harga" placeholder="Rp15.000-Rp25.000">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="add-deskripsi"><i class="fas fa-align-left"></i> Deskripsi</label>
-                            <textarea id="add-deskripsi" placeholder="Deskripsi singkat tentang kuliner..."></textarea>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="add-foto"><i class="fas fa-image"></i> URL Foto</label>
-                                <input type="url" id="add-foto" placeholder="https://example.com/foto.jpg">
-                            </div>
-                            <div class="form-group">
-                                <label for="add-kontak"><i class="fas fa-phone"></i> Nomor Kontak</label>
-                                <input type="tel" id="add-kontak" placeholder="08123456789">
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="add-lat"><i class="fas fa-map-pin"></i> Latitude *</label>
-                                <input type="number" step="any" id="add-lat" placeholder="-7.4212" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="add-lng"><i class="fas fa-map-pin"></i> Longitude *</label>
-                                <input type="number" step="any" id="add-lng" placeholder="109.2422" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="add-tipe"><i class="fas fa-store-alt"></i> Tipe Penjual</label>
-                                <select id="add-tipe">
-                                    <option value="false">🏠 Warung/Toko Tetap</option>
-                                    <option value="true">🚚 Pedagang Keliling</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="add-halal"><i class="fas fa-certificate"></i> Status Halal</label>
-                                <select id="add-halal">
-                                    <option value="unknown">❓ Belum Diketahui</option>
-                                    <option value="halal">✅ Halal MUI</option>
-                                    <option value="halal-self">🕌 Halal (Self-Declared)</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="add-parkir"><i class="fas fa-parking"></i> Fasilitas Parkir</label>
-                            <input type="text" id="add-parkir" placeholder="Tersedia, luas">
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="closeAddKulinerModal()">Batal</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane"></i> Kirim
-                            </button>
-                        </div>
-                    </form>
+                <div class="weather-stat">
+                    <i class="fas fa-cloud-rain"></i>
+                    <span>Kondisi: <span id="weatherCondition">--</span></span>
                 </div>
             </div>
         </div>
-
-        <!-- Auth Modal -->
-        <div class="modal" id="authModal">
-            <div class="modal-content auth-modal-content">
-                <button class="modal-close" onclick="closeAuthModal()" aria-label="Tutup">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="auth-container">
-                    <div class="auth-header">
-                        <span class="auth-logo">🍽️</span>
-                        <h2>Masuk ke Lapor Mangan!</h2>
-                        <p>Nikmati fitur lengkap untuk pengalaman kuliner terbaik</p>
-                    </div>
-                    <div class="auth-benefits">
-                        <div class="benefit-item">
-                            <i class="fas fa-heart"></i>
-                            <span>Simpan kuliner favorit</span>
-                        </div>
-                        <div class="benefit-item">
-                            <i class="fas fa-star"></i>
-                            <span>Tulis ulasan & rating</span>
-                        </div>
-                        <div class="benefit-item">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>Kontribusi kuliner baru</span>
-                        </div>
-                    </div>
-                    <div class="auth-buttons">
-                        <button class="btn btn-google" onclick="signInWithGoogle()">
-                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                            Masuk dengan Google
-                        </button>
-                    </div>
-                    <div class="auth-footer">
-                        <p>Dengan masuk, Anda menyetujui <a href="#">Ketentuan Layanan</a> dan <a href="#">Kebijakan Privasi</a> kami</p>
-                    </div>
-                </div>
+    </header>
+    <div id="map"></div>
+    <div class="container">
+        <div class="filter-bar">
+            <input id="search" placeholder="🔍 Cari nama kuliner..." />
+            <select id="filter">
+                <option value=""> Semua Kategori</option>
+            </select>
+            <select id="sort">
+                <option value="">Urutkan</option>
+                <option value="nama">Nama A-Z</option>
+                <option value="rating">Rating Tertinggi</option>
+                <option value="harga-asc">Harga Terendah</option>
+                <option value="harga-desc">Harga Tertinggi</option>
+            </select>
+            <button id="nearbyBtn" type="button"><i class="fas fa-location-arrow"></i> Terdekat</button>
+            <button id="randomBtn" type="button"><i class="fas fa-random"></i> Acak Pilihan</button>
+        </div>
+        <div class="secondary-filter-bar">
+            <label class="switch">
+                <input type="checkbox" id="openNowFilter">
+                <span class="slider round"></span>
+            </label>
+            <label for="openNowFilter">Hanya tampilkan yang buka sekarang</label>
+        </div>
+        <div id="list">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Memuat daftar kuliner...</p>
             </div>
         </div>
-
-        <!-- User Dropdown Menu -->
-        <div class="dropdown-menu" id="userDropdownMenu">
-            <div class="dropdown-header">
-                <img src="" alt="User" id="dropdownAvatar" class="dropdown-avatar">
-                <div class="dropdown-user-info">
-                    <span class="dropdown-name" id="dropdownName">User</span>
-                    <span class="dropdown-email" id="dropdownEmail">user@email.com</span>
-                </div>
-            </div>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item" onclick="showSection('favorites')">
-                <i class="fas fa-heart"></i> Favorit Saya
-            </a>
-            <a href="#" class="dropdown-item" onclick="showMyReviews()">
-                <i class="fas fa-star"></i> Ulasan Saya
-            </a>
-            <a href="#" class="dropdown-item" onclick="showMyContributions()">
-                <i class="fas fa-plus-circle"></i> Kontribusi Saya
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item" onclick="openSettings()">
-                <i class="fas fa-cog"></i> Pengaturan
-            </a>
-            <a href="#" class="dropdown-item text-danger" onclick="signOut()">
-                <i class="fas fa-sign-out-alt"></i> Keluar
-            </a>
+    </div>
+    <div class="detail-popup" id="detailPopup">
+        <span class="close-btn" onclick="closeDetail()">×</span>
+        <div id="detailContent"></div>
+    </div>
+    <div id="googleFormModal" class="modal">
+        <div class="modal-iframe">
+            <span class="close-btn" onclick="closeGoogleForm()"
+                style="position: absolute; right: 15px; top: 15px; z-index: 10001; background:white; padding: 5px 10px;">&times;</span>
+            <iframe
+                src="https://docs.google.com/forms/d/e/1FAIpQLScJ8tkZau-NVdhbmd0cWFKY25VBm0Ajjxvqo-rLYAO_iGb2qg/viewform?embedded=true"
+                class="modal-iframe-content"></iframe>
         </div>
-
-        <!-- Chatbot -->
-        <button class="chatbot-toggle" onclick="toggleChat()" aria-label="Buka Chatbot">
-            <i class="fas fa-robot"></i>
-            <span class="chatbot-badge">1</span>
-        </button>
-
-        <div class="chat-popup" id="chatPopup">
-            <div class="chat-header">
-                <div class="chat-header-info">
-                    <div class="chat-avatar">🤖</div>
-                    <div>
-                        <h3>MakanBot</h3>
-                        <span class="chat-status">Online</span>
-                    </div>
-                </div>
-                <button class="chat-close" onclick="toggleChat()" aria-label="Tutup Chat">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="message message-bot">
-                    <div class="message-content">
-                        Halo! 👋 Aku <strong>MakanBot</strong>, asisten kulinermu di Purwokerto!<br><br>
-                        Mau cari makan apa hari ini? Tanyakan saja, aku siap membantu! 😊
-                    </div>
-                </div>
-            </div>
-            <div class="chat-suggestions">
-                <button class="suggestion-chip" onclick="sendSuggestion('Rekomendasi makanan pedas')">🌶️ Makanan Pedas</button>
-                <button class="suggestion-chip" onclick="sendSuggestion('Kuliner murah')">💰 Murah Meriah</button>
-                <button class="suggestion-chip" onclick="sendSuggestion('Buka malam')">🌙 Buka Malam</button>
-            </div>
-            <div class="chat-input-container">
-                <input type="text" id="chatInput" placeholder="Ketik pesan..." aria-label="Pesan chat">
-                <button class="chat-send" onclick="sendChat()" aria-label="Kirim">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
+    </div>
+    <div class="chatbot" onclick="toggleChat()" title="Buka Chatbot MakanBot">💬</div>
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+            <span>🤖 MakanBot</span>
+            <span class="chat-close" onclick="toggleChat()">×</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message message-bot">
+                <span>Halo! Aku MakanBot 🍽 Mau cari kuliner apa di Purwokerto hari ini?</span>
+                <div class="message-time">Baru saja</div>
             </div>
         </div>
-
-        <!-- Bottom Navigation (Mobile) -->
-        <nav class="bottom-nav">
-            <a href="#" class="nav-item active" onclick="showSection('home')">
-                <i class="fas fa-home"></i>
-                <span>Beranda</span>
-            </a>
-            <a href="#" class="nav-item" onclick="showSection('explore')">
-                <i class="fas fa-compass"></i>
-                <span>Jelajahi</span>
-            </a>
-            <a href="#" class="nav-item" onclick="showSection('map')">
-                <i class="fas fa-map"></i>
-                <span>Peta</span>
-            </a>
-            <a href="#" class="nav-item" onclick="showSection('favorites')">
-                <i class="fas fa-heart"></i>
-                <span>Favorit</span>
-            </a>
-            <a href="#" class="nav-item" onclick="toggleChat()">
-                <i class="fas fa-robot"></i>
-                <span>MakanBot</span>
-            </a>
-        </nav>
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ketik pesan..."
+                onkeypress="if(event.key=='Enter') sendMessage()">
+            <button class="chat-send" onclick="sendMessage()" title="Kirim Pesan">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="white" stroke-width="2" />
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" />
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div id="addKulinerModal" class="add-kuliner-modal">
+        <div class="add-kuliner-modal-content">
+            <div class="add-kuliner-modal-header">
+                <h2>➕ Tambah Kuliner Baru</h2>
+                <span class="close-btn" onclick="closeAddKulinerModal()">&times;</span>
+            </div>
+            <div class="add-kuliner-modal-body">
+                <input type="text" id="add-nama" placeholder="Nama Kuliner *" required>
+                <select id="add-kategori" required>
+                    <option value="">Pilih Kategori *</option>
+                </select>
+                <input type="text" id="add-alamat" placeholder="Alamat *" required>
+                <input type="text" id="add-jam" placeholder="Jam Operasional (contoh: 08:00 - 18:00) *" required>
+                <input type="text" id="add-harga" placeholder="Harga (contoh: Rp 5.000 - 15.000) *" required>
+                <textarea id="add-deskripsi" placeholder="Deskripsi *" required></textarea>
+                <input type="text" id="add-foto" placeholder="URL Foto (opsional)">
+                <select id="add-tipe">
+                    <option value="false">Warung/Toko Tetap</option>
+                    <option value="true">Pedagang Keliling</option>
+                </select>
+                <input type="number" id="add-lat" placeholder="Latitude (contoh: -7.4100) *" step="any" required>
+                <input type="number" id="add-lng" placeholder="Longitude (contoh: 109.2450) *" step="any" required>
+                <input type="text" id="add-rute" placeholder="Rute/Info Lokasi Tambahan (opsional)">
+                <input type="text" id="add-parkir" placeholder="Info Parkir (contoh: Ya, Tidak, Tersedia) *" required>
+            </div>
+            <div class="add-kuliner-modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeAddKulinerModal()"><i class="fas fa-times"></i>
+                    Batal</button>
+                <button type="button" class="btn-submit" onclick="submitNewKuliner()"><i class="fas fa-plus"></i>
+                    Tambah</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content auth-content">
+            <div class="modal-header">
+                <h2 id="authTitle">Login</h2>
+                <span class="close-btn" onclick="toggleAuthModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                    <div id="registerFields" style="display: none;">
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <input type="text" id="regName" placeholder="Nama Anda">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="authEmail" placeholder="email@contoh.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="authPassword" placeholder="******" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="authSubmitBtn">Masuk</button>
+                </form>
+                <p class="auth-switch">
+                    <span id="authSwitchText">Belum punya akun?</span>
+                    <a href="#" onclick="switchAuthMode(event)" id="authSwitchLink">Daftar sekarang</a>
+                </p>
+            </div>
+        </div>
+    </div>
 
-    <!-- Scripts -->
-        <!-- Firebase SDK -->
-        <script type="module">
-            // TODO: Ganti config berikut dengan config Firebase project Anda
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-            import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-            const firebaseConfig = {
-                apiKey: "YOUR_API_KEY",
-                authDomain: "YOUR_AUTH_DOMAIN",
-                projectId: "YOUR_PROJECT_ID",
-                storageBucket: "YOUR_STORAGE_BUCKET",
-                messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-                appId: "YOUR_APP_ID"
-            };
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            window.firebaseAuth = auth;
-            window.GoogleAuthProvider = GoogleAuthProvider;
-            window.signInWithPopup = signInWithPopup;
-            window.fbSignOut = fbSignOut;
-            window.onAuthStateChanged = onAuthStateChanged;
-        </script>
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        <script src="app-complete.js"></script>
-    
-    <!-- Hide Splash Screen -->
-    <script>
-        // Force hide splash screen after 2 seconds
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                var splash = document.getElementById('splashScreen');
-                if (splash) {
-                    splash.style.opacity = '0';
-                    splash.style.transition = 'opacity 0.5s ease';
-                    setTimeout(function() {
-                        splash.style.display = 'none';
-                    }, 500);
-                }
-            }, 1500);
-        });
-        
-        // Fallback - hide after 3 seconds no matter what
-        setTimeout(function() {
-            var splash = document.getElementById('splashScreen');
-            if (splash && splash.style.display !== 'none') {
-                splash.style.display = 'none';
-            }
-        }, 3000);
-    </script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker registered'))
-                    .catch(err => console.log('Service Worker registration failed:', err));
-            });
-        }
-    </script>
-    <script>
-        // Extra fallback: hide splash on DOMContentLoaded as well
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                var splash = document.getElementById('splashScreen');
-                if (splash) {
-                    splash.style.opacity = '0';
-                    splash.style.transition = 'opacity 0.3s ease';
-                    setTimeout(function() { splash.style.display = 'none'; }, 350);
-                }
-            } catch (e) { console.warn('splash hide fallback failed', e); }
-        });
-    </script>
-    <script>
-        // Force-hide splash after 4s and capture JS errors to ensure UI becomes visible
-        setTimeout(function() {
-            try {
-                var s = document.getElementById('splashScreen');
-                if (s && s.style.display !== 'none') s.parentNode && s.parentNode.removeChild(s);
-            } catch (e) { /* ignore */ }
-        }, 4000);
-
-        window.addEventListener('error', function (ev) {
-            try {
-                console.error('Unhandled error:', ev.error || ev.message || ev);
-                var s = document.getElementById('splashScreen');
-                if (s) s.parentNode && s.parentNode.removeChild(s);
-                var app = document.getElementById('app');
-                if (app) app.style.display = '';
-            } catch (e) { /* ignore */ }
-        });
-
-        window.addEventListener('unhandledrejection', function (ev) {
-            try {
-                console.error('Unhandled promise rejection:', ev.reason);
-                var s = document.getElementById('splashScreen');
-                if (s) s.parentNode && s.parentNode.removeChild(s);
-            } catch (e) { /* ignore */ }
-        });
-    </script>
+    <!-- Sidebar Overlay & Menu -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <span class="close-sidebar" onclick="toggleSidebar()">&times;</span>
+        </div>
+        <div class="sidebar-menu">
+            <div class="user-profile-section" id="userProfileSection">
+                <div class="user-avatar-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <span id="userNameDisplay">Tamu</span>
+                    <small id="userEmailDisplay">Silakan Login</small>
+                </div>
+            </div>
+            <hr>
+            <a href="#" onclick="showSection('home'); toggleSidebar()" class="menu-item active"><i
+                    class="fas fa-home"></i> Beranda</a>
+            <a href="#" onclick="showSection('favorites'); toggleSidebar()" class="menu-item"><i
+                    class="fas fa-heart"></i> Favorit Saya</a>
+            <hr>
+            <button id="authBtn" class="menu-btn-full" onclick="toggleAuthModal(); toggleSidebar()">Login /
+                Register</button>
+            <button id="logoutBtn" class="menu-btn-full" onclick="handleLogout(); toggleSidebar()"
+                style="display: none; color: red;">Keluar</button>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script src="chatbot.js"></script>
 </body>
+
 </html>
