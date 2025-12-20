@@ -3863,7 +3863,8 @@
     <!-- Firebase SDK -->
     <!-- Firebase SDK -->
     <script type="module">
-        // TODO: Ganti config berikut dengan config Firebase project ializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // TODO: Ganti config berikut dengan config Firebase project Anda
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
@@ -3927,7 +3928,7 @@
 
     <!-- Service Worker Registration -->
     <script>
-        if  in navigator) {
+        if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
                     .then(reg => console.log('Service Worker registered'))
