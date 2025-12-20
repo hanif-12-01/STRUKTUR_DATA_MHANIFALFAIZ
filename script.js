@@ -302,9 +302,7 @@ const AdminManager = {
             });
             DB.set('berita', berita);
             showToast("Berita berhasil ditambahkan");
-            // If there's a renderNews function, call it. If not, reload.
-            location.hash = '#/news';
-            location.reload();
+            renderNews();
         }
     }
 };
