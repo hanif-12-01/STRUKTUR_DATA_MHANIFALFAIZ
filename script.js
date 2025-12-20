@@ -750,4 +750,18 @@ window.toggleSidebar = () => {
     if (sb) sb.classList.toggle('active');
     if (ov) ov.classList.toggle('active');
 };
+window.toggleAdvancedFilters = () => {
+    const el = document.getElementById('advancedFilters');
+    const btn = document.querySelector('button[onclick="toggleAdvancedFilters()"]');
+    if (el.style.display === 'none') {
+        el.style.display = 'grid'; // Change to grid for better layout
+        el.style.gridTemplateColumns = '1fr 1fr';
+        el.style.gap = '10px';
+        btn.innerHTML = '<i class="fas fa-chevron-up"></i> Sembunyikan Filter';
+    } else {
+        el.style.display = 'none';
+        btn.innerHTML = '<i class="fas fa-sliders-h"></i> Filter Lainnya';
+    }
+};
+
 window.showPrivacyPolicy = () => alert("Kebijakan Privasi:\nData disimpan lokal di browser Anda. Kami menjamin keamanan data pengguna.");

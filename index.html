@@ -236,21 +236,34 @@
                     </button>
 
                     <!-- Advanced Filters -->
-                    <div class="filter-bar">
+                    <div class="filter-actions"
+                        style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <button class="btn-text" onclick="toggleAdvancedFilters()"
+                            style="color: var(--primary); font-weight: 600; background: none; border: none; padding: 0; cursor: pointer;">
+                            <i class="fas fa-sliders-h"></i> Filter Lainnya
+                        </button>
+                    </div>
+
+                    <!-- Advanced Filters (Hidden by Default) -->
+                    <div class="filter-bar" id="advancedFilters"
+                        style="display: none; margin-top: 10px; animation: slideDown 0.3s ease-out;">
                         <div class="filter-group">
-                            <select id="categoryFilter" aria-label="Filter Kategori">
+                            <select id="categoryFilter" aria-label="Filter Kategori"
+                                style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">
                                 <option value="">🏷️ Semua Kategori</option>
                             </select>
                         </div>
                         <div class="filter-group">
-                            <select id="typeFilter" aria-label="Filter Tipe">
+                            <select id="typeFilter" aria-label="Filter Tipe"
+                                style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">
                                 <option value="">🏪 Semua Tipe</option>
                                 <option value="tetap">🏠 Warung Tetap</option>
                                 <option value="keliling">🚚 Pedagang Keliling</option>
                             </select>
                         </div>
                         <div class="filter-group">
-                            <select id="halalFilter" aria-label="Filter Kehalalan">
+                            <select id="halalFilter" aria-label="Filter Kehalalan"
+                                style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">
                                 <option value="">☪️ Semua Status</option>
                                 <option value="halal">✅ Halal MUI</option>
                                 <option value="halal-self">🕌 Halal (Self-Declared)</option>
@@ -258,7 +271,8 @@
                             </select>
                         </div>
                         <div class="filter-group">
-                            <select id="sortFilter" aria-label="Urutkan">
+                            <select id="sortFilter" aria-label="Urutkan"
+                                style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">
                                 <option value="">📊 Urutkan</option>
                                 <option value="nama">🔤 Nama A-Z</option>
                                 <option value="rating">⭐ Rating Tertinggi</option>
