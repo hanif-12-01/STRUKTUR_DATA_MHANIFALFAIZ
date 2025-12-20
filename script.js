@@ -257,6 +257,7 @@ const initialPromoData = [
 // ============================================
 let state = {
     currentUser: null,
+    isAdmin: false, // Admin Simulation
     currentPage: 'home',
     kulinerData: [],
     favorites: new Set(),
@@ -264,6 +265,65 @@ let state = {
     markers: [],
     weather: null
 };
+
+// ============================================
+// ADMIN & BUSINESS LOGIC
+// ============================================
+const AdminManager = {
+    toggle() {
+        state.isAdmin = !state.isAdmin;
+        showToast(state.isAdmin ? "Mode Admin: ON 🔧" : "Mode Admin: OFF");
+        location.reload();
+    },
+    deleteKuliner(id) {
+        if (!confirm("Hapus data kuliner ini? (Admin Only)")) return;
+        state.kulinerData = state.kulinerData.filter(k => k.id !== id);
+        DB.set('kuliner', state.kulinerData);
+        showToast("Data berhasil dihapus");
+        renderKulinerList();
+        renderMarkers();
+        closeModal();
+    },
+    approveSubmission(id, isApprove) {
+        showToast(isApprove ? "Pengajuan disetujui 🟢" : "Pengajuan ditolak 🔴");
+    },
+    manageNews() {
+        if (!state.isAdmin) return;
+        const title = prompt("Judul Berita Baru:");
+        if (title) {
+            const berita = DB.get('berita') || [];
+            berita.unshift({
+                id: Date.now(),
+                judul: title,
+                konten: "Konten berita baru... (Edit di database untuk detail)",
+                tanggal: new Date().toISOString().split('T')[0],
+                kategori: "Info",
+                author: "Admin"
+            });
+            DB.set('berita', berita);
+            showToast("Berita berhasil ditambahkan");
+            // If there's a renderNews function, call it. If not, reload.
+            location.hash = '#/news';
+            location.reload();
+        }
+    }
+};
+
+window.toggleAdmin = AdminManager.toggle;
+window.AdminManager = AdminManager;
+
+function claimBusiness(id) {
+    const item = state.kulinerData.find(k => k.id === id);
+    if (confirm(`Apakah Anda pemilik "${item.nama}"?\nKlaim bisnis ini untuk mengelola informasi.`)) {
+        showToast("Klaim berhasil dikirim! Tim kami akan memverifikasi. ✅");
+    }
+}
+window.claimBusiness = claimBusiness;
+
+function setSessionCookie(token) {
+    document.cookie = `session_token=${token}; path=/; SameSite=Strict; Secure;`;
+    console.log("Secure cookie set:", document.cookie);
+}
 
 // ============================================
 // INITIALIZATION
@@ -481,33 +541,46 @@ function showDetail(id) {
 
     const isFav = state.favorites.has(id);
     const detailContent = document.getElementById('modalContent');
+    const adminControls = state.isAdmin ?
+        `<div style="background:#ffebee; padding:10px; margin-top:10px; border-radius:8px; border:1px solid red;">
+            <b>🔧 Admin Zone</b><br>
+            <button onclick="AdminManager.deleteKuliner(${item.id})" class="btn-xs" style="background:red; color:white; margin-top:5px;">Hapus Data</button>
+         </div>` : '';
 
     detailContent.innerHTML = `
         <div style="position:relative;">
             <img src="${item.foto}" style="width:100%; height:200px; object-fit:cover; border-radius:10px;">
-            <button onclick="toggleFavorite(${item.id})" style="position:absolute; top:10px; right:10px; background:white; border:none; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.2); color:${isFav ? 'red' : '#ccc'}; font-size:18px;">
-                <i class="fas fa-heart"></i>
+            <button onclick="toggleFavorite(${item.id})" style="position:absolute; top:10px; right:10px; background:white; border:none; border-radius:50%; width:40px; height:40px; box-shadow:0 2px 5px rgba(0,0,0,0.2); cursor:pointer;">
+                <i class="${isFav ? 'fas' : 'far'} fa-heart" style="color:${isFav ? 'red' : '#333'}; font-size:20px;"></i>
             </button>
         </div>
+        
         <div style="padding:15px 0;">
-            <h2 style="margin:0;">${item.nama}</h2>
-            <div style="display:flex; gap:5px; margin:10px 0;">
-                <span class="badge" style="background:#eee; padding:2px 8px; border-radius:4px; font-size:12px;">${item.kategori}</span>
-                <span class="badge" style="background:${item.halal === 'halal' ? '#d4edda' : '#f8f9fa'}; color:${item.halal === 'halal' ? '#155724' : '#666'}; padding:2px 8px; border-radius:4px; font-size:12px;">${item.halal === 'halal' ? 'Halal MUI' : 'Halal'}</span>
+            <div style="display:flex; justify-content:space-between; align-items:start;">
+                <h2 style="margin:0;">${item.nama}</h2>
+                <span style="background:#eee; padding:4px 8px; border-radius:4px; font-size:12px;">${item.kategori}</span>
             </div>
             
-            <div class="info-list" style="display:flex; flex-direction:column; gap:8px; font-size:14px; margin-bottom:15px;">
-                <div><i class="fas fa-clock" style="width:20px; color:#666;"></i> ${item.jam} (${isOpen(item.jam) ? 'Buka' : 'Tutup'})</div>
-                <div><i class="fas fa-map-marker-alt" style="width:20px; color:#666;"></i> ${item.alamat}</div>
-                <div><i class="fas fa-tag" style="width:20px; color:#666;"></i> ${item.harga}</div>
-                <div><i class="fas fa-parking" style="width:20px; color:#666;"></i> ${item.parkir || 'Info parkir tidak tersedia'}</div>
-            </div>
+            <p style="color:#666; margin:5px 0;"><i class="fas fa-map-marker-alt"></i> ${item.alamat}</p>
             
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:15px 0; background:#f9f9f9; padding:10px; border-radius:10px;">
+                <div><small>Jam Buka</small><br><b>${item.jam}</b></div>
+                <div><small>Harga</small><br><b>${item.harga}</b></div>
+                <div><small>Parkir</small><br><b>${item.parkir || '-'}</b></div>
+                <div><small>Tipe</small><br><b>${item.keliling ? 'Keliling 🛵' : 'Tetap 🏠'}</b></div>
+            </div>
+
             <p style="color:#444; line-height:1.5;">${item.deskripsi}</p>
             
-            <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}', '_blank')" class="btn btn-primary" style="width:100%; padding:12px; margin-top:10px;">
-                <i class="fas fa-directions"></i> Petunjuk Arah
-            </button>
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}', '_blank')" class="btn btn-primary" style="flex:1; padding:12px;">
+                    <i class="fas fa-directions"></i> Petunjuk Arah
+                </button>
+                 <button onclick="claimBusiness(${item.id})" class="btn btn-secondary" style="flex:1; padding:12px;">
+                    <i class="fas fa-store-alt"></i> Klaim Bisnis
+                </button>
+            </div>
+            ${adminControls}
         </div>
     `;
 
@@ -703,9 +776,15 @@ function submitKuliner(e) {
 }
 
 function loginWithGoogle() {
-    showToast("Login berhasil! (Simulasi)");
+    setSessionCookie("simulated-secure-token-xyz123"); // NFR-01
+    showToast("Login berhasil! (Simulasi Secure Cookie)");
     document.getElementById('authBtn').innerHTML = `<button onclick="location.reload()" class="btn-xs">Logout</button>`;
     document.getElementById('loginModal').classList.remove('show');
+
+    // Simulate Admin Check (Simple hack for demo)
+    if (prompt("Masukkan Kode Admin (Opsional)", "") === "admin123") {
+        AdminManager.toggle();
+    }
 }
 function closeLoginModal() { document.getElementById('loginModal').classList.remove('show'); }
 function toggleAuthModal() { document.getElementById('loginModal').classList.add('show'); }
