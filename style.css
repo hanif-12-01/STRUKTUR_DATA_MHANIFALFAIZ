@@ -3870,16 +3870,18 @@ a {
 }
 
 /* ========================================
-   MODERN UI OVERRIDES (POLISH)
+   MODERN UI OVERRIDES (POLISH) - FIXED
    ======================================== */
 .card {
     background: var(--bg-card);
     border-radius: 20px !important;
     box-shadow: var(--shadow-card);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0,0,0,0.03);
+    border: 1px solid rgba(0, 0, 0, 0.03);
     overflow: hidden;
-    padding: var(--space-4); /* Ensure padding */
+    padding: var(--space-4);
+    height: auto;
+    /* Fix fixed height causing issues */
 }
 
 .card:hover {
@@ -3888,34 +3890,88 @@ a {
 }
 
 .sidebar.glass {
-    background: rgba(255, 255, 255, 0.85) !important;
+    width: 280px !important;
+    /* Restore width */
+    background: rgba(255, 255, 255, 0.95) !important;
+    /* Less transparent for readability */
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 20px 0 40px rgba(0,0,0,0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 20px 0 40px rgba(0, 0, 0, 0.05);
 }
 
-.category-card {
-    border-radius: 20px !important;
-    background: white;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
+.sidebar .nav-item span {
+    display: inline-block !important;
+    /* Force text visibility */
+    opacity: 1 !important;
+    margin-left: 10px;
 }
 
-.category-card:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: var(--shadow-md);
-    background: linear-gradient(135deg, #FFF 0%, #FFF5F0 100%);
-    border-color: var(--primary-light);
+/* Fix Header Overlaps */
+.header-right {
+    gap: var(--space-2);
+    flex-wrap: nowrap;
+    /* Prevent wrapping in weird ways, handle with scroll if needed */
+}
+
+/* Fix Chip Overlaps */
+.categories-wrapper,
+.filter-scroll,
+.suggestion-chips,
+.filter-chips {
+    display: flex;
+    flex-wrap: wrap !important;
+    /* Force wrap */
+    gap: 8px !important;
+    overflow-x: visible !important;
+    padding: 10px 0;
+    height: auto !important;
+    white-space: normal !important;
+}
+
+.filter-chips button {
+    margin-bottom: 5px;
+    /* Spacing for wrapped items */
+}
+
+/* Sidebar Visibility Fix */
+.sidebar .nav-item {
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+}
+
+.sidebar .nav-item span {
+    display: inline-block !important;
+    /* Force text visibility */
+    opacity: 1 !important;
+    visibility: visible !important;
+    margin-left: 12px;
+    font-size: 1rem;
+    color: var(--gray-800);
+}
+
+/* Fix Chatbot Button Position */
+.chatbot-fab {
+    z-index: 9999 !important;
+    bottom: 30px !important;
+    right: 30px !important;
+}
+
+.chatbot-container {
+    z-index: 10000 !important;
 }
 
 /* Typography Polish */
-h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.02em; /* Modern tight spacing */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    letter-spacing: -0.02em;
 }
 
 body {
     background-color: var(--bg-primary);
 }
-
