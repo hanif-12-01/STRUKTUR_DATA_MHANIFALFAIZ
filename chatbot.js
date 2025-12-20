@@ -1,149 +1,149 @@
-// Chatbot functionality for Lapor Mangan!
-// Powered by Google Gemini API
 
-(function () {
-    'use strict';
+// ============================================
+// CHATBOT "MakanBot" (AI Powered)
+// ============================================
 
-    // Konfigurasi Chatbot
-    const CHATBOT_CONFIG = {
-        MODEL: 'gemini-1.5-flash',
-        API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
-        API_KEY: 'AIzaSyDn1E7SrbHbgoRCG7NQeUH-IsjtAJ5HA7A' // Using the key from feature branch
-    };
+const chatConfig = {
+    apiKey: "AIzaSyDn1E7SrbHbgoRCG7NQeUH-IsjtAJ5HA7A", // API Key (Hardcoded for demo)
+    model: "gemini-1.5-flash"
+};
 
-    // State
-    let isChatOpen = false;
-    let isTyping = false;
+const chatState = {
+    isOpen: false,
+    history: []
+};
 
-    // DOM Elements
-    const chatbot = document.getElementById('chatbot');
-    const chatMessages = document.getElementById('chatMessages');
-    const chatInput = document.getElementById('chatInput');
+// 1. INIT CHATBOT UI
+function initChatbot() {
+    if (document.getElementById('chatbot')) return;
 
-    // Toggle Chatbot
-    function toggleChat() {
-        isChatOpen = !isChatOpen;
-        if (chatbot) {
-            chatbot.classList.toggle('active', isChatOpen);
-            chatbot.style.display = isChatOpen ? 'flex' : 'none';
-            if (isChatOpen && chatInput) chatInput.focus();
+    const chatHTML = `
+    <div id="chatbot" class="chatbot-container" style="display: none;">
+        <div class="chat-header">
+            <div class="chat-title">
+                <i class="fas fa-robot"></i>
+                <span>MakanBot AI</span>
+            </div>
+            <button onclick="toggleChat()" class="close-chat"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message bot">
+                <div class="message-content">Halo! Saya MakanBot 🤖. Lagi cari kuliner apa di Purwokerto?</div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Tanya rekomendasi..." onkeypress="handleChatInput(event)">
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+    <button class="chatbot-fab" onclick="toggleChat()">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+    `;
+
+    const div = document.createElement('div');
+    div.innerHTML = chatHTML;
+    document.body.appendChild(div);
+}
+
+// 2. TOGGLE CHAT
+window.toggleChat = function () {
+    const chat = document.getElementById('chatbot');
+    if (!chat) {
+        initChatbot();
+        setTimeout(toggleChat, 100);
+        return;
+    }
+
+    chatState.isOpen = !chatState.isOpen;
+    chat.style.display = chatState.isOpen ? 'flex' : 'none';
+    chat.classList.toggle('active', chatState.isOpen);
+
+    if (chatState.isOpen) {
+        setTimeout(() => document.getElementById('chatInput').focus(), 100);
+    }
+};
+
+// 3. SEND MESSAGE Logic
+async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    // User Message
+    appendMessage(msg, 'user');
+    input.value = '';
+
+    // Typing Indicator
+    showTyping(true);
+
+    try {
+        const reply = await fetchGeminiResponse(msg);
+        showTyping(false);
+        appendMessage(reply, 'bot');
+    } catch (err) {
+        showTyping(false);
+        appendMessage("Maaf, saya sedang pusing. Coba lagi nanti ya! 😵", 'bot');
+        console.error(err);
+    }
+}
+
+function handleChatInput(e) {
+    if (e.key === 'Enter') sendMessage();
+}
+
+function appendMessage(text, sender) {
+    const body = document.getElementById('chatBody');
+    const div = document.createElement('div');
+    div.className = `chat-message ${sender}`;
+    div.innerHTML = `<div class="message-content">${marked.parse(text)}</div>`;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+}
+
+function showTyping(show) {
+    const body = document.getElementById('chatBody');
+    const existing = document.getElementById('typing-indicator');
+    if (show) {
+        if (!existing) {
+            const div = document.createElement('div');
+            div.id = 'typing-indicator';
+            div.className = 'chat-message bot';
+            div.innerHTML = `<div class="message-content typing">Sedang mengetik...</div>`;
+            body.appendChild(div);
+            body.scrollTop = body.scrollHeight;
         }
+    } else {
+        if (existing) existing.remove();
     }
+}
 
-    // Expose toggleChat globally
-    window.toggleChat = toggleChat;
+// 4. GEMINI API CALL
+async function fetchGeminiResponse(prompt) {
+    // Context Construction
+    const context = `Kamu adalah MakanBot, asisten kuliner ramah untuk aplikasi "Lapor Mangan!" di Purwokerto.
+    Data Kuliner Saat Ini:
+    ${JSON.stringify(window.kulinerData || [], null, 2)}
+    
+    Jawablah pertanyaan user dengan santai, gunakan emoji, dan berikan rekomendasi spesifik dari data di atas jika relevan.
+    Jika tidak ada di data, berikan saran umum kuliner Purwokerto (seperti Mendoan, Soto Sokaraja, Getuk Goreng).`;
 
-    // Handle Input
-    function handleChatInput(e) {
-        if (e.key === 'Enter') sendMessage();
-    }
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${chatConfig.model}:generateContent?key=${chatConfig.apiKey}`;
 
-    // Show Typing Indicator
-    function showTypingIndicator() {
-        const id = 'typing-' + Date.now();
-        const div = document.createElement('div');
-        div.className = 'message message-bot';
-        div.id = id;
-        div.innerHTML = `<div class="message-content"><i class="fas fa-circle-notch fa-spin"></i> MakanBot sedang mengetik...</div>`;
-        if (chatMessages) {
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        return id;
-    }
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            contents: [{
+                parts: [{ text: context + "\n\nUser: " + prompt }]
+            }]
+        })
+    });
 
-    // Append message to chat container
-    function appendMessage(container, text, sender) {
-        if (!container) return;
-        const div = document.createElement('div');
-        div.className = `message message-${sender}`;
-        div.innerHTML = `<div class="message-content">${text}</div><div class="message-time">Baru saja</div>`;
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
-    }
+    const data = await response.json();
+    return data.candidates[0].content.parts[0].text;
+}
 
-    // Format text
-    function formatResponse(text) {
-        if (!text) return "";
-        return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-    }
-
-    // Send Message
-    async function sendMessage() {
-        if (!chatInput) return;
-        const text = chatInput.value.trim();
-        if (!text || isTyping) return;
-
-        appendMessage(chatMessages, text, 'user');
-        chatInput.value = '';
-
-        isTyping = true;
-        const typingId = showTypingIndicator();
-
-        try {
-            // Context Building
-            let contextContent = "Belum ada data kuliner.";
-            if (typeof kulinerData !== 'undefined' && Array.isArray(kulinerData)) {
-                contextContent = kulinerData.map(k =>
-                    `- ${k.nama} (${k.kategori}): Alamat ${k.alamat}, Harga ${k.harga}, Jam ${k.jam}. Deskripsi: ${k.deskripsi || ''}`
-                ).join('\n');
-            }
-
-            const systemPrompt = `
-                Kamu adalah "MakanBot", asisten AI paling asik untuk aplikasi Lapor Mangan! di Purwokerto.
-                
-                Data Kuliner:
-                ${contextContent}
-
-                Aturan:
-                - Ramah, humoris, gunakan sapaan "Lur".
-                - Jawab bahasa Indonesia santai.
-                - Berikan rekomendasi konkret dari data.
-                - Gunakan emoji 🍜.
-            `;
-
-            const response = await fetch(`${CHATBOT_CONFIG.API_URL}?key=${CHATBOT_CONFIG.API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: systemPrompt + `\n\nUser: ${text}` }] }]
-                })
-            });
-
-            const data = await response.json();
-
-            // Remove typing indicator
-            const typingEl = document.getElementById(typingId);
-            if (typingEl) typingEl.remove();
-
-            if (data.candidates && data.candidates[0].content) {
-                const reply = data.candidates[0].content.parts[0].text;
-                appendMessage(chatMessages, formatResponse(reply), 'bot');
-            } else {
-                throw new Error('No response content');
-            }
-        } catch (error) {
-            console.error('Bot Error:', error);
-            const typingEl = document.getElementById(typingId);
-            if (typingEl) typingEl.remove();
-            appendMessage(chatMessages, "Waduh Lur, lagi error nih (API/Koneksi). Coba lagi ya! 🙏", 'bot');
-        } finally {
-            isTyping = false;
-        }
-    }
-
-    // Send Quick Message
-    function sendQuickMessage(text) {
-        if (chatInput) {
-            chatInput.value = text;
-            sendMessage();
-        }
-    }
-
-    window.sendMessage = sendMessage;
-    window.handleChatInput = handleChatInput;
-    window.sendQuickMessage = sendQuickMessage;
-
-    // Auto Init
-    console.log('Chatbot script loaded');
-})();
+// Initialize on Load
+document.addEventListener('DOMContentLoaded', initChatbot);
+window.initChatbot = initChatbot; // Global Expose

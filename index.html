@@ -622,79 +622,144 @@
         }
     </style>
 
-    <script>
-        console.log('🚨 EMERGENCY SCRIPT ACTIVED 🚨');
-
-        // 1. Force Restore Data if missing
-        if (typeof kulinerData === 'undefined' || kulinerData.length === 0) {
-            console.log('Restoring Kuliner Data...');
-            window.kulinerData = [
-                { id: 1, nama: "Soto Kecik Sokaraja", kategori: "Soto", alamat: "Jl. Jend. Soedirman No. 12", jam: "08.00 - 20.00", harga: "Rp 20.000", gambar: "https://t-2.tstatic.net/banyumas/foto/bank/images/Soto-Kecik-Sokaraja.jpg", rating: 4.8, reviews: [] },
-                { id: 2, nama: "Bakso Pekih", kategori: "Bakso", alamat: "Jl. Pekih No. 10", jam: "09.00 - 18.00", harga: "Rp 25.000", gambar: "https://visitjawatengah.jatengprov.go.id/assets/images/cb606553-625d-4f05-b778-2975949d0124.jpg", rating: 4.7, reviews: [] },
-                { id: 3, nama: "Sate Ayam Martawi", kategori: "Sate", alamat: "Jl. Masjid No. 4", jam: "10.00 - 22.00", harga: "Rp 30.000", gambar: "https://asset.kompas.com/crops/O2yqEwZ08uM-M3p0eJ0y0f0y0y0=/0x0:1000x667/750x500/data/photo/2020/01/22/5e27e5a7a7a7a.jpg", rating: 4.6, reviews: [] },
-                { id: 4, nama: "Tempe Mendoan Eco 21", kategori: "Jajanan", alamat: "Jl. HR Bunyamin", jam: "15.00 - 23.00", harga: "Rp 3.000", gambar: "https://asset.kompas.com/crops/O2yqEwZ08uM-M3p0eJ0y0f0y0y0=/0x0:1000x667/750x500/data/photo/2020/01/22/5e27e5a7a7a7a.jpg", rating: 4.9, reviews: [] }
-            ];
+    <!-- EMERGENCY RESTORATION SCRIPT (BYPASS MODE) -->
+    <style>
+        .map-section {
+            width: 100%;
+            height: 350px !important;
+            display: block !important;
+            position: relative;
+            margin-bottom: 20px;
+            z-index: 1;
+            background: #eee;
         }
 
-        // 2. Force Render Function
+        #map {
+            width: 100%;
+            height: 100% !important;
+            min-height: 350px;
+        }
+
+        .sidebar {
+            width: 280px !important;
+            transform: translateX(0) !important;
+        }
+
+        .filter-chips {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+            height: auto !important;
+        }
+
+        .chatbot-fab {
+            z-index: 9999 !important;
+            pointer-events: auto !important;
+        }
+
+        #chatbot.active {
+            display: flex !important;
+        }
+    </style>
+
+    <script>
+        console.log('🚨 EMERGENCY BYPASS SCRIPT EXECUTING 🚨');
+
+        // 1. DATA KULINER (Real Images)
+        window.kulinerData = [
+            { id: 1, nama: "Soto Kecik Sokaraja", kategori: "Soto", alamat: "Jl. Jend. Soedirman No. 12", jam: "08.00 - 20.00", harga: "Rp 20.000", gambar: "https://images.unsplash.com/photo-1572656631137-7935297eff55?w=500&q=80", lat: -7.4589, lng: 109.2890, rating: 4.8, reviews: [] },
+            { id: 2, nama: "Bakso Pekih", kategori: "Bakso", alamat: "Jl. Pekih No. 10", jam: "09.00 - 18.00", harga: "Rp 25.000", gambar: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=500&q=80", lat: -7.4213, lng: 109.2345, rating: 4.7, reviews: [] },
+            { id: 3, nama: "Sate Ayam Martawi", kategori: "Sate", alamat: "Jl. Masjid No. 4", jam: "10.00 - 22.00", harga: "Rp 30.000", gambar: "https://images.unsplash.com/photo-1529563021893-cc83c9123490?w=500&q=80", lat: -7.4245, lng: 109.2312, rating: 4.6, reviews: [] },
+            { id: 4, nama: "Tempe Mendoan Eco 21", kategori: "Jajanan", alamat: "Jl. HR Bunyamin", jam: "15.00 - 23.00", harga: "Rp 3.000", gambar: "https://images.unsplash.com/photo-1626132647523-66f5bf380027?w=500&q=80", lat: -7.4012, lng: 109.2456, rating: 4.9, reviews: [] },
+            { id: 5, nama: "Gudeg Yu Djum", kategori: "Gudeg", alamat: "Jl. Overste Isdiman", jam: "07.00 - 21.00", harga: "Rp 25.000", gambar: "https://images.unsplash.com/photo-1626202157715-671c6dc0011d?w=500&q=80", lat: -7.4111, lng: 109.2399, rating: 4.5, reviews: [] }
+        ];
+
+        // 2. RENDER LIST
         window.renderKulinerList = function (data) {
-            const displayData = data || window.kulinerData;
             const list = document.getElementById('list');
-            const countBtn = document.getElementById('resultCount');
+            const count = document.getElementById('resultCount');
             if (!list) return;
 
+            const displayData = data || window.kulinerData;
             list.innerHTML = '';
-            if (countBtn) countBtn.innerText = displayData.length + ' hasil';
+            if (count) count.innerText = displayData.length + ' hasil';
 
             displayData.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'card';
-                div.style.marginBottom = '15px'; // Ensure spacing
+                div.onclick = () => alert('Detail: ' + item.nama);
                 div.innerHTML = `
-                    <div style="height:150px; background:#ddd; border-radius:12px 12px 0 0; overflow:hidden;">
+                    <div style="height:140px; overflow:hidden; border-radius:12px 12px 0 0;">
                         <img src="${item.gambar}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/300'">
                     </div>
-                    <div style="padding:15px;">
+                    <div style="padding:12px;">
                         <h3 style="margin:0 0 5px 0;">${item.nama}</h3>
                         <p style="margin:0; color:#666;">${item.kategori} • ${item.harga}</p>
-                        <p style="margin:5px 0 0 0; font-size:12px; color:#888;">📍 ${item.alamat}</p>
+                        <p style="margin:4px 0 0 0; font-size:12px; color:#888;">📍 ${item.alamat}</p>
                     </div>
                 `;
-                div.onclick = () => alert('Detail: ' + item.nama); // Simple fallback
                 list.appendChild(div);
             });
-            console.log('Rendered ' + displayData.length + ' items');
-
-            // Remove Loading Spinner if present
-            const loading = document.querySelector('.loading');
-            if (loading) loading.remove();
+            document.querySelector('.loading')?.remove();
         };
 
-        // 3. Force Render Immediately
-        setTimeout(() => {
-            window.renderKulinerList(window.kulinerData);
-        }, 1000);
+        // 3. MAP INIT (Delayed)
+        window.initMap = function () {
+            if (!document.getElementById('map')) return;
 
-        // 4. Force Chatbot Toggle
+            // Wait for L to be defined (Leaflet)
+            if (typeof L === 'undefined') {
+                console.log('Leaflet not loaded yet...');
+                return;
+            }
+
+            if (window.mapInstance) {
+                window.mapInstance.remove();
+            }
+
+            // Purwokerto Center
+            const center = [-7.4245, 109.2302];
+            window.mapInstance = L.map('map').setView(center, 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(window.mapInstance);
+
+            window.kulinerData.forEach(item => {
+                if (item.lat && item.lng) {
+                    L.marker([item.lat, item.lng])
+                        .addTo(window.mapInstance)
+                        .bindPopup(`<b>${item.nama}</b><br>${item.kategori}`);
+                }
+            });
+            console.log('Map RESTORED & MARKERS ADDED');
+        };
+
+        // 4. CHATBOT TOGGLE
         window.toggleChat = function () {
             const chat = document.getElementById('chatbot');
             if (chat) {
-                const isHidden = chat.style.display === 'none' || getComputedStyle(chat).display === 'none';
+                const isHidden = getComputedStyle(chat).display === 'none';
                 chat.style.display = isHidden ? 'flex' : 'none';
                 chat.classList.toggle('active', isHidden);
-                if (isHidden) {
-                    const input = document.getElementById('chatInput');
-                    if (input) input.focus();
-                }
-            } else {
-                alert('Chatbot loading...');
             }
         };
 
-        // 5. Force Sidebar Toggle
-        window.toggleSidebar = function () {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
-        }
+        // 5. EXECUTE ON LOAD
+        window.onload = function () {
+            // Render List Immediately
+            setTimeout(() => {
+                window.renderKulinerList(window.kulinerData);
+                // Try initializing map
+                window.initMap();
+
+                // Re-attempt map init if Leaflet was slow
+                setTimeout(window.initMap, 2000);
+
+                // Bind Chatbot
+                const fab = document.querySelector('.chatbot-fab');
+                if (fab) fab.onclick = window.toggleChat;
+            }, 500);
+        };
     </script>
     </body>
