@@ -12,13 +12,11 @@ int main() {
     addNode(G, 'C');
     addNode(G, 'D');
     addNode(G, 'E');
-
-    addEdge(G, 'A', 'B');  
     
-    addEdge(G, 'B', 'C');  
-    addEdge(G, 'B', 'E');  
-
-    addEdge(G, 'C', 'D');  
+    addEdge(G, 'A', 'B');  
+    addEdge(G, 'C', 'B'); 
+    addEdge(G, 'E', 'B');  
+    addEdge(G, 'D', 'C');  
 
     printGraph(G);
 
